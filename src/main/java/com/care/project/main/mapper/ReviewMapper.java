@@ -1,5 +1,13 @@
 package com.care.project.main.mapper;
 
-public interface ReviewMapper {
+import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.care.project.main.dto.ReviewDTO;
+import com.care.project.main.dto.ReviewSearchDTO;
+
+public interface ReviewMapper {
+	public List<ReviewSearchDTO> getList(@Param("id") String id);
+	public List<ReviewDTO> searchInfo(int id);
 }

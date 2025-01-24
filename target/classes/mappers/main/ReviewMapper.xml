@@ -4,5 +4,32 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.care.project.main.mapper.ReviewMapper">
-
+	<resultMap type="com.care.project.main.dto.ReviewSearchDTO"
+		id="search">
+		<id property="movieId" column="movie_id" />
+		<result property="title" column="title" />
+		<result property="posterUrl" column="poster_url" />
+		<result property="synopsis" column="synopsis" />
+		<result property="director" column="director" />
+		<result property="actors" column="actors" />
+	</resultMap>
+	<resultMap type="com.care.project.main.dto.ReviewDTO" id="info">
+		<id property="movieId" column="movie_id" />
+		<id property="reviewNo" column="review_no" />
+		<result property="content" column="content" />
+		<result property="title" column="title" />
+		<result property="posterUrl" column="poster_url" />
+		<result property="synopsis" column="synopsis" />
+		<result property="director" column="director" />
+		<result property="actors" column="actors" />
+		<result property="userId" column="user_id" />
+		<result property="reviewDate" column="review_date" />
+	</resultMap>
+	<select id="getList" resultMap="search">
+		select * from movie
+		<if test="id != null"> where title=#{id} or director=#{id} or actors like concat(concat('%', #{id}), '%')</if>
+	</select>
+	<select id="searchInfo" resultMap="info">
+		select * from review inner join movie using (movie_id) where movie_id=#{id}
+	</select>
 </mapper>
