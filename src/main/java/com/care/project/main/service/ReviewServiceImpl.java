@@ -31,5 +31,32 @@ public class ReviewServiceImpl implements ReviewService{
 		}
 		return list;
 	}
-
+	
+	public List<ReviewDTO> getInfo(String id, int start){
+		List<ReviewDTO> list = null;
+		start=(start-1)*5;
+		try {
+			list = rev.getInfo(id,start);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public int getCount(String id) {
+		int count=0;
+		try {
+			count = rev.getCount(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		int page=count/5;
+		if(count%5!=0) {
+			page+=1;
+		}
+		
+		return page;
+	}
 }

@@ -10,4 +10,6 @@ import com.care.project.main.dto.ReviewSearchDTO;
 public interface ReviewMapper {
 	public List<ReviewSearchDTO> getList(@Param("id") String id);
 	public List<ReviewDTO> searchInfo(int id);
+	public List<ReviewDTO> getInfo(@Param("id") String id, @Param("start") int start);
+	public int getCount(String id);
 }

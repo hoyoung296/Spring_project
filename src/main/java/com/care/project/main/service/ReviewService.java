@@ -8,4 +8,6 @@ import com.care.project.main.dto.ReviewSearchDTO;
 public interface ReviewService {
 	public List<ReviewSearchDTO> getList(String id);
 	public List<ReviewDTO> searchInfo(int id);
-}
+	public List<ReviewDTO> getInfo(String id, int start);
+	public int getCount (String id);
+ }
