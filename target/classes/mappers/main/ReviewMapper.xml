@@ -25,6 +25,21 @@
 		<result property="userId" column="user_id" />
 		<result property="reviewDate" column="review_date" />
 	</resultMap>
+	<resultMap type="com.care.project.main.dto.ReviewReserveDTO" id="reserve">
+		<id property="reservationId" column="reservation_id" />
+		<id property="scheduleId" column="schedule_id" />
+		<id property="movieId" column="movie_id" />
+		<id property= "screenId" column="screen_id" />
+		<id property= "userId" column="user_id" />
+		<id property= "seatId" column="seat_id" />
+		<result property="reservationStatusId" column="reservation_status_id" />
+		<result property="totalAmount" column="total_amount" />
+		<result property="seatRow" column="seat_row" />
+		<result property="seatNumber" column="seat_number" />
+		<result property="screenName" column="screen_name" />
+		<result property="startDT" column="start_dt" />
+		<result property="endDT" column="end_dt" />
+	</resultMap>
 	<select id="getList" resultMap="search">
 		select * from movie <if test="id != null"> where title = #{id} or director = #{id} or 
 		INSTR(',' || REPLACE(actors, ' ', '') || ',', ',' || #{id} || ',') > 0</if>
@@ -38,4 +53,16 @@
 	<select id="getCount">
 		select count(*) from (select * from review inner join movie using (movie_id) where user_id=#{id})
 	</select>
+	<insert id="writeReview">
+		insert into review(review_no,content,user_id,movie_id) values(review_sequence.nextval,#{content},#{userId},#{movieId})
+	</insert>
+	<select id="getReserve" resultMap="reserve">
+		select * from (select * from reservation inner join (schedule inner join movie using (movie_id) inner join seat using (screen_id) inner join screen using (screen_id)) using (schedule_id) where user_id=#{id}) order by user_id desc offset #{start} rows fetch next 5 rows only
+	</select>
+	<select id="getReserveCount">
+		select count(*) from (select * from reservation inner join (schedule inner join movie using (movie_id) inner join seat using (screen_id) inner join screen using (screen_id)) using (schedule_id) where user_id=#{id})
+	</select>
+	<delete id="delReserve">
+		delete from reservation where reservation_id=#{id}
+	</delete>
 </mapper>
