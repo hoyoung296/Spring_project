@@ -20,7 +20,7 @@ import com.care.project.main.dto.ReviewSearchDTO;
 import com.care.project.main.service.ReviewService;
 
 @RestController
-@RequestMapping("/review")
+@RequestMapping("review")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ReviewController {
 	@Autowired
