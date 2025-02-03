@@ -10,7 +10,7 @@
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
 		<java-version>1.8</java-version>
-		<org.springframework-version>5.2.1.RELEASE</org.springframework-version>
+		<org.springframework-version>5.3.10</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 	</properties>
@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>${org.springframework-version}</version>
+			<version>5.3.10</version>
 		</dependency>
 
 		<!-- AspectJ -->
@@ -181,33 +181,27 @@
 			<artifactId>javax.mail</artifactId>
 			<version>1.5.3</version>
 		</dependency>
-		<!-- Spring MVC (웹 애플리케이션을 위한 Spring) -->
-	    <dependency>
-	        <groupId>org.springframework</groupId>
-	        <artifactId>spring-webmvc</artifactId>
-	        <version>5.3.10</version> <!-- 사용하려는 Spring 버전으로 수정 -->
-	    </dependency>
-	
-	    <!-- Spring Security (웹 보안 기능 제공) -->
-	    <dependency>
-	        <groupId>org.springframework.security</groupId>
-	        <artifactId>spring-security-web</artifactId>
-	        <version>5.5.0</version> <!-- 사용하려는 Spring Security 버전으로 수정 -->
-	    </dependency>
-	
-	    <dependency>
-	        <groupId>org.springframework.security</groupId>
-	        <artifactId>spring-security-config</artifactId>
-	        <version>5.5.0</version> <!-- 사용하려는 Spring Security 버전으로 수정 -->
-	    </dependency>
-	
-	    <!-- Spring Test (단위 테스트 관련) -->
-	    <dependency>
-	        <groupId>org.springframework</groupId>
-	        <artifactId>spring-test</artifactId>
-	        <version>5.3.10</version> <!-- 사용하려는 Spring 버전으로 수정 -->
-	        <scope>test</scope>
-	    </dependency>
+
+		<!-- Spring Security (웹 보안 기능 제공) -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>5.5.0</version> <!-- 사용하려는 Spring Security 버전으로 수정 -->
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>5.5.0</version> <!-- 사용하려는 Spring Security 버전으로 수정 -->
+		</dependency>
+
+		<!-- Spring Test (단위 테스트 관련) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>5.3.10</version> <!-- 사용하려는 Spring 버전으로 수정 -->
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

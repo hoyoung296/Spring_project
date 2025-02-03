@@ -1,18 +1,10 @@
 package com.care.project.main.controller;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +20,6 @@ import com.care.project.main.service.ReviewService;
 
 @RestController
 @RequestMapping("review")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ReviewController {
 	@Autowired
 	ReviewService rvs;
@@ -42,33 +33,35 @@ public class ReviewController {
 	public List<ReviewSearchDTO> getList(@PathVariable String id) {
 		return rvs.getList(id);
 	}
-	
+
 	@GetMapping("/searchinfo/{id}")
-	public List<ReviewDTO> searchInfo(@PathVariable int id){
+	public List<ReviewDTO> searchInfo(@PathVariable int id) {
 		return rvs.searchInfo(id);
 	}
-	
+
 	@GetMapping("/info")
-	public Map<String , Object> getInfo(@RequestParam String id,@RequestParam(required = false, defaultValue= "1") int start){
+	public Map<String, Object> getInfo(@RequestParam String id,
+			@RequestParam(required = false, defaultValue = "1") int start) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("dto", rvs.getInfo(id,start));
+		map.put("dto", rvs.getInfo(id, start));
 		map.put("page", rvs.getCount(id));
 		return map;
 	}
-	
+
 	@GetMapping("/reserve")
-	public Map<String,Object> getReserve(@RequestParam String id,@RequestParam(required = false, defaultValue= "1") int start){
+	public Map<String, Object> getReserve(@RequestParam String id,
+			@RequestParam(required = false, defaultValue = "1") int start) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("dto", rvs.getReserve(id,start));
+		map.put("dto", rvs.getReserve(id, start));
 		map.put("page", rvs.getReserveCount(id));
 		return map;
 	}
-	
+
 	@PostMapping("/writereview")
 	public int writeReview(@RequestBody ReviewDTO dto) {
 		return rvs.writeReview(dto);
 	}
-	
+
 	@DeleteMapping("/del/{id}")
 	public int delReserve(@PathVariable int id) {
 		return rvs.delReserve(id);

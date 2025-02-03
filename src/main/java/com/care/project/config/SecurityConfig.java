@@ -13,26 +13,25 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors()  // Spring Security¿¡ CORS Àû¿ë
+        http.cors()  // Spring Security CORS ì„¤ì •
             .and()
             .authorizeRequests()
-            .antMatchers("/api/**").authenticated()  // ÀÎÁõµÈ »ç¿ëÀÚ¸¸ Á¢±Ù °¡´É
-            .anyRequest().permitAll()  // ³ª¸ÓÁö ¿äÃ»Àº ¸ğµÎ Çã¿ë
+            .antMatchers("/api/**").authenticated()  // ì¸ì¦ëœ ì‚¬ìš©ìë§Œ ì ‘ê·¼ ê°€ëŠ¥
+            .anyRequest().permitAll()  // ë‚˜ë¨¸ì§€ ìš”ì²­ì€ ëª¨ë‘ í—ˆìš©
             .and()
-            .csrf().disable();  // CSRF º¸È£¸¦ ºñÈ°¼ºÈ­ (ÇÊ¿ä ½Ã È°¼ºÈ­)
+            .csrf().disable();  // CSRF ë³´í˜¸ ë¹„í™œì„±í™”
     }
-	
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedHeader("http://localhost:3000");
+        configuration.addAllowedOrigin("http://localhost:3000");  // React ê°œë°œ ì„œë²„ URL
+        configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("*");
 
-        // Web MVC¿¡ ¸Â´Â URL ±â¹İ CORS ¼³Á¤
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

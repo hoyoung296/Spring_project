@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.care.project.main.service.MemberService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 public class MemberController {
 	@Autowired MemberService ms;
 
