@@ -15,7 +15,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
             .antMatchers("/root/review/**").authenticated()  // 인증된 사용자만 접근 가능
-            .antMatchers("/project/review/image/**").permitAll() // 이미지 URL 허용
             .antMatchers("/api/**").authenticated()  // 인증된 사용자만 접근 가능
             .anyRequest().permitAll()  // 나머지 요청은 모두 허용
             .and()
