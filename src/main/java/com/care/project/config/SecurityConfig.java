@@ -18,6 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors()  // Spring Security CORS 설정
             .and()
             .authorizeRequests()
+            .antMatchers("/project/review/image/**").permitAll() // 이미지 URL 허용
             .antMatchers("/api/**").authenticated()  // 인증된 사용자만 접근 가능
             .anyRequest().permitAll()  // 나머지 요청은 모두 허용
             .and()
