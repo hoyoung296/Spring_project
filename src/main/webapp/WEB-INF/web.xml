@@ -87,4 +87,20 @@
         <url-pattern>/*</url-pattern> <!-- 모든 요청에 대해 CORS 필터 적용 -->
     </filter-mapping>
 
+    <!-- Default Servlet 설정 추가 -->
+    <servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+        <init-param>
+            <param-name>listings</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/project/review/image/*</url-pattern> <!-- 이미지 요청 처리 -->
+    </servlet-mapping>
+
 </web-app>

@@ -10,6 +10,6 @@ public class ImgConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     	registry.addResourceHandler("/project/review/image/**")
-                .addResourceLocations("/resources/img/poster/");
+                .addResourceLocations("file:C:/Users/USER/Desktop/job/spring-workspace/movieProjectBack/target/movieProject/resources/img/poster/");
     }
 }
