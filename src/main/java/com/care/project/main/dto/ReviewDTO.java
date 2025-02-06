@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class ReviewDTO {
     private int reviewNo, movieId;
     private String content, userId, title, posterUrl, synopsis, director, actors;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private Timestamp reviewDate;
   
   	public String getTitle() {

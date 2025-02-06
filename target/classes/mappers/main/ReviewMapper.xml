@@ -45,7 +45,7 @@
 		INSTR(',' || REPLACE(actors, ' ', '') || ',', ',' || #{id} || ',') > 0</if>
 	</select>
 	<select id="searchInfo" resultMap="info">
-		select * from review inner join movie using (movie_id) where movie_id=#{id}
+		select * from movie left join review using (movie_id) where movie_id=#{id}
 	</select>
 	<select id="getInfo" resultMap="info">
 		select * from (select * from review inner join movie using (movie_id) where user_id=#{id}) order by user_id desc offset #{start} rows fetch next 5 rows only
