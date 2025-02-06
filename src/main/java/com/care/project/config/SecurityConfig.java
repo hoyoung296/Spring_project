@@ -14,8 +14,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors()  // Spring Security에 CORS 설정 적용
             .and()
             .authorizeRequests()
-            .antMatchers("/root/review/**").authenticated()  // 인증된 사용자만 접근 가능
-            .antMatchers("/api/**").authenticated()  // 인증된 사용자만 접근 가능
+            .antMatchers("/root/**").authenticated()  // 인증된 사용자만 접근 가능
             .anyRequest().permitAll()  // 나머지 요청은 모두 허용
             .and()
             .csrf().disable();  // CSRF 보호 비활성화

@@ -1,35 +1,51 @@
 package com.care.project.main.dto;
 
-import java.sql.Timestamp;
-
 public class ScheduleDTO {
-	private Timestamp start_DT,end_DT;
-	private String screen_name, movie_name;
-	
-	public Timestamp getStart_DT() {
-		return start_DT;
-	}
-	public void setStart_DT(Timestamp start_DT) {
-		this.start_DT = start_DT;
-	}
-	public Timestamp getEnd_DT() {
-		return end_DT;
-	}
-	public void setEnd_DT(Timestamp end_DT) {
-		this.end_DT = end_DT;
-	}
-	public String getScreen_name() {
-		return screen_name;
-	}
-	public void setScreen_name(String screen_name) {
-		this.screen_name = screen_name;
-	}
-	public String getMovie_name() {
-		return movie_name;
-	}
-	public void setMovie_name(String movie_name) {
-		this.movie_name = movie_name;
-	}
-	
-	
+    private String startDateTime;  // 변경: Timestamp → String
+    private String endDateTime;    // 변경: Timestamp → String
+    private int scheduleId;
+    private int movieId;
+    private int screenId;
+
+    // Getters and Setters
+    public String getStartDateTime() {
+        return startDateTime;
+    }
+
+    public void setStartDateTime(String startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+
+    public String getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(String endDateTime) {
+        this.endDateTime = endDateTime;
+    }
+
+    public int getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(int scheduleId) {
+        this.scheduleId = scheduleId;
+    }
+
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
+    }
+
+    public int getScreenId() {
+        return screenId;
+    }
+
+    public void setScreenId(int screenId) {
+        this.screenId = screenId;
+    }
 }
+
