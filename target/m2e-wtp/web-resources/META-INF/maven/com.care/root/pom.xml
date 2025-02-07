@@ -202,6 +202,29 @@
 			<version>5.3.10</version> <!-- 사용하려는 Spring 버전으로 수정 -->
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Lombok 의존성 추가 -->
+	    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+		    <groupId>org.projectlombok</groupId>
+		    <artifactId>lombok</artifactId>
+		    <version>1.18.36</version>
+		    <scope>provided</scope>
+		</dependency>
+		
+		<!-- SLF4J API (로깅 인터페이스) 의존성 추가 -->
+	    <dependency>
+	        <groupId>org.slf4j</groupId>
+	        <artifactId>slf4j-api</artifactId>
+	        <version>1.7.32</version> <!-- 최신 버전 확인 후 설정 -->
+	    </dependency>
+	
+	    <!-- Logback Classic (SLF4J의 구현체) 의존성 추가 -->
+	    <dependency>
+	        <groupId>ch.qos.logback</groupId>
+	        <artifactId>logback-classic</artifactId>
+	        <version>1.2.6</version> <!-- 최신 버전 확인 후 설정 -->
+	    </dependency>
 	</dependencies>
 	<build>
     <plugins>
