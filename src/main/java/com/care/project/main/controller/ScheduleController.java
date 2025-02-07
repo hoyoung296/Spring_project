@@ -1,12 +1,13 @@
 package com.care.project.main.controller;
 
+import java.util.List;
 import java.util.Map;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,37 +24,62 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("member")
+@RequestMapping("member/schedule")
 public class ScheduleController {
 
-@Autowired ScheduleService scheduleser;
-	@GetMapping("/schedule")
-	public ResponseEntity<?> getSchedule(@RequestParam("title") String title) {
+	@Autowired
+	ScheduleService scheduleser;
+
+	@GetMapping("/title")
+	public ResponseEntity<?> getScheduleDate(@RequestParam("title") String title) {
 		try {
-			Map<String, Object> scheduleData = scheduleser.scheduleDetails(title);
+			Map<String, Object> scheduleData = scheduleser.scheduleDate(title);
 			System.out.println("scheduleData : " + scheduleData);
-            return CommonResponse.createResponse(
-                    CommonResponse.builder()
-                            .code(Constant.Success.SUCCESS_CODE)
-                            .message("Success")
-                            .data(scheduleData)
-                            .build(),
-                    HttpStatus.OK
-            );
+			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
+					.message("Success").data(scheduleData).build(), HttpStatus.OK);
 
-        } catch (Exception e) {
-            log.info("scheduleData Error ");
-            e.printStackTrace();
+		} catch (Exception e) {
+			log.info("scheduleData Error ");
+			e.printStackTrace();
 
-            return CommonResponse.createResponse(
-                    CommonResponse.builder()
-                            .code(ErrorType.ETC_FAIL.getErrorCode())
-                            .message(ErrorType.ETC_FAIL.getErrorMessage())
-                            .build(),
-                    HttpStatus.INTERNAL_SERVER_ERROR
-            );
-        }
-		
+			return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
+					.message(ErrorType.ETC_FAIL.getErrorMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-	
+
+	@GetMapping("/startdate")
+	public ResponseEntity<?> getScheduleInfo(@RequestParam("startdate") String startdate) {
+		try {
+			Map<String, Object> scheduleInfo = scheduleser.scheduleInfo(startdate);
+			System.out.println("scheduleInfo : " + scheduleInfo);
+			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
+					.message("Success").data(scheduleInfo).build(), HttpStatus.OK);
+
+		} catch (Exception e) {
+			log.info("scheduleInfo Error ");
+			e.printStackTrace();
+
+			return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
+					.message(ErrorType.ETC_FAIL.getErrorMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/seatselect")
+	public ResponseEntity<?> SeatSelect(@RequestParam("schedule_id") Integer scheduleid) {
+		try {
+			Map<String, Object> scheduleDetailData = scheduleser.scheduleDetailData(scheduleid);
+			List<Map<String, Object>> reservedSeats = scheduleser.reservedSeats(scheduleid);
+			System.out.println("reservedSeats : " + reservedSeats);
+			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
+					.message("Success").data(reservedSeats).build(), HttpStatus.OK);
+
+		} catch (Exception e) {
+			log.info("scheduleInfo Error ");
+			e.printStackTrace();
+
+			return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
+					.message(ErrorType.ETC_FAIL.getErrorMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

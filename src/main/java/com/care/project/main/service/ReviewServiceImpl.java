@@ -102,7 +102,6 @@ public class ReviewServiceImpl implements ReviewService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return list;
 	}
 
@@ -121,8 +120,8 @@ public class ReviewServiceImpl implements ReviewService {
 
 		return page;
 	}
-	
-	public MovieDTO reserveInfo (int id){
+
+	public MovieDTO reserveInfo(int id) {
 		MovieDTO list = null;
 		try {
 			list = rev.reserveInfo(id);
@@ -131,7 +130,7 @@ public class ReviewServiceImpl implements ReviewService {
 		}
 		return list;
 	}
-	
+
 	public int writeReview(ReviewDTO dto) {
 		int result = 0;
 		try {
