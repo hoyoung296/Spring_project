@@ -4,34 +4,35 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.care.project.main.mapper.ReviewMapper">
-	<resultMap type="com.care.project.main.dto.ReviewSearchDTO"
-		id="search">
+	<resultMap type="com.care.project.main.dto.MovieDTO" id="search">
 		<id property="movieId" column="movie_id" />
 		<result property="title" column="title" />
 		<result property="posterUrl" column="poster_url" />
-		<result property="synopsis" column="synopsis" />
-		<result property="director" column="director" />
+		<result property="movieSynopsis" column="synopsis" />
+		<result property="directorName" column="director" />
 		<result property="actors" column="actors" />
 	</resultMap>
-	<resultMap type="com.care.project.main.dto.ReviewDTO" id="info">
-		<id property="movieId" column="movie_id" />
-		<id property="reviewNo" column="review_no" />
-		<result property="content" column="content" />
-		<result property="title" column="title" />
-		<result property="posterUrl" column="poster_url" />
-		<result property="synopsis" column="synopsis" />
-		<result property="director" column="director" />
-		<result property="actors" column="actors" />
-		<result property="userId" column="user_id" />
-		<result property="reviewDate" column="review_date" />
-	</resultMap>
-	<resultMap type="com.care.project.main.dto.ReviewReserveDTO" id="reserve">
+	
+	 <resultMap type="java.util.HashMap" id="info">
+        <id property="movieId" column="movie_id" />
+        <result property="reviewNo" column="review_no" />
+        <result property="content" column="content" />
+        <result property="title" column="title" />
+        <result property="posterUrl" column="poster_url" />
+        <result property="synopsis" column="synopsis" />
+        <result property="director" column="director" />
+        <result property="actors" column="actors" />
+        <result property="userId" column="user_id" />
+        <result property="reviewDate" column="review_date" />
+    </resultMap>
+	
+	<resultMap type="java.util.HashMap" id="reserve">
 		<id property="reservationId" column="reservation_id" />
-		<id property="scheduleId" column="schedule_id" />
-		<id property="movieId" column="movie_id" />
-		<id property= "screenId" column="screen_id" />
-		<id property= "userId" column="user_id" />
-		<id property= "seatId" column="seat_id" />
+		<result property="scheduleId" column="schedule_id" />
+		<result property="movieId" column="movie_id" />
+		<result property= "screenId" column="screen_id" />
+		<result property= "userId" column="user_id" />
+		<result property= "seatId" column="seat_id" />
 		<result property="reservationStatusId" column="reservation_status_id" />
 		<result property="totalAmount" column="total_amount" />
 		<result property="seatRow" column="seat_row" />
@@ -39,28 +40,69 @@
 		<result property="screenName" column="screen_name" />
 		<result property="startDT" column="start_dt" />
 		<result property="endDT" column="end_dt" />
+		
+		<!-- sprivate int reservationId, scheduleId, reservationStatusId,totalAmount; 
+		private String userId; 
+		private int movieId;
+    	private String title;
+    	private String posterUrl;
+    	private String movieSynopsis;
+    	private String directorName;
+    	private String actors;
+    	private String startDateTime;
+    	private String endDateTime;
+    	private int scheduleId;
+    	private int movieId;
+    	private int screenId;
+    	private int screenID;
+		private String screenName;
+		-->
+		
+	
+		
+		
+		
+		
+		
+		
 	</resultMap>
+	
 	<select id="getList" resultMap="search">
-		select * from movie <if test="id != null"> where title = #{id} or director = #{id} or 
+		select * from movie 
+		<if test="id != null"> where title = #{id} or director = #{id} or 
 		INSTR(',' || REPLACE(actors, ' ', '') || ',', ',' || #{id} || ',') > 0</if>
 	</select>
 	<select id="searchInfo" resultMap="info">
-		select * from movie left join review using (movie_id) where movie_id=#{id}
+		select * from movie 
+		left join review using (movie_id) where movie_id=#{id}
 	</select>
 	<select id="getInfo" resultMap="info">
-		select * from (select * from review inner join movie using (movie_id) where user_id=#{id}) order by user_id desc offset #{start} rows fetch next 5 rows only
+		select * from 
+		(select * from review 
+		inner join movie using (movie_id) where user_id=#{id}) 
+		order by user_id desc offset #{start} rows fetch next 5 rows only
 	</select>
 	<select id="getCount">
-		select count(*) from (select * from review inner join movie using (movie_id) where user_id=#{id})
+		select count(*) from 
+		(select * from review 
+		inner join movie using (movie_id) where user_id=#{id})
 	</select>
 	<insert id="writeReview">
 		insert into review(review_no,content,user_id,movie_id) values(review_sequence.nextval,#{content},#{userId},#{movieId})
 	</insert>
 	<select id="getReserve" resultMap="reserve">
-		select * from (select * from reservation inner join (schedule inner join movie using (movie_id) inner join seat using (screen_id) inner join screen using (screen_id)) using (schedule_id) where user_id=#{id}) order by user_id desc offset #{start} rows fetch next 5 rows only
+		SELECT * FROM 
+    	(SELECT * FROM reservation 
+    	INNER JOIN (schedule 
+        INNER JOIN movie USING (movie_id) 
+        INNER JOIN seat USING (screen_id) 
+        INNER JOIN (seat_status 
+            INNER JOIN screen USING (screen_id)
+        ) USING (seat_status_id)
+    ) USING (schedule_id)) WHERE user_id = #{id} ORDER BY user_id DESC OFFSET #{start} ROWS FETCH NEXT 5 ROWS ONLY;
 	</select>
 	<select id="getReserveCount">
-		select count(*) from (select * from reservation inner join (schedule inner join movie using (movie_id) inner join seat using (screen_id) inner join screen using (screen_id)) using (schedule_id) where user_id=#{id})
+		
 	</select>
 	<delete id="delReserve">
 		delete from reservation where reservation_id=#{id}
