@@ -32,21 +32,80 @@
 		<id property="screenID" column="screen_id" />
 		<result property="screenName" column="screen_name" />
 	</resultMap>
+	
+	
 
-	<select id="getSchedule" resultType="map">
+	<select id="getScheduleDate" resultType="map">
 		SELECT
 		s.schedule_id,
-		TO_CHAR(s.start_DT, 'YYYY-MM-DD HH24:MI') AS startDateTime,
-		TO_CHAR(s.end_DT, 'YYYY-MM-DD HH24:MI') AS endDateTime,
-		m.movie_id,
-		m.title AS movie_title,
-		m.director,
-		m.actors,
-		sc.screen_id,
-		sc.screen_name
+		TO_CHAR(s.start_DT, 'YYYY-MM-DD') AS startDate,
+		m.title AS title,
+		m.director AS director,
+		m.actors AS actors
 		FROM schedule s
 		LEFT JOIN movie m ON s.movie_id = m.movie_id
 		LEFT JOIN screen sc ON s.screen_id = sc.screen_id
 		WHERE m.title = #{title}
 	</select>
+
+	<select id="getScheduleInfo" resultType="map">
+		SELECT
+		s.schedule_id,
+		TO_CHAR(s.start_DT, 'HH24:MI') AS startTime,
+		sc.screen_id,
+		sc.screen_name As screenName
+		FROM schedule s
+		LEFT JOIN movie m ON s.movie_id = m.movie_id
+		LEFT JOIN screen sc ON s.screen_id = sc.screen_id
+		WHERE TO_CHAR(s.start_DT, 'YYYY-MM-DD') = #{startdate}
+	</select>
+	
+	<select id="scheduleDetailData" resultType="map">
+		SELECT
+		s.schedule_id,
+		TO_CHAR(s.start_DT, 'HH24:MI') AS startTime,
+		TO_CHAR(s.start_DT, 'HH24:MI') AS startTime,
+		sc.screen_name As screenName
+		m.title AS title,
+		m.director AS director,
+		m.actors AS actors
+		FROM schedule s
+		LEFT JOIN movie m ON s.movie_id = m.movie_id
+		LEFT JOIN screen sc ON s.screen_id = sc.screen_id
+		WHERE s.schedule_id = #{scheduleid}
+	</select>
+	
+	<select id="reservedSeats" resultType="java.util.List">
+		SELECT
+		s.schedule_id,
+		TO_CHAR(s.start_DT, 'HH24:MI') AS startTime,
+		sc.screen_id,
+		sc.screen_name As screenName
+		FROM schedule s
+		LEFT JOIN movie m ON s.movie_id = m.movie_id
+		LEFT JOIN screen sc ON s.screen_id = sc.screen_id
+		WHERE TO_CHAR(s.start_DT, 'YYYY-MM-DD') = #{startdate}
+	</select>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
