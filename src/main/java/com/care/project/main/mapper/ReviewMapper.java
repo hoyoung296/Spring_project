@@ -13,8 +13,9 @@ public interface ReviewMapper {
 	public List<Map<String, Object>> searchInfo(int id);
 	public List<Map<String, Object>> getInfo(@Param("id") String id, @Param("start") int start);
 	public int getCount(String id);
-	public int writeReview(ReviewDTO dto);
 	public List<Map<String, Object>> getReserve(@Param("id") String id,@Param("start") int start);
 	public int getReserveCount(String id);
+	public MovieDTO reserveInfo (int id);
+	public int writeReview(ReviewDTO dto);
 	public int delReserve(int id);
 }

@@ -56,6 +56,11 @@ public class ReviewController {
 		map.put("page", rvs.getReserveCount(id));
 		return map;
 	}
+	
+	@GetMapping("/reserveinfo/{id}")
+	public MovieDTO reserveInfo (@PathVariable int id){
+		return rvs.reserveInfo(id);
+	}
 
 	@PostMapping("/writereview")
 	public int writeReview(@RequestBody ReviewDTO dto) {

@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.care.project.main.dto.MovieDTO;
 import com.care.project.main.dto.ReviewDTO;
 import com.care.project.main.mapper.ReviewMapper;
@@ -93,16 +94,6 @@ public class ReviewServiceImpl implements ReviewService {
 		return page;
 	}
 
-	public int writeReview(ReviewDTO dto) {
-		int result = 0;
-		try {
-			result = rev.writeReview(dto);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
 	public List<Map<String, Object>> getReserve(String id, int start) {
 		List<Map<String, Object>> list = null;
 		start = (start - 1) * 5;
@@ -129,6 +120,26 @@ public class ReviewServiceImpl implements ReviewService {
 		}
 
 		return page;
+	}
+	
+	public MovieDTO reserveInfo (int id){
+		MovieDTO list = null;
+		try {
+			list = rev.reserveInfo(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public int writeReview(ReviewDTO dto) {
+		int result = 0;
+		try {
+			result = rev.writeReview(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	public int delReserve(int id) {

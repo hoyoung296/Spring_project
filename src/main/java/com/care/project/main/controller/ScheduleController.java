@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ScheduleController {
 
 @Autowired ScheduleService scheduleser;
-	
 	@GetMapping("/schedule")
 	public ResponseEntity<?> getSchedule(@RequestParam("title") String title) {
 		try {
