@@ -1,7 +1,5 @@
 package com.care.project.main.dto;
 
-import java.sql.Timestamp;
-
 public class ReserveDTO {
 	private int reservationId, scheduleId, reservationStatusId,totalAmount; 
 	// reservation_ID => reservationId, schedule_ID => scheduleId, reservation_Status_ID => reservationStatusId, 
@@ -37,11 +35,5 @@ public class ReserveDTO {
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-	public Timestamp getReservationDateTime() {
-		return reservationDateTime;
-	}
-	public void setReservationDateTime(Timestamp reservationDateTime) {
-		this.reservationDateTime = reservationDateTime;
 	}
 }
