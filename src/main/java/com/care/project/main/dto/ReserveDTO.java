@@ -1,5 +1,6 @@
 package com.care.project.main.dto;
 
+
 public class ReserveDTO {
 	private int reservationId, scheduleId, reservationStatusId,totalAmount; 
 	// reservation_ID => reservationId, schedule_ID => scheduleId, reservation_Status_ID => reservationStatusId, 

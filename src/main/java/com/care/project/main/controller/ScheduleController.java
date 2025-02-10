@@ -3,7 +3,6 @@ package com.care.project.main.controller;
 import java.util.List;
 import java.util.Map;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,64 +27,43 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("member/schedule")
 public class ScheduleController {
 
-@Autowired ScheduleService scheduleser;
-	
+	@Autowired
+	ScheduleService scheduleser;
+
 	@GetMapping("/title")
 	public ResponseEntity<?> getScheduleDate(@RequestParam("title") String title) {
 		try {
 			Map<String, Object> scheduleData = scheduleser.scheduleDate(title);
 			System.out.println("scheduleData : " + scheduleData);
-            return CommonResponse.createResponse(
-                    CommonResponse.builder()
-                            .code(Constant.Success.SUCCESS_CODE)
-                            .message("Success")
-                            .data(scheduleData)
-                            .build(),
-                    HttpStatus.OK
-            );
+			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
+					.message("Success").data(scheduleData).build(), HttpStatus.OK);
 
-        } catch (Exception e) {
-            log.info("scheduleData Error ");
-            e.printStackTrace();
+		} catch (Exception e) {
+			log.info("scheduleData Error ");
+			e.printStackTrace();
 
-            return CommonResponse.createResponse(
-                    CommonResponse.builder()
-                            .code(ErrorType.ETC_FAIL.getErrorCode())
-                            .message(ErrorType.ETC_FAIL.getErrorMessage())
-                            .build(),
-                    HttpStatus.INTERNAL_SERVER_ERROR
-            );
-        }
+			return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
+					.message(ErrorType.ETC_FAIL.getErrorMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-	
+
 	@GetMapping("/startdate")
 	public ResponseEntity<?> getScheduleInfo(@RequestParam("startdate") String startdate) {
 		try {
 			Map<String, Object> scheduleInfo = scheduleser.scheduleInfo(startdate);
 			System.out.println("scheduleInfo : " + scheduleInfo);
-            return CommonResponse.createResponse(
-                    CommonResponse.builder()
-                            .code(Constant.Success.SUCCESS_CODE)
-                            .message("Success")
-                            .data(scheduleInfo)
-                            .build(),
-                    HttpStatus.OK
-            );
+			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
+					.message("Success").data(scheduleInfo).build(), HttpStatus.OK);
 
-        } catch (Exception e) {
-            log.info("scheduleInfo Error ");
-            e.printStackTrace();
+		} catch (Exception e) {
+			log.info("scheduleInfo Error ");
+			e.printStackTrace();
 
-            return CommonResponse.createResponse(
-                    CommonResponse.builder()
-                            .code(ErrorType.ETC_FAIL.getErrorCode())
-                            .message(ErrorType.ETC_FAIL.getErrorMessage())
-                            .build(),
-                    HttpStatus.INTERNAL_SERVER_ERROR
-            );
-        }
+			return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
+					.message(ErrorType.ETC_FAIL.getErrorMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-	
+
 	@GetMapping("/seatselect")
 	public ResponseEntity<?> SeatSelect(@RequestParam("schedule_id") Integer scheduleid) {
 		try {
@@ -106,18 +84,13 @@ public class ScheduleController {
                     HttpStatus.OK
             );
 
-        } catch (Exception e) {
-            log.info("scheduleInfo Error ");
-            e.printStackTrace();
+		} catch (Exception e) {
+			log.info("scheduleInfo Error ");
+			e.printStackTrace();
 
-            return CommonResponse.createResponse(
-                    CommonResponse.builder()
-                            .code(ErrorType.ETC_FAIL.getErrorCode())
-                            .message(ErrorType.ETC_FAIL.getErrorMessage())
-                            .build(),
-                    HttpStatus.INTERNAL_SERVER_ERROR
-            );
-        }
+			return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
+					.message(ErrorType.ETC_FAIL.getErrorMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-	
+
 }

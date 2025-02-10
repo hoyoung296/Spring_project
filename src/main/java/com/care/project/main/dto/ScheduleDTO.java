@@ -48,4 +48,3 @@ public class ScheduleDTO {
         this.screenId = screenId;
     }
 }
-

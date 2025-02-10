@@ -31,6 +31,7 @@ public class ReviewDTO {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+	
 	public Timestamp getReviewDate() {
 		return reviewDate;
 	}
