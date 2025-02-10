@@ -68,10 +68,21 @@ public class ScheduleController {
 	public ResponseEntity<?> SeatSelect(@RequestParam("schedule_id") Integer scheduleid) {
 		try {
 			Map<String, Object> scheduleDetailData = scheduleser.scheduleDetailData(scheduleid);
-			List<Map<String, Object>> reservedSeats = scheduleser.reservedSeats(scheduleid);
-			System.out.println("reservedSeats : " + reservedSeats);
-			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
-					.message("Success").data(reservedSeats).build(), HttpStatus.OK);
+			List<Map<String, Object>> reservedSeats  = scheduleser.reservedSeats(scheduleid);
+			 // 최종 응답 데이터 구성
+	        Map<String, Object> responseData = Map.of(
+	            "scheduleDetailData", scheduleDetailData,
+	            "reservedSeats", reservedSeats
+	        );
+			System.out.println("responseData : " + responseData);
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(Constant.Success.SUCCESS_CODE)
+                            .message("Success")
+                            .data(responseData)
+                            .build(),
+                    HttpStatus.OK
+            );
 
 		} catch (Exception e) {
 			log.info("scheduleInfo Error ");
