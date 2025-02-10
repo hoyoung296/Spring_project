@@ -60,7 +60,6 @@ public class ReviewController {
 
 	@PostMapping("/writeReview")
 	public ResponseEntity<Map<String, Object>> writeReview(@RequestBody ReviewDTO dto) {
-		System.out.println("dto 확인 : " + dto.getContent());
 		Map<String, Object> map = new HashMap<>();
 		int result = rvs.writeReview(dto);
 		if (result == 1) {
