@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +36,7 @@ public class ReviewController {
 		return rvs.getList(id);
 	}
 
-	@GetMapping("/searchinfo/{id}")
+	@GetMapping("/searchInfo/{id}")
 	public List<Map<String, Object>> searchInfo(@PathVariable int id) {
 		return rvs.searchInfo(id);
 	}
@@ -56,19 +58,41 @@ public class ReviewController {
 		map.put("page", rvs.getReserveCount(id));
 		return map;
 	}
-	
-	@GetMapping("/reserveinfo/{id}")
-	public MovieDTO reserveInfo (@PathVariable int id){
-		return rvs.reserveInfo(id);
+
+	@GetMapping("/reviewCheck")
+	public int reviewcheck(@RequestParam String id, @RequestParam int movieid) {
+		return rvs.reviewCheck(id, movieid);
 	}
 
-	@PostMapping("/writereview")
-	public int writeReview(@RequestBody ReviewDTO dto) {
-		return rvs.writeReview(dto);
+	@PostMapping("/writeReview")
+	public ResponseEntity<Map<String, Object>> writeReview(@RequestBody ReviewDTO dto) {
+		Map<String, Object> map = new HashMap<>();
+		int result = rvs.writeReview(dto);
+		if (result == 1) {
+			map.put("message", "리뷰 작성 성공");
+			return ResponseEntity.ok(map); // HTTP 200
+		} else if (result == -1) { // 예를 들어 없는 ID
+			map.put("message", "알 수 없는 에러");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map); // HTTP 404
+		} else {
+			map.put("message", "리뷰 작성 실패");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map); // HTTP 500
+		}
 	}
 
 	@DeleteMapping("/del/{id}")
-	public int delReserve(@PathVariable int id) {
-		return rvs.delReserve(id);
+	public ResponseEntity<Map<String, Object>> delReserve(@PathVariable int id) {
+		Map<String, Object> map = new HashMap<>();
+		int result = rvs.delReserve(id);
+		if (result == 1) {
+			map.put("message", "예매 취소 성공");
+			return ResponseEntity.ok(map); // HTTP 200
+		} else if (result == -1) { // 예를 들어 없는 ID
+			map.put("message", "해당 예매를 찾을 수 없음");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map); // HTTP 404
+		} else {
+			map.put("message", "예매 취소 실패");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map); // HTTP 500
+		}
 	}
 }

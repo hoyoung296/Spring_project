@@ -13,7 +13,7 @@ public interface ReviewService {
 	public int getCount (String id);
 	public List<Map<String, Object>> getReserve(String id, int start);
 	public int getReserveCount(String id);
-	public MovieDTO reserveInfo (int id);
+	public int reviewCheck(String id, int movieid);
 	public int writeReview (ReviewDTO dto);
 	public int delReserve(int id);
  }

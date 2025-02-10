@@ -2,9 +2,12 @@ package com.care.project.main.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,11 @@ import com.care.project.main.mapper.ReviewMapper;
 public class ReviewServiceImpl implements ReviewService {
 	@Autowired
 	ReviewMapper rev;
+
+	// 불필요한 필드를 무시하는 Mixin 클래스
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	private abstract class IgnoreUnknownMixin {
+	}
 
 	public List<MovieDTO> getList(String id) {
 		List<MovieDTO> list = null;
@@ -39,7 +47,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 		// ObjectMapper 설정
 		ObjectMapper objectMapper = new ObjectMapper();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
 
 		List<Map<String, Object>> formattedList = list.stream().map(map -> {
 			try {
@@ -59,11 +67,6 @@ public class ReviewServiceImpl implements ReviewService {
 		}).collect(Collectors.toList());
 
 		return formattedList;
-	}
-
-	// 불필요한 필드를 무시하는 Mixin 클래스
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	private abstract class IgnoreUnknownMixin {
 	}
 
 	public List<Map<String, Object>> getInfo(String id, int start) {
@@ -95,14 +98,37 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	public List<Map<String, Object>> getReserve(String id, int start) {
-		List<Map<String, Object>> list = null;
-		start = (start - 1) * 5;
-		try {
-			list = rev.getReserve(id, start);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
+	    List<Map<String, Object>> list = null;
+	    start = (start - 1) * 5;
+	    try {
+	        list = rev.getReserve(id, start);  // 예약 내역 가져오기
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    // ObjectMapper 설정
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");  // 최종 출력 형식
+
+	    List<Map<String, Object>> formattedList = list.stream().map(map -> {
+	        try {
+	            // start_dt 변환
+	            if (map.containsKey("startDateTime")) {
+	                String startDateTime = (String) map.get("startDateTime");  // start_dt는 String 형식으로 제공됨
+	                if (startDateTime != null && !startDateTime.isEmpty()) {
+	                    // `startDateTime`이 "yyyy-MM-dd HH:mm:ss" 형식일 경우에만 처리
+	                    SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  // 기존 형식
+	                    Date date = originalFormat.parse(startDateTime);  // String을 Date로 변환
+	                    String formattedStartDate = dateFormat.format(date);  // Date를 "yyyy.MM.dd" 형식으로 변환
+	                    map.put("startDateTime", formattedStartDate);  // 변환된 start_dt를 맵에 업데이트
+	                }
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return map;
+	    }).collect(Collectors.toList());
+
+	    return formattedList;
 	}
 
 	public int getReserveCount(String id) {
@@ -121,14 +147,14 @@ public class ReviewServiceImpl implements ReviewService {
 		return page;
 	}
 
-	public MovieDTO reserveInfo(int id) {
-		MovieDTO list = null;
+	public int reviewCheck(String id, int movieid) {
+		int result = 0;
 		try {
-			list = rev.reserveInfo(id);
+			result = rev.reviewCheck(id, movieid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return list;
+		return result;
 	}
 
 	public int writeReview(ReviewDTO dto) {
