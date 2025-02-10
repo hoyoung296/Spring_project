@@ -91,12 +91,17 @@ public class ScheduleController {
 		try {
 			Map<String, Object> scheduleDetailData = scheduleser.scheduleDetailData(scheduleid);
 			List<Map<String, Object>> reservedSeats  = scheduleser.reservedSeats(scheduleid);
-			System.out.println("reservedSeats : " + reservedSeats);
+			 // 최종 응답 데이터 구성
+	        Map<String, Object> responseData = Map.of(
+	            "scheduleDetailData", scheduleDetailData,
+	            "reservedSeats", reservedSeats
+	        );
+			System.out.println("responseData : " + responseData);
             return CommonResponse.createResponse(
                     CommonResponse.builder()
                             .code(Constant.Success.SUCCESS_CODE)
                             .message("Success")
-                            .data(reservedSeats)
+                            .data(responseData)
                             .build(),
                     HttpStatus.OK
             );
