@@ -18,18 +18,18 @@
 
     <!-- 회원가입 -->
     <insert id="register" parameterType="com.care.project.main.dto.MemberDTO">
-        insert into membership(user_id, username, password, email, phone_number, addr, postnum, user_birthday, user_grade)
+        insert into users(user_id, username, password, email, phone_number, addr, postnum, user_birthday, user_grade)
         values(#{userId}, #{userName}, #{password}, #{email}, #{phoneNumber}, #{addr}, #{postNum}, #{userBirthday}, #{userGrade})
     </insert>
 
     <!-- 로그인 -->
     <select id="login" resultMap="member" parameterType="com.care.project.main.dto.MemberDTO">
-        select * from membership where user_id = #{userId} and password = #{password}
+        select * from users where user_id = #{userId} and password = #{password}
     </select>
 
     <!-- 회원 정보 수정 -->
     <update id="updateMember" parameterType="com.care.project.main.dto.MemberDTO">
-        update membership
+        update users
         set username = #{userName}, 
             password = #{password}, 
             email = #{email}, 
@@ -43,12 +43,12 @@
 
     <!-- 회원 탈퇴 -->
     <delete id="deleteMember" parameterType="String">
-        delete from membership where user_id = #{userId}
+        delete from users where user_id = #{userId}
     </delete>
 
     <!-- 특정 사용자 정보 조회 -->
     <select id="getMember" resultMap="member" parameterType="String">
-        select * from membership where user_id = #{userId}
+        select * from users where user_id = #{userId}
     </select>
 
 </mapper>
