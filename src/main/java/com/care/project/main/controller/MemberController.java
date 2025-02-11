@@ -1,15 +1,7 @@
 package com.care.project.main.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.care.project.main.dto.MemberDTO;
 import com.care.project.main.service.MemberService;
@@ -17,17 +9,26 @@ import com.care.project.main.service.MemberService;
 @CrossOrigin(origins = "*")
 @RestController
 public class MemberController {
-	@Autowired
-	private MemberService ms;
-	
-	// 회원가입
-	@PostMapping(value = "/register", produces = "text/plain;charset=UTF-8")
+    @Autowired
+    private MemberService ms;
+
+    // 회원가입
+    @PostMapping(value = "/register", produces = "text/plain;charset=UTF-8")
     public String register(@RequestBody MemberDTO memberDTO) {
         try {
+            // 아이디 중복 체크
+            if (ms.getMemberInfo(memberDTO.getUserId()) != null) {
+                return "아이디가 이미 존재합니다.";
+            }
+            // 이메일 중복 체크
+            if (ms.getMemberInfo(memberDTO.getEmail()) != null) {
+                return "이메일이 이미 존재합니다.";
+            }
+
             ms.registerMember(memberDTO);
             return "회원가입 성공";
         } catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             return "회원가입 실패: " + e.getMessage();
         }
     }

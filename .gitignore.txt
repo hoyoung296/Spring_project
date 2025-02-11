@@ -43,7 +43,6 @@ hs_err_pid*
 replay_pid*
 
 ### Maven ###
-target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -60,6 +59,9 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# Eclipse settings folder (added)
+.settings/
 
 ### Windows ###
 # Windows thumbnail cache files
@@ -87,4 +89,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/maven,git,windows,java
+# Maven target directory (compiled files)
+target/

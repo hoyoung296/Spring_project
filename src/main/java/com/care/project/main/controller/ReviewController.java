@@ -5,17 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.care.project.main.dto.MovieDTO;
 import com.care.project.main.dto.ReviewDTO;
-import com.care.project.main.dto.ReviewSearchDTO;
 import com.care.project.main.service.ReviewService;
 
 @RestController
@@ -25,17 +26,12 @@ public class ReviewController {
 	ReviewService rvs;
 
 	@GetMapping("/search")
-	public List<ReviewSearchDTO> getList() {
-		return rvs.getList(null);
-	}
-
-	@GetMapping("/search/{id}")
-	public List<ReviewSearchDTO> getList(@PathVariable String id) {
+	public List<MovieDTO> getList(@RequestParam String id) {
 		return rvs.getList(id);
 	}
 
-	@GetMapping("/searchinfo/{id}")
-	public List<ReviewDTO> searchInfo(@PathVariable int id) {
+	@GetMapping("/searchInfo")
+	public List<Map<String, Object>> searchInfo(@RequestParam int id) {
 		return rvs.searchInfo(id);
 	}
 
@@ -57,13 +53,40 @@ public class ReviewController {
 		return map;
 	}
 
-	@PostMapping("/writereview")
-	public int writeReview(@RequestBody ReviewDTO dto) {
-		return rvs.writeReview(dto);
+	@GetMapping("/reviewCheck")
+	public int reviewcheck(@RequestParam String id, @RequestParam int movieid) {
+		return rvs.reviewCheck(id, movieid);
 	}
 
-	@DeleteMapping("/del/{id}")
-	public int delReserve(@PathVariable int id) {
-		return rvs.delReserve(id);
+	@PostMapping("/writeReview")
+	public ResponseEntity<Map<String, Object>> writeReview(@RequestBody ReviewDTO dto) {
+		Map<String, Object> map = new HashMap<>();
+		int result = rvs.writeReview(dto);
+		if (result == 1) {
+			map.put("message", "리뷰 작성 성공");
+			return ResponseEntity.ok(map); // HTTP 200
+		} else if (result == -1) { // 예를 들어 없는 ID
+			map.put("message", "알 수 없는 에러");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map); // HTTP 404
+		} else {
+			map.put("message", "리뷰 작성 실패");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map); // HTTP 500
+		}
+	}
+
+	@DeleteMapping("/del")
+	public ResponseEntity<Map<String, Object>> delReserve(@RequestParam int id) {
+		Map<String, Object> map = new HashMap<>();
+		int result = rvs.delReserve(id);
+		if (result == 1) {
+			map.put("message", "예매 취소 성공");
+			return ResponseEntity.ok(map); // HTTP 200
+		} else if (result == -1) { // 예를 들어 없는 ID
+			map.put("message", "해당 예매를 찾을 수 없음");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map); // HTTP 404
+		} else {
+			map.put("message", "예매 취소 실패");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map); // HTTP 500
+		}
 	}
 }

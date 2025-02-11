@@ -6,7 +6,7 @@ public class MovieDTO {
     private String posterUrl;  // poster_URL -> posterUrl
     private String movieSynopsis;  // synopsis -> movieSynopsis
     private String directorName;  // director -> directorName
-    private String actors;  // actor -> actors
+    private String actors;  // actors -> actors
 
     // Getters and Setters
     public int getMovieId() {

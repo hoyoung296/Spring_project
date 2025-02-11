@@ -32,21 +32,111 @@
 		<id property="screenID" column="screen_id" />
 		<result property="screenName" column="screen_name" />
 	</resultMap>
+	
+	<!-- Seat_statusDTO ResultMap -->
+	<resultMap type="com.care.project.main.dto.SeatStatusDTO"
+		id="seatstatus">
+		<id property="seatStatusId" column="seat_status_id" />
+		<result property="seatId" column="seat_id" />
+		<result property="scheduleId" column="schedule_id" />
+		<result property="statusId" column="status_id" />
+	</resultMap>
+	
+	<!-- SeatDTO ResultMap -->
+	<resultMap type="com.care.project.main.dto.SeatDTO"
+		id="seat">
+		<id property="seatId" column="seat_id" />
+		<result property="screenId" column="screen_id" />
+		<result property="seatRow" column="seat_row" />
+		<result property="seatNumber" column="seat_number" />
+	</resultMap>
+	
+	<!-- SeatStatusTypeDTO ResultMap -->
+	<resultMap type="com.care.project.main.dto.SeatStatusTypeDTO"
+		id="seatstatustype">
+		<id property="statusId" column="status_id" />
+		<result property="seatStatus" column="seat_status" />
+	</resultMap>
+	
+	
+	
 
-	<select id="getSchedule" resultType="map">
+	<select id="getScheduleDate" resultType="map">
 		SELECT
 		s.schedule_id,
-		TO_CHAR(s.start_DT, 'YYYY-MM-DD HH24:MI') AS startDateTime,
-		TO_CHAR(s.end_DT, 'YYYY-MM-DD HH24:MI') AS endDateTime,
-		m.movie_id,
-		m.title AS movie_title,
-		m.director,
-		m.actors,
-		sc.screen_id,
-		sc.screen_name
+		TO_CHAR(s.start_DT, 'YYYY-MM-DD') AS startDate,
+		m.title AS title,
+		m.director AS director,
+		m.actors AS actors
+		FROM schedule s
+		LEFT JOIN movie m ON s.movie_id = m.movie_id
+		WHERE m.title = #{title}
+	</select>
+
+	<!-- getScheduleInfo (NULL 방지 처리) -->
+	<select id="getScheduleInfo" resultType="map">
+		SELECT
+		s.schedule_id,
+		TO_CHAR(s.start_DT, 'HH24:MI') AS startTime,
+		NVL(sc.screen_id, -1) AS screen_id,  <!-- NULL 처리 -->
+		NVL(sc.screen_name, 'N/A') AS screenName
 		FROM schedule s
 		LEFT JOIN movie m ON s.movie_id = m.movie_id
 		LEFT JOIN screen sc ON s.screen_id = sc.screen_id
-		WHERE m.title = #{title}
+		WHERE TO_CHAR(s.start_DT, 'YYYY-MM-DD') = #{startdate}
 	</select>
+	
+	<!-- 해당영화 정보 -->
+	<select id="scheduleDetailData" resultType="map">
+		SELECT
+		s.schedule_id,
+		TO_CHAR(s.start_DT, 'YYYY-MM-DD') AS startDate,
+		TO_CHAR(s.start_DT, 'HH24:MI') AS startTime,
+		sc.screen_name As screenName,
+		m.title AS title,
+		m.director AS director,
+		m.actors AS actors
+		FROM schedule s
+		LEFT JOIN movie m ON s.movie_id = m.movie_id
+		LEFT JOIN screen sc ON s.screen_id = sc.screen_id
+		WHERE s.schedule_id = #{scheduleid}
+	</select>
+	
+	<!-- 해당영화 예매된 좌석 표시 -->
+	<select id="reservedSeats" resultType="map">
+	    SELECT
+	        ss.seat_status_id AS seatStatusId,
+	        ss.seat_id AS seatId,
+	        s.seat_row AS seatRow,
+	        s.seat_number AS seatCol
+	    FROM seat_status ss
+	    INNER JOIN Seat s ON ss.seat_id = s.seat_id
+	    WHERE ss.schedule_id = #{scheduleid} AND ss.status_id = 2
+	</select>
+
+	
+	
+	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -50,5 +50,15 @@
     <select id="getMember" resultMap="member" parameterType="String">
         select * from users where user_id = #{userId}
     </select>
+    
+    <!-- 아이디 중복 확인 -->
+    <select id="getMemberById" resultMap="member" parameterType="String">
+        select * from users where user_id = #{userId}
+    </select>
+
+    <!-- 이메일 중복 확인 -->
+    <select id="getMemberByEmail" resultMap="member" parameterType="String">
+        select * from users where email = #{email}
+    </select>
 
 </mapper>
