@@ -12,40 +12,47 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     private MemberMapper memberMapper;
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();// 비밀번호 암호화
 
     @Override
     public void registerMember(MemberDTO memberDTO) {
-        // 패스워드 암호화
-        String encodedPassword = passwordEncoder.encode(memberDTO.getPassword());
-        memberDTO.setPassword(encodedPassword);
-        memberMapper.register(memberDTO);
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));// 비밀번호 암호화
+        memberMapper.register(memberDTO);// 회원 등록
     }
 
     @Override
-    public MemberDTO loginMember(MemberDTO memberDTO) {
-        MemberDTO loginUser = memberMapper.login(memberDTO);
-        if (loginUser != null && passwordEncoder.matches(memberDTO.getPassword(), loginUser.getPassword())) {
-            return loginUser;
-        }
-        return null;
+    public boolean loginMember(MemberDTO memberDTO) {
+        MemberDTO user = memberMapper.getMember(memberDTO.getUserId());// 회원 조회
+        return user != null && passwordEncoder.matches(memberDTO.getPassword(), user.getPassword());// 비밀번호 검증
     }
 
     @Override
-    public void updateMember(MemberDTO memberDTO) {
-        // 패스워드 암호화
-        String encodedPassword = passwordEncoder.encode(memberDTO.getPassword());
-        memberDTO.setPassword(encodedPassword);
-        memberMapper.updateMember(memberDTO);
+    public boolean updateMember(MemberDTO memberDTO) {
+        if (memberMapper.getMember(memberDTO.getUserId()) == null) return false;// 회원 존재 여부 확인
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));// 비밀번호 암호화
+        memberMapper.updateMember(memberDTO);// 회원 정보 수정
+        return true;
     }
 
     @Override
-    public void deleteMember(String userId) {
-        memberMapper.deleteMember(userId);
+    public boolean deleteMember(String userId) {
+        if (memberMapper.getMember(userId) == null) return false;// 회원 존재 여부 확인
+        memberMapper.deleteMember(userId);// 회원 삭제
+        return true;
     }
 
     @Override
-    public MemberDTO getMemberInfo(String userId) {
-        return memberMapper.getMember(userId);
+    public MemberDTO getMember(String userId) {
+        return memberMapper.getMember(userId);// 회원 정보 조회
+    }
+
+    @Override
+    public boolean isUserIdDuplicate(String userId) {
+        return memberMapper.getMemberByUserId(userId) != null;// 아이디 중복 체크
+    }
+
+    @Override
+    public boolean isEmailDuplicate(String email) {
+        return memberMapper.getMemberByEmail(email) != null;// 이메일 중복 체크
     }
 }
