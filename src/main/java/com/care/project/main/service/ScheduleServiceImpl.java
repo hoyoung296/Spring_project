@@ -12,7 +12,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private ScheduleMapper scheduleMapper;
 
     @Override
-    public Map<String, Object> scheduleDate(String title) {
+    public List<Map<String, Object>> scheduleDate(String title) {
 //        Map<String, Object> scheduleData = scheduleMapper.getSchedule(title);
 //        return scheduleData;
         return scheduleMapper.getScheduleDate(title);
