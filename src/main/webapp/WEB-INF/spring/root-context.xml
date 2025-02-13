@@ -7,14 +7,13 @@
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<!-- 히카리 커넥션풀 빈 등록 -->
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-		<property name="driverClassName"
-			value="oracle.jdbc.driver.OracleDriver" />
-		<property name="jdbcUrl"
-			value="jdbc:oracle:thin:@localhost:1521:xe" />
-		<property name="username" value="c##java" />
-		<property name="password" value="1234" />
-	</bean>
+	 <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <!-- 🔹 충돌 해결: 기본적으로 192.168.51.95 사용 -->
+        <property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.51.95:1522:xe"/>
+        <property name="username" value="c##sinema"/>
+        <property name="password" value="1234"/>
+    </bean>
 	<!-- 히카리 데이터소스 빈 등록 -->
 	<bean id="ds" class="com.zaxxer.hikari.HikariDataSource">
 		<constructor-arg ref="hikariConfig" />

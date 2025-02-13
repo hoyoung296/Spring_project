@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,17 +26,12 @@ public class ReviewController {
 	ReviewService rvs;
 
 	@GetMapping("/search")
-	public List<MovieDTO> getList() {
-		return rvs.getList(null);
-	}
-
-	@GetMapping("/search/{id}")
-	public List<MovieDTO> getList(@PathVariable String id) {
+	public List<MovieDTO> getList(@RequestParam String id) {
 		return rvs.getList(id);
 	}
 
-	@GetMapping("/searchInfo/{id}")
-	public List<Map<String, Object>> searchInfo(@PathVariable int id) {
+	@GetMapping("/searchInfo")
+	public List<Map<String, Object>> searchInfo(@RequestParam int id) {
 		return rvs.searchInfo(id);
 	}
 
@@ -80,8 +74,8 @@ public class ReviewController {
 		}
 	}
 
-	@DeleteMapping("/del/{id}")
-	public ResponseEntity<Map<String, Object>> delReserve(@PathVariable int id) {
+	@DeleteMapping("/del")
+	public ResponseEntity<Map<String, Object>> delReserve(@RequestParam int id) {
 		Map<String, Object> map = new HashMap<>();
 		int result = rvs.delReserve(id);
 		if (result == 1) {
