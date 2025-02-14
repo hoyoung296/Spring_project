@@ -62,16 +62,18 @@
 	
 
 	<select id="getScheduleDate" resultType="map">
-		SELECT
-		s.schedule_id,
-		TO_CHAR(s.start_DT, 'YYYY-MM-DD') AS startDate,
-		m.title AS title,
-		m.director AS director,
-		m.actors AS actors
-		FROM schedule s
-		LEFT JOIN movie m ON s.movie_id = m.movie_id
-		WHERE m.title = #{title}
+    SELECT
+        TO_CHAR(s.start_DT, 'YYYY-MM-DD') AS startDate,
+        MIN(s.schedule_id) AS schedule_id,
+        MAX(m.title) AS title,
+        MAX(m.director) AS director,
+        MAX(m.actors) AS actors
+	    FROM schedule s
+	    LEFT JOIN movie m ON s.movie_id = m.movie_id
+	    WHERE m.title = #{title}
+	    GROUP BY TO_CHAR(s.start_DT, 'YYYY-MM-DD')
 	</select>
+
 
 	<!-- getScheduleInfo (NULL 방지 처리) -->
 	<select id="getScheduleInfo" resultType="map">

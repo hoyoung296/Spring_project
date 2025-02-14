@@ -1,5 +1,7 @@
 package com.care.project.main.controller;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +34,11 @@ public class ScheduleController {
 
 	@GetMapping("/title")
 	public ResponseEntity<?> getScheduleDate(@RequestParam("title") String title) {
+		
+		
+		System.out.println("제목값:"+title);
 		try {
-			Map<String, Object> scheduleData = scheduleser.scheduleDate(title);
+			List<Map<String, Object>> scheduleData = scheduleser.scheduleDate(title);
 			System.out.println("scheduleData : " + scheduleData);
 			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
 					.message("Success").data(scheduleData).build(), HttpStatus.OK);
