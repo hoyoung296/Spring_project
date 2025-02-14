@@ -35,13 +35,8 @@
         DELETE FROM users WHERE user_id = #{userId}
     </delete>
 
-    <!-- 특정 사용자 정보 조회 -->
+    <!-- 특정 사용자 정보 조회(아이디 중복 체크)-->
     <select id="getMember" resultMap="member" parameterType="String">
-        SELECT * FROM users WHERE user_id = #{userId}
-    </select>
-
-    <!-- 아이디 중복 체크 -->
-    <select id="getMemberByUserId" resultMap="member" parameterType="String">
         SELECT * FROM users WHERE user_id = #{userId}
     </select>
 

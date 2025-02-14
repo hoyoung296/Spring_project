@@ -10,4 +10,5 @@ public interface MemberService {
     MemberDTO getMember(String userId);
     boolean isUserIdDuplicate(String userId);  // 아이디 중복 체크
     boolean isEmailDuplicate(String email);  // 이메일 중복 체크
+    boolean checkPassword(MemberDTO memberDTO); // 비밀번호 확인
 }

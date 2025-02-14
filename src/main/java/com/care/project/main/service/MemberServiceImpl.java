@@ -48,11 +48,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean isUserIdDuplicate(String userId) {
-        return memberMapper.getMemberByUserId(userId) != null;// 아이디 중복 체크
+        return memberMapper.getMember(userId) != null;// 아이디 중복 체크
     }
 
     @Override
     public boolean isEmailDuplicate(String email) {
         return memberMapper.getMemberByEmail(email) != null;// 이메일 중복 체크
+    }
+    
+    @Override
+    public boolean checkPassword(MemberDTO memberDTO) {
+        MemberDTO user = memberMapper.getMember(memberDTO.getUserId());
+        return user != null && passwordEncoder.matches(memberDTO.getPassword(), user.getPassword());
     }
 }

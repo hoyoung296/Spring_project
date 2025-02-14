@@ -1,5 +1,8 @@
 package com.care.project.admin;
 
-public interface AdminMapper {
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
+public interface AdminMapper {
+   
 }

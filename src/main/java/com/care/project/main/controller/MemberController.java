@@ -35,23 +35,35 @@ public class MemberController {
     public boolean checkEmail(@RequestParam String email) {
         return ms.isEmailDuplicate(email);
     }
+    
+    // 비밀번호 확인
+    @PostMapping(value = "/check-password", produces = "text/plain;charset=UTF-8")
+    public String checkPassword(@RequestBody MemberDTO memberDTO) {
+        return ms.checkPassword(memberDTO) ? "비밀번호 확인 성공" : "비밀번호가 일치하지 않습니다.";
+    }
 
     // 로그인
     @PostMapping(value = "/login", produces = "text/plain;charset=UTF-8")
     public String login(@RequestBody MemberDTO memberDTO) {
         return ms.loginMember(memberDTO) ? "로그인 성공" : "아이디 또는 비밀번호가 일치하지 않습니다.";
     }
-
-    // 회원 정보 수정
+    
+    // 회원정보 수정 (비밀번호 확인 추가)
     @PutMapping(value = "/update", produces = "text/plain;charset=UTF-8")
     public String updateMember(@RequestBody MemberDTO memberDTO) {
+        if (!ms.checkPassword(memberDTO)) {
+            return "비밀번호가 일치하지 않습니다.";
+        }
         return ms.updateMember(memberDTO) ? "회원정보가 수정되었습니다." : "회원정보 수정 실패";
     }
 
-    // 회원 탈퇴
+    // 회원 탈퇴 (비밀번호 확인 추가)
     @DeleteMapping(value = "/delete", produces = "text/plain;charset=UTF-8")
-    public String deleteMember(@RequestParam String userId) {
-        return ms.deleteMember(userId) ? "회원탈퇴가 완료되었습니다." : "회원탈퇴 실패";
+    public String deleteMember(@RequestBody MemberDTO memberDTO) {
+        if (!ms.checkPassword(memberDTO)) {
+            return "비밀번호가 일치하지 않습니다.";
+        }
+        return ms.deleteMember(memberDTO.getUserId()) ? "회원탈퇴가 완료되었습니다." : "회원탈퇴 실패";
     }
 
     // 사용자 정보 조회
