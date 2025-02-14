@@ -35,6 +35,12 @@ public class MemberController {
     public boolean checkEmail(@RequestParam String email) {
         return ms.isEmailDuplicate(email);
     }
+    
+    // 비밀번호 확인 API
+    @PostMapping(value = "/check-password", produces = "text/plain;charset=UTF-8")
+    public String checkPassword(@RequestBody MemberDTO memberDTO) {
+        return ms.checkPassword(memberDTO) ? "비밀번호 확인 성공" : "비밀번호가 일치하지 않습니다.";
+    }
 
     // 로그인
     @PostMapping(value = "/login", produces = "text/plain;charset=UTF-8")
@@ -64,11 +70,5 @@ public class MemberController {
     @GetMapping(value = "/info", produces = "application/json;charset=UTF-8")
     public MemberDTO getMemberInfo(@RequestParam String userId) {
         return ms.getMember(userId);
-    }
-    
-    // 비밀번호 확인 API
-    @PostMapping(value = "/check-password", produces = "text/plain;charset=UTF-8")
-    public String checkPassword(@RequestBody MemberDTO memberDTO) {
-        return ms.checkPassword(memberDTO) ? "비밀번호 확인 성공" : "비밀번호가 일치하지 않습니다.";
     }
 }
