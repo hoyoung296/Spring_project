@@ -36,7 +36,7 @@ public class MemberController {
         return ms.isEmailDuplicate(email);
     }
     
-    // 비밀번호 확인 API
+    // 비밀번호 확인
     @PostMapping(value = "/check-password", produces = "text/plain;charset=UTF-8")
     public String checkPassword(@RequestBody MemberDTO memberDTO) {
         return ms.checkPassword(memberDTO) ? "비밀번호 확인 성공" : "비밀번호가 일치하지 않습니다.";
@@ -47,7 +47,7 @@ public class MemberController {
     public String login(@RequestBody MemberDTO memberDTO) {
         return ms.loginMember(memberDTO) ? "로그인 성공" : "아이디 또는 비밀번호가 일치하지 않습니다.";
     }
-
+    
     // 회원정보 수정 (비밀번호 확인 추가)
     @PutMapping(value = "/update", produces = "text/plain;charset=UTF-8")
     public String updateMember(@RequestBody MemberDTO memberDTO) {

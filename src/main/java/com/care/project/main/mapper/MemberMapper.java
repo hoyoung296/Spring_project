@@ -7,6 +7,5 @@ public interface MemberMapper {
     void updateMember(MemberDTO memberDTO);
     void deleteMember(String userId);
     MemberDTO getMember(String userId);
-    MemberDTO getMemberByUserId(String userId);  // 아이디 중복 체크
     MemberDTO getMemberByEmail(String email);  // 이메일 중복 체크
 }
