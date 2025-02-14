@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Primary
 public class AdminServiceImpl implements AdminService {
-@Autowired
-AdminMapper adminMap;
+    @Autowired
+    AdminMapper adminMapper;
 }

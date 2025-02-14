@@ -8,7 +8,7 @@ public class MovieDTO {
     private String directorName;  // director -> directorName
     private String actors;  // actors -> actors
 
-    // Getters and Setters
+	// Getters and Setters
     public int getMovieId() {
         return movieId;
     }
