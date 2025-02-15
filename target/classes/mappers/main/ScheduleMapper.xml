@@ -67,7 +67,8 @@
         MIN(s.schedule_id) AS schedule_id,
         MAX(m.title) AS title,
         MAX(m.director) AS director,
-        MAX(m.actors) AS actors
+        MAX(m.actors) AS actors,
+         MAX(m.poster_url) AS posterUrl 
 	    FROM schedule s
 	    LEFT JOIN movie m ON s.movie_id = m.movie_id
 	    WHERE m.title = #{title}
@@ -78,10 +79,10 @@
 	<!-- getScheduleInfo (NULL 방지 처리) -->
 	<select id="getScheduleInfo" resultType="map">
 		SELECT
-		s.schedule_id,
-		TO_CHAR(s.start_DT, 'HH24:MI') AS startTime,
-		NVL(sc.screen_id, -1) AS screen_id,  <!-- NULL 처리 -->
-		NVL(sc.screen_name, 'N/A') AS screenName
+			s.schedule_id,
+			TO_CHAR(s.start_DT, 'HH24:MI') AS startTime,
+			NVL(sc.screen_id, -1) AS screen_id,  <!-- NULL 처리 -->
+			NVL(sc.screen_name, 'N/A') AS screenName
 		FROM schedule s
 		LEFT JOIN movie m ON s.movie_id = m.movie_id
 		LEFT JOIN screen sc ON s.screen_id = sc.screen_id
