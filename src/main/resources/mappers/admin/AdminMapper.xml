@@ -17,7 +17,7 @@
 	<insert id="insertMovie">
 		insert into movie1 (movie_id, title, poster_url, synopsis, director, actors)
 		values (movie_sequence.nextval, #{movie.title}, #{movie.posterUrl},
-		#{movie.movieSynopsis}, #{movie.directorName}, #{movie.actors})
+		#{movie.movieSynopsis}, #{movie.directorName, jdbcType=VARCHAR}, #{movie.actors, jdbcType=VARCHAR})
 	</insert>
 
 </mapper>
