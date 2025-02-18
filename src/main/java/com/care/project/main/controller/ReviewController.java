@@ -59,19 +59,9 @@ public class ReviewController {
 	}
 
 	@PostMapping("/writeReview")
-	public ResponseEntity<Map<String, Object>> writeReview(@RequestBody ReviewDTO dto) {
-		Map<String, Object> map = new HashMap<>();
+	public int writeReview(@RequestBody ReviewDTO dto) {
 		int result = rvs.writeReview(dto);
-		if (result == 1) {
-			map.put("message", "리뷰 작성 성공");
-			return ResponseEntity.ok(map); // HTTP 200
-		} else if (result == -1) { // 예를 들어 없는 ID
-			map.put("message", "알 수 없는 에러");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map); // HTTP 404
-		} else {
-			map.put("message", "리뷰 작성 실패");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map); // HTTP 500
-		}
+		return result;
 	}
 
 	@DeleteMapping("/del")
