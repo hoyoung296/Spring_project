@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.PaymentMapper">
+
+    <!-- PaymentDTO ResultMap -->
+    <resultMap id="PaymentResultMap" type="com.care.project.main.dto.PaymentDTO">
+        <id property="paymentId" column="payment_id"/>
+        <result property="reservationId" column="reservation_id"/>
+        <result property="paymentMethodId" column="payment_method_id"/>
+        <result property="amount" column="amount"/>
+        <result property="paymentStatus" column="payment_status"/>
+        <result property="portonePaymentId" column="portone_payment_id"/>
+        <result property="receiptUrl" column="receipt_url"/>
+        <!-- TIMESTAMP 컬럼을 TO_CHAR로 문자열 변환 -->
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insertPayment" parameterType="com.care.project.main.dto.PaymentDTO">
+        INSERT INTO PAYMENT (
+            reservation_id,
+            payment_method_id,
+            amount,
+            payment_status,
+            portone_payment_id,
+            receipt_url,
+            created_at
+        ) VALUES (
+            #{reservationId},
+            #{paymentMethodId},
+            #{amount},
+            #{paymentStatus},
+            #{portonePaymentId},
+            #{receiptUrl},
+            SYSTIMESTAMP
+        )
+    </insert>
+    
+    <select id="selectPayment" parameterType="long" resultMap="PaymentResultMap">
+        SELECT 
+            payment_id,
+            reservation_id,
+            payment_method_id,
+            amount,
+            payment_status,
+            portone_payment_id,
+            receipt_url,
+            TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') AS createdAt,
+            TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updatedAt
+        FROM PAYMENT
+        WHERE payment_id = #{paymentId}
+    </select>
+    
+    <update id="updatePaymentStatus" parameterType="com.care.project.main.dto.PaymentDTO">
+        UPDATE PAYMENT
+           SET payment_status = #{paymentStatus},
+               updated_at = SYSTIMESTAMP
+         WHERE payment_id = #{paymentId}
+    </update>
+</mapper>

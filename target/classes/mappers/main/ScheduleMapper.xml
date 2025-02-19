@@ -117,6 +117,10 @@
 	    WHERE ss.schedule_id = #{scheduleid} AND ss.status_id = 2
 	</select>
 
+	<insert id="insertReservation">
+	    INSERT INTO Reservation (reservation_id, user_id, schedule_id, reservation_status_id, total_amount)
+	    VALUES (#{reservationId}, #{userId}, #{scheduleid}, #{reservationStatusId}, #{totalAmount})
+	</insert>
 	
 	
 	

@@ -10,5 +10,5 @@ public interface ScheduleService {
 	public List<Map<String, Object>> scheduleInfo(String startdate);
 	public Map<String, Object> scheduleDetailData(Integer scheduleid);
 	public List<Map<String, Object>> reservedSeats(Integer scheduleid);
-	
+	public Long createReservation(String userId, Integer scheduleid, Integer totalAmount);
 }

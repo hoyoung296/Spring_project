@@ -2,6 +2,8 @@ package com.care.project.main.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.care.project.main.mapper.ScheduleMapper;
@@ -54,6 +56,21 @@ public class ScheduleServiceImpl implements ScheduleService {
 		System.out.println("예약된 좌석 : "+ scheduleMapper.reservedSeats(scheduleid));
 		return scheduleMapper.reservedSeats(scheduleid);
 	}
+
+	@Override
+	public Long createReservation(String userId, Integer scheduleid, Integer totalAmount) {
+		 // 유니크한 예약 ID 생성
+        Long reservationId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+
+        int reservationStatusId = 1; // 기본 예약 상태 (1: 대기)
+		
+        // DB에 예약 정보 저장
+        scheduleMapper.insertReservation(reservationId, userId, scheduleid, reservationStatusId, totalAmount);
+        
+        return reservationId; // ✅ 생성된 예약 ID 반환
+	}
+	
+	
     
     
 }
