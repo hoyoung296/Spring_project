@@ -7,5 +7,6 @@ import com.care.project.main.dto.MovieDTO;
 
 @Mapper
 public interface AdminMapper {
+	void resetSequence();
 	void insertMovie(@Param("movie") MovieDTO movie);
 }

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.care.project.main.dto.MovieDTO;
 import com.care.project.utils.MovieUtils;
@@ -139,8 +140,10 @@ public class AdminServiceImpl implements AdminService {
 
 		return null;
 	}
-
+	
+	@Transactional
 	private void insertMoviesInDB(List<MovieDTO> movies) {
+		adminMapper.resetSequence();
 		movies.forEach(adminMapper::insertMovie);
 	}
 }
