@@ -143,7 +143,6 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Transactional
 	private void insertMoviesInDB(List<MovieDTO> movies) {
-		adminMapper.resetSequence();
 		movies.forEach(adminMapper::insertMovie);
 	}
 }

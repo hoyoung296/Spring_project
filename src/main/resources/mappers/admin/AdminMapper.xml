@@ -13,17 +13,8 @@
 		<result property="directorName" column="director" />
 		<result property="actors" column="actors" />
 	</resultMap>
-
-	<update id="resetSequence">
-		ALTER SEQUENCE movie_sequence RESTART START WITH 1
-	</update>
-
 	<insert id="insertMovie">
-		insert into movie (movie_id, title, poster_url,
-		synopsis, director,actors) values (movie_sequence.nextval,
-		#{movie.title}, #{movie.posterUrl},
-		#{movie.movieSynopsis}, #{movie.directorName, jdbcType=VARCHAR}, #{movie.actors,
-		jdbcType=VARCHAR})
+		insert into movie (movie_id, title, poster_url, synopsis, director,actors) values (movie_sequence.nextval, #{movie.title}, #{movie.posterUrl},
+		#{movie.movieSynopsis}, #{movie.directorName, jdbcType=VARCHAR}, #{movie.actors, jdbcType=VARCHAR})
 	</insert>
-
 </mapper>
