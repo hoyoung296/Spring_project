@@ -18,6 +18,10 @@ public class KmdbApiClient {
         ResponseEntity<String> response = restTemplate.getForEntity(urlString, String.class);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(response.getBody());
+        
+        System.out.println("KMDB API 응답: " + response.getBody());
+        
+        
         JsonNode movieListNode = rootNode.path("Data").path(0).path("Result");
 
         // 응답이 없을 경우 처리
@@ -32,9 +36,11 @@ public class KmdbApiClient {
 
         // 포스터 URL 처리
         movie.setPosterUrl(getFirstNonEmptyValue(firstMovie.path("posters")));
+        System.out.println("포스터 url 확인 : " + movie.getPosterUrl());
 
         // 시놉시스 처리 (기존 방식 유지)
         movie.setMovieSynopsis(getFirstNonEmptyValue(firstMovie.path("plots").path("plot").path(0).path("plotText")));
+        System.out.println("시놉 확인 : " + movie.getMovieSynopsis());
 
         return movie;
     }
@@ -53,6 +59,9 @@ public class KmdbApiClient {
                 return textValue;
             }
         }
+        
+        // 디버깅을 위해 출력
+        System.out.println("No valid value found, returning '데이터없음'");
         return "데이터없음";
     }
 }
