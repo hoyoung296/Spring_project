@@ -3,7 +3,6 @@ package com.care.project.main.service;
 import java.util.List;
 import java.util.Map;
 
-import com.care.project.main.dto.ScheduleDTO;
 
 public interface ScheduleService {
 	public List<Map<String, Object>> scheduleDate(String title);
