@@ -16,6 +16,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void registerMember(MemberDTO memberDTO) {
+        if (memberDTO.getUserGrade() == null || memberDTO.getUserGrade().isEmpty()) {
+            memberDTO.setUserGrade("일반");  // 기본 등급 설정
+        }
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));// 비밀번호 암호화
         memberMapper.register(memberDTO);// 회원 등록
     }
