@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.care.project.main.dto.MovieDTO;
 import com.care.project.utils.MovieUtils;
@@ -31,7 +32,7 @@ public class AdminServiceImpl implements AdminService {
 			List<MovieDTO> enhancedMovies = enhanceMovieDetails(allMovies);
 
 			if (!enhancedMovies.isEmpty()) {
-				insertMoviesInDB(enhancedMovies);
+				insertOrUpdateMoviesInDB(enhancedMovies);
 			}
 
 			return enhancedMovies;
@@ -139,8 +140,22 @@ public class AdminServiceImpl implements AdminService {
 
 		return null;
 	}
+	
+	@Transactional
+    private void insertOrUpdateMoviesInDB(List<MovieDTO> movies) {
+        // 현재 DB에 있는 모든 movieId 조회
+        Set<Integer> existingMovieIds = new HashSet<>(adminMapper.getAllMovieIds());
 
-	private void insertMoviesInDB(List<MovieDTO> movies) {
-		movies.forEach(adminMapper::insertMovie);
-	}
+        for (MovieDTO movie : movies) {
+            System.out.println("movieId 확인 : " + movie.getMovieId());
+
+            if (existingMovieIds.contains(movie.getMovieId())) {
+                System.out.println("기존 영화 UPDATE");
+                adminMapper.updateMovie(movie);
+            } else {
+                System.out.println("새로운 영화 INSERT");
+                adminMapper.insertMovie(movie);
+            }
+        }
+    }
 }

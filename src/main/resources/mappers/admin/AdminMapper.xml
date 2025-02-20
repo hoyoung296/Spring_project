@@ -4,20 +4,39 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.care.project.admin.AdminMapper">
-	<resultMap type="com.care.project.main.dto.MovieDTO"
-		id="movie">
-		<id property="movieId" column="movie_id" />
-		<result property="title" column="title" />
-		<result property="posterUrl" column="poster_url" />
-		<result property="movieSynopsis" column="synopsis" />
-		<result property="directorName" column="director" />
-		<result property="actors" column="actors" />
-	</resultMap>
+    <resultMap type="com.care.project.main.dto.MovieDTO" id="movie">
+        <id property="movieId" column="movie_id" />
+        <result property="title" column="title" />
+        <result property="posterUrl" column="poster_url" />
+        <result property="movieSynopsis" column="synopsis" />
+        <result property="directorName" column="director" />
+        <result property="actors" column="actors" />
+    </resultMap>
 
-	<insert id="insertMovie">
-		insert into movie1 (movie_id, title, poster_url, synopsis, director, actors)
-		values (movie_sequence.nextval, #{movie.title}, #{movie.posterUrl},
-		#{movie.movieSynopsis}, #{movie.directorName, jdbcType=VARCHAR}, #{movie.actors, jdbcType=VARCHAR})
-	</insert>
+    <insert id="insertMovie">
+        insert into movie (movie_id, title, poster_url, synopsis, director, actors, rank) 
+        values (#{movie.movieId}, #{movie.title}, #{movie.posterUrl}, 
+                #{movie.movieSynopsis}, #{movie.directorName, jdbcType=VARCHAR}, 
+                #{movie.actors, jdbcType=VARCHAR}, #{movie.rank})
+    </insert>
 
+    <select id="checkExistingMovie" resultMap="movie">
+        SELECT * FROM movie WHERE movie_id = #{movieId}
+    </select>
+
+    <update id="updateMovie">
+        UPDATE movie
+        SET title = #{movie.title}, 
+            poster_url = #{movie.posterUrl}, 
+            synopsis = #{movie.movieSynopsis}, 
+            director = #{movie.directorName, jdbcType=VARCHAR}, 
+            actors = #{movie.actors, jdbcType=VARCHAR},
+            rank = #{movie.rank}
+        WHERE movie_id = #{movie.movieId}
+    </update>
+
+    <!-- 추가: DB에 있는 모든 movie_id 가져오기 -->
+    <select id="getAllMovieIds" resultType="int">
+        SELECT movie_id FROM movie
+    </select>
 </mapper>
