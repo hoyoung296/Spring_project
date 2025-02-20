@@ -73,7 +73,7 @@ public class ScheduleController {
 	}
 
 	@GetMapping("/seatselect")
-	public ResponseEntity<?> SeatSelect(@RequestParam("schedule_id") Integer scheduleid) {
+	public ResponseEntity<?> SeatSelect(@RequestParam("scheduleId") Integer scheduleid) {
 		try {
 			Map<String, Object> scheduleDetailData = scheduleser.scheduleDetailData(scheduleid);
 			List<Map<String, Object>> reservedSeats  = scheduleser.reservedSeats(scheduleid);
@@ -100,38 +100,6 @@ public class ScheduleController {
 					.message(ErrorType.ETC_FAIL.getErrorMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	@PostMapping("/reservation")
-	public ResponseEntity<?> Reservation(
-			HttpServletRequest req,
-			@RequestBody Map<String, Object> requestData){
 
-		//  세션에서 사용자 ID 가져오기
-        HttpSession session = req.getSession(false);
-        String userId = (session != null) ? (String) session.getAttribute("userId") : "aaa"; // 기본값 "aaa"
-
-        // 요청 데이터에서 값 추출
-        int scheduleid = Integer.parseInt(requestData.get("scheduleid").toString());
-        List<String> seatIds = (List<String>) requestData.get("seatIds");
-        int totalAmount = Integer.parseInt(requestData.get("totalamount").toString());
-
-        System.out.println("유저 ID: " + userId);
-        System.out.println("스케줄 ID: " + scheduleid);
-        System.out.println("선택한 좌석: " + seatIds);
-        System.out.println("총 결제 금액: " + totalAmount);
-		
-        // 예매 서비스 호출
-        Long reservationId = scheduleser.createReservation(userId, scheduleid, totalAmount);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "예매가 완료되었습니다.");
-        response.put("reservationId", reservationId);
-        response.put("userId", userId);
-        response.put("scheduleId", scheduleid);
-        response.put("seatIds", seatIds);
-        response.put("totalAmount", totalAmount);
-
-        return ResponseEntity.ok(response);
-	}
 
 }

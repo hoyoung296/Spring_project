@@ -114,14 +114,8 @@
 	        s.seat_number AS seatCol
 	    FROM seat_status ss
 	    INNER JOIN Seat s ON ss.seat_id = s.seat_id
-	    WHERE ss.schedule_id = #{scheduleid} AND ss.status_id = 2
+	    WHERE ss.schedule_id = #{scheduleid} AND (ss.status_id = 2 or ss.status_id = 3)
 	</select>
-
-	<insert id="insertReservation">
-	    INSERT INTO Reservation (reservation_id, user_id, schedule_id, reservation_status_id, total_amount)
-	    VALUES (#{reservationId}, #{userId}, #{scheduleid}, #{reservationStatusId}, #{totalAmount})
-	</insert>
-	
 	
 	
 </mapper>
