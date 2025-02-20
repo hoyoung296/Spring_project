@@ -51,64 +51,43 @@
 	</resultMap>
 
 	<select id="getList" resultMap="search">
-		select * from movie
-		<if test="id != null and id.trim() != ''"> where title = #{id} or director = #{id} or
-			INSTR(',' || REPLACE(actors, ' ', '') || ',', ',' || #{id} || ',') > 0
-		</if>
+		select * from movie <if test="id != null and id.trim() != ''"> where title = #{id} or director = #{id} or
+			INSTR(',' || REPLACE(actors, ' ', '') || ',', ',' || #{id} || ',') > 0</if>
 	</select>
 	<select id="searchInfo" resultMap="info">
-		select * from movie
-		left join review using (movie_id) where movie_id=#{id}
+		select * from movie left join review using (movie_id) where movie_id=#{id}
 	</select>
 	<select id="getInfo" resultMap="info">
-		select * from review inner join
-		movie using (movie_id) where user_id=#{id}
-		order by user_id desc offset
-		#{start} rows fetch next 5 rows only
+		select * from review inner join movie using (movie_id) where user_id=#{id}
+		order by user_id desc offset #{start} rows fetch next 5 rows only
 	</select>
 	<select id="getCount">
-		select count(*) from review inner join movie using
-		(movie_id) where user_id=#{id}
+		select count(*) from review inner join movie using (movie_id) where user_id=#{id}
 	</select>
 	<select id="getReserve" resultMap="reserve">
-		select
-		r.*,
-		TO_CHAR(s.start_dt, 'YYYY-MM-DD HH24:MI:SS') AS start_dt, 
-        TO_CHAR(s.end_dt, 'YYYY-MM-DD HH24:MI:SS') AS end_dt, 
-		m.*,
-		ss.*,
-		st.*,
-		sc.*
-		from reservation r
-		inner join schedule s on r.schedule_id = s.schedule_id
+		select r.*, TO_CHAR(s.start_dt, 'YYYY-MM-DD HH24:MI:SS') AS start_dt,
+		TO_CHAR(s.end_dt, 'YYYY-MM-DD HH24:MI:SS') AS end_dt,
+		m.*, ss.*, st.*, sc.*
+		from reservation r inner join schedule s on r.schedule_id = s.schedule_id
 		inner join movie m on s.movie_id = m.movie_id
 		inner join seat_status ss on s.schedule_id = ss.schedule_id
 		inner join seat st on ss.seat_id = st.seat_id
 		inner join screen sc on st.screen_id = sc.screen_id
-		where r.user_id=#{id}
-		order by s.start_dt desc
-		offset #{start} rows fetch next 5 rows only
+		where r.user_id=#{id} order by s.start_dt desc offset #{start} rows fetch next 5 rows only
 	</select>
 	<select id="getReserveCount">
-		select count(*) from reservation r
-		inner join schedule
-		s on r.schedule_id = s.schedule_id
-		inner join movie m on s.movie_id =
-		m.movie_id
+		select count(*) from reservation r inner join schedule s on r.schedule_id = s.schedule_id
+		inner join movie m on s.movie_id = m.movie_id
 		inner join seat_status ss on s.schedule_id = ss.schedule_id
 		inner join seat st on ss.seat_id = st.seat_id
 		inner join screen sc on
-		st.screen_id = sc.screen_id
-		where r.user_id=#{id}
+		st.screen_id = sc.screen_id where r.user_id=#{id}
 	</select>
 	<select id="reviewCheck">
-		select count(*) from review inner join movie using
-		(movie_id) where user_id=#{id} and movie_id=#{movie_id}
+		select count(*) from review inner join movie using (movie_id) where user_id=#{id} and movie_id=#{movie_id}
 	</select>
 	<insert id="writeReview">
-		insert into
-		review(review_no,content,user_id,movie_id)
-		values(review_sequence.nextval,#{content},#{userId},#{movieId})
+		insert into review(review_no,content,user_id,movie_id) values(review_sequence.nextval,#{content},#{userId},#{movieId})
 	</insert>
 	<delete id="delReserve">
 		delete from reservation where reservation_id=#{id}

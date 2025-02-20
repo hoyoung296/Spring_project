@@ -35,7 +35,6 @@ public class ScheduleController {
 	@GetMapping("/title")
 	public ResponseEntity<?> getScheduleDate(@RequestParam("title") String title) {
 		
-		
 		System.out.println("제목값:"+title);
 		try {
 			List<Map<String, Object>> scheduleData = scheduleser.scheduleDate(title);
@@ -55,7 +54,7 @@ public class ScheduleController {
 	@GetMapping("/startdate")
 	public ResponseEntity<?> getScheduleInfo(@RequestParam("startdate") String startdate) {
 		try {
-			Map<String, Object> scheduleInfo = scheduleser.scheduleInfo(startdate);
+			List<Map<String, Object>> scheduleInfo = scheduleser.scheduleInfo(startdate);
 			System.out.println("scheduleInfo : " + scheduleInfo);
 			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
 					.message("Success").data(scheduleInfo).build(), HttpStatus.OK);

@@ -1,5 +1,8 @@
 package com.care.project.admin;
 
-public interface AdminService {
+import java.util.List;
+import com.care.project.main.dto.MovieDTO;
 
+public interface AdminService {
+	List<MovieDTO> getPopularBoxOfficeMovies();
 }

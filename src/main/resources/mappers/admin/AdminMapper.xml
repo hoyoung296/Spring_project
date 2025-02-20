@@ -4,5 +4,17 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.care.project.admin.AdminMapper">
-
+	<resultMap type="com.care.project.main.dto.MovieDTO"
+		id="movie">
+		<id property="movieId" column="movie_id" />
+		<result property="title" column="title" />
+		<result property="posterUrl" column="poster_url" />
+		<result property="movieSynopsis" column="synopsis" />
+		<result property="directorName" column="director" />
+		<result property="actors" column="actors" />
+	</resultMap>
+	<insert id="insertMovie">
+		insert into movie (movie_id, title, poster_url, synopsis, director,actors) values (movie_sequence.nextval, #{movie.title}, #{movie.posterUrl},
+		#{movie.movieSynopsis}, #{movie.directorName, jdbcType=VARCHAR}, #{movie.actors, jdbcType=VARCHAR})
+	</insert>
 </mapper>
