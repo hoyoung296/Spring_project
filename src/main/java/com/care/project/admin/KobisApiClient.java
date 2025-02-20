@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 public class KobisApiClient {
-    private static final String API_KEY = "223d1e26958f82e364bb48b1c762ba3d";
+    private static final String API_KEY = "0acc3f1311b66d892dbbc7aa5a4a37b8";
     private static final String BASE_URL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json";
     private static final String MOVIE_INFO_URL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json";
 
@@ -32,6 +32,8 @@ public class KobisApiClient {
             MovieDTO movie = new MovieDTO();
             movie.setMovieId(node.path("movieCd").asInt());
             movie.setTitle(node.path("movieNm").asText());
+            movie.setRank(targetDate + "-" + node.path("rank").asInt());
+            System.out.println("랭크 확인 : " + movie.getRank());
 
             addMovieDetailsFromKobis(movie, node.path("movieCd").asText());
 

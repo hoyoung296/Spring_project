@@ -32,7 +32,7 @@ public class AdminServiceImpl implements AdminService {
 			List<MovieDTO> enhancedMovies = enhanceMovieDetails(allMovies);
 
 			if (!enhancedMovies.isEmpty()) {
-				insertMoviesInDB(enhancedMovies);
+				insertOrUpdateMoviesInDB(enhancedMovies);
 			}
 
 			return enhancedMovies;
@@ -142,7 +142,20 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Transactional
-	private void insertMoviesInDB(List<MovieDTO> movies) {
-		movies.forEach(adminMapper::insertMovie);
-	}
+    private void insertOrUpdateMoviesInDB(List<MovieDTO> movies) {
+        // 현재 DB에 있는 모든 movieId 조회
+        Set<Integer> existingMovieIds = new HashSet<>(adminMapper.getAllMovieIds());
+
+        for (MovieDTO movie : movies) {
+            System.out.println("movieId 확인 : " + movie.getMovieId());
+
+            if (existingMovieIds.contains(movie.getMovieId())) {
+                System.out.println("기존 영화 UPDATE");
+                adminMapper.updateMovie(movie);
+            } else {
+                System.out.println("새로운 영화 INSERT");
+                adminMapper.insertMovie(movie);
+            }
+        }
+    }
 }
