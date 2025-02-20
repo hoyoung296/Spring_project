@@ -114,10 +114,8 @@
 	        s.seat_number AS seatCol
 	    FROM seat_status ss
 	    INNER JOIN Seat s ON ss.seat_id = s.seat_id
-	    WHERE ss.schedule_id = #{scheduleid} AND ss.status_id = 2
+	    WHERE ss.schedule_id = #{scheduleid} AND (ss.status_id = 2 or ss.status_id = 3)
 	</select>
-
-	
 	
 	
 </mapper>

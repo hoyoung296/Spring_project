@@ -11,13 +11,14 @@
         <result property="movieSynopsis" column="synopsis" />
         <result property="directorName" column="director" />
         <result property="actors" column="actors" />
+        <result property="movieRank" column="movie_rank" />
     </resultMap>
 
     <insert id="insertMovie">
-        insert into movie (movie_id, title, poster_url, synopsis, director, actors, rank) 
+        insert into movie (movie_id, title, poster_url, synopsis, director, actors, movie_rank) 
         values (#{movie.movieId}, #{movie.title}, #{movie.posterUrl}, 
                 #{movie.movieSynopsis}, #{movie.directorName, jdbcType=VARCHAR}, 
-                #{movie.actors, jdbcType=VARCHAR}, #{movie.rank})
+                #{movie.actors, jdbcType=VARCHAR}, #{movie.movieRank})
     </insert>
 
     <select id="checkExistingMovie" resultMap="movie">
@@ -31,7 +32,7 @@
             synopsis = #{movie.movieSynopsis}, 
             director = #{movie.directorName, jdbcType=VARCHAR}, 
             actors = #{movie.actors, jdbcType=VARCHAR},
-            rank = #{movie.rank}
+            movie_rank = #{movie.movieRank}
         WHERE movie_id = #{movie.movieId}
     </update>
 
