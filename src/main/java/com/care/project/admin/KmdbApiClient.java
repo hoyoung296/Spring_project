@@ -45,7 +45,7 @@ public class KmdbApiClient {
         return movie;
     }
 
-    private String getFirstNonEmptyValue(JsonNode node) {
+    public String getFirstNonEmptyValue(JsonNode node) {
         if (node.isArray()) {
             for (JsonNode item : node) {
                 String textValue = item.asText().trim();

@@ -19,13 +19,13 @@ import com.care.project.utils.MovieUtils;
 @Primary
 public class AdminServiceImpl implements AdminService {
 	@Autowired
-	private KobisApiClient kobisApiClient;
+	KobisApiClient kobisApiClient;
 
 	@Autowired
-	private KmdbApiClient kmdbApiClient;
+	KmdbApiClient kmdbApiClient;
 
 	@Autowired
-	private AdminMapper adminMapper;
+	AdminMapper adminMapper;
 
 	@Override
 	public List<MovieDTO> getPopularBoxOfficeMovies() {
@@ -44,12 +44,12 @@ public class AdminServiceImpl implements AdminService {
 		}
 	}
 
-	private List<MovieDTO> fetchUniqueBoxOfficeMovies() {
+	public List<MovieDTO> fetchUniqueBoxOfficeMovies() {
 		Set<String> seenTitles = new HashSet<>();
 		List<MovieDTO> allMovies = new ArrayList<>();
 		int daysAgo = 1;
 
-		while (allMovies.size() < 10) {
+		while (allMovies.size() < 50) {
 			try {
 				List<MovieDTO> kobisMovies = kobisApiClient.getBoxOfficeMovies(getDateNDaysAgo(daysAgo));
 				if (kobisMovies != null) {
@@ -64,11 +64,11 @@ public class AdminServiceImpl implements AdminService {
 		return allMovies.stream().distinct().collect(Collectors.toList());
 	}
 
-	private List<MovieDTO> enhanceMovieDetails(List<MovieDTO> movies) {
+	public List<MovieDTO> enhanceMovieDetails(List<MovieDTO> movies) {
 		return movies.stream().map(this::enhanceMovie).collect(Collectors.toList());
 	}
 
-	private MovieDTO enhanceMovie(MovieDTO movie) {
+	public MovieDTO enhanceMovie(MovieDTO movie) {
 		// 1. KOBIS에서 가져온 영화 정보로 상세정보 추가
 		enhanceMovieDetailsFromKobis(movie);
 
@@ -126,7 +126,7 @@ public class AdminServiceImpl implements AdminService {
 		return movie;
 	}
 
-	private void enhanceMovieDetailsFromKobis(MovieDTO movie) {
+	public void enhanceMovieDetailsFromKobis(MovieDTO movie) {
 		try {
 			String movieCd = String.valueOf(movie.getMovieId());
 			kobisApiClient.addMovieDetailsFromKobis(movie, movieCd);
@@ -135,15 +135,15 @@ public class AdminServiceImpl implements AdminService {
 		}
 	}
 
-	private String getDateNDaysAgo(int daysAgo) {
+	public String getDateNDaysAgo(int daysAgo) {
 		return LocalDate.now().minusDays(daysAgo).format(DateTimeFormatter.BASIC_ISO_DATE);
 	}
 
-	private MovieDTO getMovieFromKmdb(String title, String releaseDts) {
+	public MovieDTO getMovieFromKmdb(String title, String releaseDts) {
 		try {
 			String urlString = KmdbApiClient.BASE_URL + "?collection=kmdb_new2&ServiceKey=" + KmdbApiClient.API_KEY
-					+ "&query=" + title.replaceAll("[!HS!HE\\\\\\\\s]", "").trim() + "&releaseDts=" + releaseDts.replace("-", "")
-					+ "&listCount=1";
+					+ "&query=" + title.replaceAll("[!HS!HE\\\\\\\\s]", "").trim() + "&releaseDts="
+					+ releaseDts.replace("-", "") + "&listCount=1";
 
 			System.out.println("주소 확인 : " + urlString);
 
@@ -178,11 +178,13 @@ public class AdminServiceImpl implements AdminService {
 			if (existingMovie != null) {
 				// 기존 데이터 업데이트
 				existingMovie.setTitle(movie.getTitle());
-				existingMovie.setDirectorName(movie.getDirectorName());
-				existingMovie.setActors(movie.getActors());
+				existingMovie.setEntitle(movie.getEntitle());
 				existingMovie.setPosterUrl(movie.getPosterUrl());
 				existingMovie.setMovieSynopsis(movie.getMovieSynopsis());
-
+				existingMovie.setDirectorName(movie.getDirectorName());
+				existingMovie.setActors(movie.getActors());
+				existingMovie.setMovieRank(movie.getMovieRank());
+				existingMovie.setOpenDt(movie.getOpenDt());
 				adminMapper.updateMovie(existingMovie); // 명시적 업데이트
 			} else {
 				// 새로운 데이터 저장

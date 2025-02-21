@@ -5,7 +5,7 @@ public class MovieUtils {
 		return (synopsis == null || synopsis.trim().isEmpty()) ? "데이터없음" : trimSynopsis(synopsis, 300);
 	}
 	
-	private static String trimSynopsis(String synopsis, int maxLength) {
+	public static String trimSynopsis(String synopsis, int maxLength) {
 		return synopsis.length() > maxLength ? synopsis.substring(0, maxLength) + "..." : synopsis;
 	}
 	

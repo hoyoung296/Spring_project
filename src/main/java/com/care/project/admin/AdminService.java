@@ -4,6 +4,6 @@ import java.util.List;
 import com.care.project.main.dto.MovieDTO;
 
 public interface AdminService {
-	List<MovieDTO> getPopularBoxOfficeMovies();
-	void scheduledFetchAndUpdateMovies();
+	public List<MovieDTO> getPopularBoxOfficeMovies();
+	public void scheduledFetchAndUpdateMovies();
 }
