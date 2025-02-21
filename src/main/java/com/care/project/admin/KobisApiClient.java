@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 public class KobisApiClient {
-    private static final String API_KEY = "ab81a2dab77362a852a5a45bbdf7438a";
+    private static final String API_KEY = "20c6f4c6aac1d54cfaa0a50cb57e840b";
     private static final String BASE_URL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json";
     private static final String MOVIE_INFO_URL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json";
 
@@ -34,6 +34,9 @@ public class KobisApiClient {
             movie.setTitle(node.path("movieNm").asText());
             movie.setMovieRank(targetDate + "-" + node.path("rank").asInt());
             System.out.println("랭크 확인 : " + movie.getMovieRank());
+            
+            movie.setOpenDt(node.path("openDt").asText());
+            System.out.println("개봉일자 확인 : " + movie.getOpenDt());
 
             addMovieDetailsFromKobis(movie, node.path("movieCd").asText());
 
@@ -50,12 +53,15 @@ public class KobisApiClient {
             JsonNode rootNode = objectMapper.readTree(response.getBody());
             JsonNode movieInfoNode = rootNode.path("movieInfoResult").path("movieInfo");
             
-
-            // 상세정보에서 영화 제목을 가져오기
+            // 상세정보에서 영화 제목(한글)을 가져오기
             String movieTitle = movieInfoNode.path("movieNm").asText();
-            System.out.println("제목 확인 : " + movieTitle);
-            
+            System.out.println("한글 제목 확인 : " + movieTitle);
             movie.setTitle(movieTitle);
+            
+            // 상세정보에서 영화 제목(영문)을 가져오기
+            String movieEntitle = movieInfoNode.path("movieNmEn").asText();
+            System.out.println("영문 제목 확인 : " + movieEntitle);
+            movie.setEntitle(movieEntitle);
             
             // 감독 정보 가져오기
             JsonNode directorsNode = movieInfoNode.path("directors");
@@ -82,7 +88,6 @@ public class KobisApiClient {
             
             System.out.println("배우 확인 : " + movie.getActors());
             
-
             movie.setMovieSynopsis(MovieUtils.getValidSynopsis(movieInfoNode.path("synopsis").asText("")));
             
             movie.setPosterUrl(movieInfoNode.path("posters").asText("").isEmpty() ? "데이터없음" : movieInfoNode.path("posters").asText());

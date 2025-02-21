@@ -1,7 +1,5 @@
 package com.care.project.admin;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,11 +7,12 @@ import com.care.project.main.dto.MovieDTO;
 
 @Mapper
 public interface AdminMapper {
-    void resetSequence();
-    void insertMovie(@Param("movie") MovieDTO movie);
-    MovieDTO checkExistingMovie(@Param("movieId") int movieId);
-    void updateMovie(@Param("movie") MovieDTO movie);
+   // 모든 영화 데이터 삽입
+   void insertMovie(@Param("movie") MovieDTO movie);
+   
+   // 기존 영화 찾기
+    MovieDTO findByMovieId(@Param("movieId") int movieId);
 
-    // 추가: 모든 movie_id 가져오는 쿼리
-    List<Integer> getAllMovieIds();
+    // 기존 영화 업데이트
+    void updateMovie(@Param("movie") MovieDTO movie);
 }

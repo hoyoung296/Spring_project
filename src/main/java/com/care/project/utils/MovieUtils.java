@@ -5,14 +5,6 @@ public class MovieUtils {
 		return (synopsis == null || synopsis.trim().isEmpty()) ? "데이터없음" : trimSynopsis(synopsis, 300);
 	}
 	
-	public static String getValidActors(String actors) {
-		return (actors == null || actors.trim().isEmpty()) ? "데이터없음" : actors;
-	}
-
-	public static String getValidDirector(String director) {
-		return (director == null || director.trim().isEmpty()) ? "데이터없음" : director;
-	}
-
 	private static String trimSynopsis(String synopsis, int maxLength) {
 		return synopsis.length() > maxLength ? synopsis.substring(0, maxLength) + "..." : synopsis;
 	}
@@ -27,5 +19,10 @@ public class MovieUtils {
 	    }
 	    String[] urls = posterUrls.split("\\|");
 	    return urls.length > 0 ? urls[0].trim() : "데이터없음";
+	}
+	
+	public static String openDt(String openDt) {
+		
+		return openDt;
 	}
 }

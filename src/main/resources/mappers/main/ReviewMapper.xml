@@ -8,11 +8,13 @@
 		id="search">
 		<id property="movieId" column="movie_id" />
 		<result property="title" column="title" />
+		<result property="entitle" column="entitle" />
 		<result property="posterUrl" column="poster_url" />
 		<result property="movieSynopsis" column="synopsis" />
 		<result property="directorName" column="director" />
 		<result property="actors" column="actors" />
 		<result property="movieRank" column="movie_rank" />
+		<result property="openDt" column="open_dt" />
 	</resultMap>
 
 	<resultMap type="java.util.HashMap" id="info">
@@ -20,11 +22,13 @@
 		<result property="reviewNo" column="review_no" />
 		<result property="content" column="content" />
 		<result property="title" column="title" />
+		<result property="entitle" column="entitle" />
 		<result property="posterUrl" column="poster_url" />
 		<result property="synopsis" column="synopsis" />
 		<result property="director" column="director" />
 		<result property="actors" column="actors" />
 		<result property="movieRank" column="movie_rank" />
+		<result property="openDt" column="open_dt" />
 		<result property="userId" column="user_id" />
 		<result property="reviewDate" column="review_date" />
 	</resultMap>
@@ -44,11 +48,13 @@
 		<result property="startDateTime" column="start_dt" />
 		<result property="endDateTime" column="end_dt" />
 		<result property="title" column="title" />
+		<result property="entitle" column="entitle" />
 		<result property="posterUrl" column="poster_url" />
 		<result property="synopsis" column="synopsis" />
 		<result property="director" column="director" />
 		<result property="actors" column="actors" />
 		<result property="movieRank" column="movie_rank" />
+		<result property="openDt" column="open_dt" />
 		<result property="seatStatusId" column="seat_status_id" />
 		<result property="statusId" column="status_id" />
 	</resultMap>

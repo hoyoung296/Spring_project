@@ -5,8 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +34,7 @@ public class AdminServiceImpl implements AdminService {
 			List<MovieDTO> enhancedMovies = enhanceMovieDetails(allMovies);
 
 			if (!enhancedMovies.isEmpty()) {
-				insertOrUpdateMoviesInDB(enhancedMovies);
+				fetchAndUpdateMovies();
 			}
 
 			return enhancedMovies;
@@ -71,7 +73,7 @@ public class AdminServiceImpl implements AdminService {
 		enhanceMovieDetailsFromKobis(movie);
 
 		// 2. KMDB에서 영화 제목을 기반으로 시놉시스와 포스터 URL 추가
-		MovieDTO kmdbMovie = getMovieFromKmdb(movie.getTitle());
+		MovieDTO kmdbMovie = getMovieFromKmdb(movie.getTitle(), movie.getOpenDt());
 		if (kmdbMovie != null) {
 			System.out.println("서비스임플 포스터 url 확인 : " + kmdbMovie.getPosterUrl());
 
@@ -79,13 +81,21 @@ public class AdminServiceImpl implements AdminService {
 			movie.setPosterUrl(MovieUtils.getFirstPosterUrl(kmdbMovie.getPosterUrl()));
 			movie.setMovieSynopsis(MovieUtils.getValidSynopsis(kmdbMovie.getMovieSynopsis()));
 
-			// KOBIS에서 제목이 이미 존재하면 KMDB 제목으로 덮어쓰지 않음
+			// 한글 제목 유지
 			if ((movie.getTitle() == null || movie.getTitle().trim().isEmpty()) && kmdbMovie.getTitle() != null
 					&& !kmdbMovie.getTitle().trim().isEmpty()) {
 				movie.setTitle(kmdbMovie.getTitle());
 			}
 
-			// 감독 정보 유지
+			// 영어 제목 유지 (NuLL 체크 추가)
+			if (movie.getEntitle() == null || movie.getEntitle().trim().isEmpty()
+					|| movie.getEntitle().equals("데이터없음")) {
+				movie.setEntitle(kmdbMovie.getEntitle() != null && !kmdbMovie.getEntitle().trim().isEmpty()
+						? kmdbMovie.getEntitle()
+						: "데이터없음");
+			}
+
+			// 감독 정보 유지 (NuLL 체크 추가)
 			if (movie.getDirectorName() == null || movie.getDirectorName().trim().isEmpty()
 					|| movie.getDirectorName().equals("데이터없음")) {
 				movie.setDirectorName(
@@ -100,6 +110,14 @@ public class AdminServiceImpl implements AdminService {
 						kmdbMovie.getActors() != null && !kmdbMovie.getActors().trim().isEmpty() ? kmdbMovie.getActors()
 								: "데이터없음");
 			}
+
+			// 개봉일자 유지 (NuLL 체크 추가)
+			if (movie.getOpenDt() == null || movie.getOpenDt().trim().isEmpty() || movie.getOpenDt().equals("데이터없음")) {
+				movie.setOpenDt(
+						kmdbMovie.getOpenDt() != null && !kmdbMovie.getOpenDt().trim().isEmpty() ? kmdbMovie.getOpenDt()
+								: "데이터없음");
+			}
+
 		} else {
 			movie.setPosterUrl("데이터없음");
 			movie.setMovieSynopsis("데이터없음");
@@ -121,10 +139,11 @@ public class AdminServiceImpl implements AdminService {
 		return LocalDate.now().minusDays(daysAgo).format(DateTimeFormatter.BASIC_ISO_DATE);
 	}
 
-	private MovieDTO getMovieFromKmdb(String title) {
+	private MovieDTO getMovieFromKmdb(String title, String releaseDts) {
 		try {
 			String urlString = KmdbApiClient.BASE_URL + "?collection=kmdb_new2&ServiceKey=" + KmdbApiClient.API_KEY
-					+ "&query=" + MovieUtils.cleanTitle(title) + "&listCount=1";
+					+ "&query=" + MovieUtils.cleanTitle(title) + "&releaseDts=" + releaseDts.replace("-", "")
+					+ "&listCount=1";
 
 			System.out.println("주소 확인 : " + urlString);
 
@@ -140,22 +159,35 @@ public class AdminServiceImpl implements AdminService {
 
 		return null;
 	}
-	
+
+	@Scheduled(fixedRate = 600000) // 100분
+	public void scheduledFetchAndUpdateMovies() {
+		System.out.println("자동 업데이트 시작");
+		((AdminServiceImpl) AopContext.currentProxy()).fetchAndUpdateMovies(); // 자기 자신을 Proxy로 호출
+		System.out.println("자동 업데이트 완료.");
+	}
+
 	@Transactional
-    private void insertOrUpdateMoviesInDB(List<MovieDTO> movies) {
-        // 현재 DB에 있는 모든 movieId 조회
-        Set<Integer> existingMovieIds = new HashSet<>(adminMapper.getAllMovieIds());
+	public void fetchAndUpdateMovies() {
+		List<MovieDTO> newMovies = fetchUniqueBoxOfficeMovies();
+		List<MovieDTO> enhancedMovies = enhanceMovieDetails(newMovies); // 상세정보 보강
 
-        for (MovieDTO movie : movies) {
-            System.out.println("movieId 확인 : " + movie.getMovieId());
+		for (MovieDTO movie : enhancedMovies) { // enhancedMovies로 반복
+			MovieDTO existingMovie = adminMapper.findByMovieId(movie.getMovieId());
 
-            if (existingMovieIds.contains(movie.getMovieId())) {
-                System.out.println("기존 영화 UPDATE");
-                adminMapper.updateMovie(movie);
-            } else {
-                System.out.println("새로운 영화 INSERT");
-                adminMapper.insertMovie(movie);
-            }
-        }
-    }
+			if (existingMovie != null) {
+				// 기존 데이터 업데이트
+				existingMovie.setTitle(movie.getTitle());
+				existingMovie.setDirectorName(movie.getDirectorName());
+				existingMovie.setActors(movie.getActors());
+				existingMovie.setPosterUrl(movie.getPosterUrl());
+				existingMovie.setMovieSynopsis(movie.getMovieSynopsis());
+
+				adminMapper.updateMovie(existingMovie); // 명시적 업데이트
+			} else {
+				// 새로운 데이터 저장
+				adminMapper.insertMovie(movie);
+			}
+		}
+	}
 }
