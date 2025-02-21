@@ -15,6 +15,20 @@ public class MemberController {
     // 회원가입
     @PostMapping(value = "/register", produces = "text/plain;charset=UTF-8")
     public String register(@RequestBody MemberDTO memberDTO) {
+    	 // 유효성 검사
+        if (!ms.isUserIdValid(memberDTO.getUserId())) {
+            return "아이디는 6자 이상 영문자와 숫자만 가능합니다.";
+        }
+        if (!ms.isEmailValid(memberDTO.getEmail())) {
+            return "올바른 이메일 형식을 입력해주세요. (예: example@email.com)";
+        }
+        if (!ms.isPhoneNumberValid(memberDTO.getPhoneNumber())) {
+            return "하이픈(-)이나 공백 없이 숫자만 입력해주세요. (예: 01012345678)";
+        }
+        if (!ms.isPasswordValid(memberDTO.getPassword())) {
+            return "비밀번호는 최소 8자 이상이어야 하며, 영문/숫자/특수문자를 포함해야 합니다.";
+        }
+    	
         if (ms.isUserIdDuplicate(memberDTO.getUserId())) {
             return "등록된 아이디입니다.";
         }
@@ -54,6 +68,23 @@ public class MemberController {
         if (!ms.checkPassword(memberDTO)) {
             return "비밀번호가 일치하지 않습니다.";
         }
+     // 유효성 검사
+        if (!ms.isUserIdValid(memberDTO.getUserId())) {
+            return "아이디는 6자 이상 영문자와 숫자만 가능합니다.";
+        }
+        if (!ms.isEmailValid(memberDTO.getEmail())) {
+            return "올바른 이메일 형식을 입력해주세요. (예: example@email.com)";
+        }
+        if (!ms.isPhoneNumberValid(memberDTO.getPhoneNumber())) {
+            return "하이픈(-)이나 공백 없이 숫자만 입력해주세요. (예: 01012345678)";
+        }
+     // 새 비밀번호 유효성 검사 추가
+        if (memberDTO.getNewPassword() != null && !memberDTO.getNewPassword().isEmpty()) {
+            if (!ms.isPasswordValid(memberDTO.getNewPassword())) {
+                return "비밀번호는 최소 8자 이상이어야 하며, 영문/숫자/특수문자를 포함해야 합니다.";
+            }
+        }
+        
         return ms.updateMember(memberDTO) ? "회원정보가 수정되었습니다." : "회원정보 수정 실패";
     }
 

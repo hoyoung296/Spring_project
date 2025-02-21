@@ -3,6 +3,7 @@ package com.care.project.main.dto;
 public class MemberDTO {
 	private String userId, userName, password, newPassword, email, phoneNumber, addr, postNum, userGrade;
 	private Integer userBirthday;
+	
 	public String getUserId() {
 		return userId;
 	}
@@ -63,6 +64,4 @@ public class MemberDTO {
 	public void setUserBirthday(Integer userBirthday) {
 		this.userBirthday = userBirthday;
 	}
-	
-	
 }
