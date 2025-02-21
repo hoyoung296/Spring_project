@@ -64,6 +64,4 @@ public class MemberDTO {
 	public void setUserBirthday(Integer userBirthday) {
 		this.userBirthday = userBirthday;
 	}
-	
-	
 }
