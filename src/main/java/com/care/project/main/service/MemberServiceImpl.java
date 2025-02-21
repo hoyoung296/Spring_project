@@ -31,9 +31,47 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean updateMember(MemberDTO memberDTO) {
-        if (memberMapper.getMember(memberDTO.getUserId()) == null) return false;// 회원 존재 여부 확인
-        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));// 비밀번호 암호화
-        memberMapper.updateMember(memberDTO);// 회원 정보 수정
+        MemberDTO user = memberMapper.getMember(memberDTO.getUserId());
+        if (user == null) return false; // 회원 존재 여부 확인
+
+        // 현재 비밀번호 검증
+        if (!passwordEncoder.matches(memberDTO.getPassword(), user.getPassword())) {
+            return false; // 현재 비밀번호가 일치하지 않으면 false 반환
+        }
+
+        // 새로운 비밀번호가 입력된 경우 변경
+        if (memberDTO.getNewPassword() != null && !memberDTO.getNewPassword().isEmpty()) {
+            memberDTO.setPassword(passwordEncoder.encode(memberDTO.getNewPassword())); // 새 비밀번호 암호화
+        } else {
+            // 새로운 비밀번호가 없으면 기존 비밀번호 유지
+            memberDTO.setPassword(user.getPassword());
+        }
+
+        // 변경하지 않은 값은 기존 값을 그대로 사용
+        if (memberDTO.getUserName() == null || memberDTO.getUserName().isEmpty()) {
+            memberDTO.setUserName(user.getUserName());
+        }
+        if (memberDTO.getEmail() == null || memberDTO.getEmail().isEmpty()) {
+            memberDTO.setEmail(user.getEmail());
+        }
+        if (memberDTO.getPhoneNumber() == null || memberDTO.getPhoneNumber().isEmpty()) {
+            memberDTO.setPhoneNumber(user.getPhoneNumber());
+        }
+        if (memberDTO.getAddr() == null || memberDTO.getAddr().isEmpty()) {
+            memberDTO.setAddr(user.getAddr());
+        }
+        if (memberDTO.getPostNum() == null || memberDTO.getPostNum().isEmpty()) {
+            memberDTO.setPostNum(user.getPostNum());
+        }
+        if (memberDTO.getUserGrade() == null || memberDTO.getUserGrade().isEmpty()) {
+            memberDTO.setUserGrade(user.getUserGrade());
+        }
+        if (memberDTO.getUserBirthday() == null) {
+            memberDTO.setUserBirthday(user.getUserBirthday());
+        }
+
+        // 회원 정보 업데이트
+        memberMapper.updateMember(memberDTO);
         return true;
     }
 

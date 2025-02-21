@@ -7,7 +7,7 @@ public class MovieDTO {
     private String movieSynopsis;  // synopsis -> movieSynopsis
     private String directorName;  // director -> directorName
     private String actors;  // actors -> actors
-    private String rank; // rank - > rank (영화데이터 api를 위한 추가, kobis에서 가져오는 rank의 자료형은 int이지만 날짜구별을 위해 앞에
+    private String movieRank; // movie_rank - > movieRank (영화데이터 api를 위한 추가, kobis에서 가져오는 rank의 자료형은 int이지만 날짜구별을 위해 앞에
     // "날짜 - 순위" 이런식으로 만들어서 데이터베이스 넣을거라서 String으로 작성
 
 	// Getters and Setters
@@ -59,11 +59,11 @@ public class MovieDTO {
         this.actors = actors;
     }
 
-	public String getRank() {
-		return rank;
+	public String getMovieRank() {
+		return movieRank;
 	}
 
-	public void setRank(String rank) {
-		this.rank = rank;
+	public void setMovieRank(String movieRank) {
+		this.movieRank = movieRank;
 	}
 }

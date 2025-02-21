@@ -12,7 +12,7 @@
 		<result property="movieSynopsis" column="synopsis" />
 		<result property="directorName" column="director" />
 		<result property="actors" column="actors" />
-		<result property="rank" column="rank" />
+		<result property="movieRank" column="movie_rank" />
 	</resultMap>
 
 	<resultMap type="java.util.HashMap" id="info">
@@ -24,7 +24,7 @@
 		<result property="synopsis" column="synopsis" />
 		<result property="director" column="director" />
 		<result property="actors" column="actors" />
-		<result property="rank" column="rank" />
+		<result property="movieRank" column="movie_rank" />
 		<result property="userId" column="user_id" />
 		<result property="reviewDate" column="review_date" />
 	</resultMap>
@@ -48,7 +48,7 @@
 		<result property="synopsis" column="synopsis" />
 		<result property="director" column="director" />
 		<result property="actors" column="actors" />
-		<result property="rank" column="rank" />
+		<result property="movieRank" column="movie_rank" />
 		<result property="seatStatusId" column="seat_status_id" />
 		<result property="statusId" column="status_id" />
 	</resultMap>
