@@ -49,7 +49,7 @@ public class AdminServiceImpl implements AdminService {
 		List<MovieDTO> allMovies = new ArrayList<>();
 		int daysAgo = 1;
 
-		while (allMovies.size() < 50) {
+		while (allMovies.size() < 10) {
 			try {
 				List<MovieDTO> kobisMovies = kobisApiClient.getBoxOfficeMovies(getDateNDaysAgo(daysAgo));
 				if (kobisMovies != null) {
@@ -142,7 +142,7 @@ public class AdminServiceImpl implements AdminService {
 	private MovieDTO getMovieFromKmdb(String title, String releaseDts) {
 		try {
 			String urlString = KmdbApiClient.BASE_URL + "?collection=kmdb_new2&ServiceKey=" + KmdbApiClient.API_KEY
-					+ "&query=" + MovieUtils.cleanTitle(title) + "&releaseDts=" + releaseDts.replace("-", "")
+					+ "&query=" + title.replaceAll("[!HS!HE\\\\\\\\s]", "").trim() + "&releaseDts=" + releaseDts.replace("-", "")
 					+ "&listCount=1";
 
 			System.out.println("주소 확인 : " + urlString);
