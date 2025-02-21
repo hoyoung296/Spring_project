@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.care.project.main.mapper.ReserveMapper;
-import com.care.project.main.mapper.ScheduleMapper;
 
 @Service
 public class ReserveServiceImpl implements ReserveService {
@@ -23,12 +22,10 @@ public class ReserveServiceImpl implements ReserveService {
 		public Long createReservation(String userId, Integer scheduleid, Integer totalAmount) {
 			 // 유니크한 예약 ID 생성
 	        Long reservationId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
-
 	        int reservationStatusId = 1; // 기본 예약 상태 (1: 대기)
 			
 	        // DB에 예약 정보 저장
 	        reserveMapper.insertReservation(reservationId, userId, scheduleid, reservationStatusId, totalAmount);
-	        
 	        return reservationId; // 생성된 예약 ID 반환
 		}
 
