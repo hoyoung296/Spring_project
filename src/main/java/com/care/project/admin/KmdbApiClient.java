@@ -37,7 +37,11 @@ public class KmdbApiClient {
         // 포스터 URL 처리
         movie.setPosterUrl(getFirstNonEmptyValue(firstMovie.path("posters")));
         System.out.println("포스터 url 확인 : " + movie.getPosterUrl());
-
+        
+        // 스틸 URL 처리
+        movie.setStillUrl(getFirstNonEmptyValue(firstMovie.path("stlls")));
+        System.out.println("스틸 url 확인 : " + movie.getStillUrl());
+        
         // 시놉시스 처리 (기존 방식 유지)
         movie.setMovieSynopsis(getFirstNonEmptyValue(firstMovie.path("plots").path("plot").path(0).path("plotText")));
         System.out.println("시놉 확인 : " + movie.getMovieSynopsis());

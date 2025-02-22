@@ -9,6 +9,7 @@
         <result property="title" column="title" />
         <result property="entitle" column="entitle" />
         <result property="posterUrl" column="poster_url" />
+        <result property="stillUrl" column="still_url" />
         <result property="movieSynopsis" column="synopsis" />
         <result property="directorName" column="director" />
         <result property="actors" column="actors" />
@@ -17,8 +18,8 @@
     </resultMap>
 
     <insert id="insertMovie">
-        insert into movie (movie_id, title, entitle, poster_url, synopsis, director, actors, movie_rank, open_dt) 
-        values (#{movie.movieId}, #{movie.title}, #{movie.entitle, jdbcType=VARCHAR}, #{movie.posterUrl}, 
+        insert into movie (movie_id, title, entitle, poster_url, still_url, synopsis, director, actors, movie_rank, open_dt) 
+        values (#{movie.movieId}, #{movie.title}, #{movie.entitle, jdbcType=VARCHAR}, #{movie.posterUrl}, #{movie.stillUrl},
                 #{movie.movieSynopsis}, #{movie.directorName, jdbcType=VARCHAR}, 
                 #{movie.actors, jdbcType=VARCHAR}, #{movie.movieRank}, #{movie.openDt, jdbcType=VARCHAR})
     </insert>
@@ -32,7 +33,8 @@
         UPDATE movie
         SET title = #{movie.title},
         	entitle = #{movie.entitle, jdbcType=VARCHAR}, 
-            poster_url = #{movie.posterUrl}, 
+            poster_url = #{movie.posterUrl},
+            still_url = #{movie.stillUrl},
             synopsis = #{movie.movieSynopsis}, 
             director = #{movie.directorName, jdbcType=VARCHAR}, 
             actors = #{movie.actors, jdbcType=VARCHAR},

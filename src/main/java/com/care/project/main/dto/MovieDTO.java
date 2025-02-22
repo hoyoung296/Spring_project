@@ -5,6 +5,7 @@ public class MovieDTO {
     private String title;
     private String entitle; // entitle -> entitle
     private String posterUrl;  // poster_URL -> posterUrl
+    private String stillUrl; // still_url -> stillUrl
     private String movieSynopsis;  // synopsis -> movieSynopsis
     private String directorName;  // director -> directorName
     private String actors;  // actors -> actors
@@ -44,8 +45,16 @@ public class MovieDTO {
     public void setPosterUrl(String posterUrl) {
         this.posterUrl = posterUrl;
     }
+    
+    public String getStillUrl() {
+		return stillUrl;
+	}
 
-    public String getMovieSynopsis() {
+	public void setStillUrl(String stillUrl) {
+		this.stillUrl = stillUrl;
+	}
+
+	public String getMovieSynopsis() {
         return movieSynopsis;
     }
 

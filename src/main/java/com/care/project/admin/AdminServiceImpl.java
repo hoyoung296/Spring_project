@@ -79,6 +79,7 @@ public class AdminServiceImpl implements AdminService {
 
 			// KMDB에서 가져온 값이 유효할 때만 업데이트
 			movie.setPosterUrl(MovieUtils.getFirstPosterUrl(kmdbMovie.getPosterUrl()));
+			movie.setStillUrl(MovieUtils.getFirstPosterUrl(kmdbMovie.getStillUrl()));
 			movie.setMovieSynopsis(MovieUtils.getValidSynopsis(kmdbMovie.getMovieSynopsis()));
 
 			// 한글 제목 유지
@@ -119,6 +120,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 
 		} else {
+			movie.setStillUrl("데이터없음");
 			movie.setPosterUrl("데이터없음");
 			movie.setMovieSynopsis("데이터없음");
 		}
@@ -180,6 +182,7 @@ public class AdminServiceImpl implements AdminService {
 				existingMovie.setTitle(movie.getTitle());
 				existingMovie.setEntitle(movie.getEntitle());
 				existingMovie.setPosterUrl(movie.getPosterUrl());
+				existingMovie.setStillUrl(movie.getStillUrl());
 				existingMovie.setMovieSynopsis(movie.getMovieSynopsis());
 				existingMovie.setDirectorName(movie.getDirectorName());
 				existingMovie.setActors(movie.getActors());
