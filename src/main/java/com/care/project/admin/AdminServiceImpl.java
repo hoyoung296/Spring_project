@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,7 +25,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	AdminMapper adminMapper;
-
+	
 	@Override
 	public List<MovieDTO> getPopularBoxOfficeMovies() {
 		try {
@@ -165,7 +164,7 @@ public class AdminServiceImpl implements AdminService {
 	@Scheduled(fixedRate = 600000) // 100분
 	public void scheduledFetchAndUpdateMovies() {
 		System.out.println("자동 업데이트 시작");
-		((AdminServiceImpl) AopContext.currentProxy()).fetchAndUpdateMovies(); // 자기 자신을 Proxy로 호출
+		fetchAndUpdateMovies();
 		System.out.println("자동 업데이트 완료.");
 	}
 
@@ -178,7 +177,6 @@ public class AdminServiceImpl implements AdminService {
 			MovieDTO existingMovie = adminMapper.findByMovieId(movie.getMovieId());
 
 			if (existingMovie != null) {
-				// 기존 데이터 업데이트
 				existingMovie.setTitle(movie.getTitle());
 				existingMovie.setEntitle(movie.getEntitle());
 				existingMovie.setPosterUrl(movie.getPosterUrl());
@@ -188,9 +186,8 @@ public class AdminServiceImpl implements AdminService {
 				existingMovie.setActors(movie.getActors());
 				existingMovie.setMovieRank(movie.getMovieRank());
 				existingMovie.setOpenDt(movie.getOpenDt());
-				adminMapper.updateMovie(existingMovie); // 명시적 업데이트
+				adminMapper.updateMovie(existingMovie);
 			} else {
-				// 새로운 데이터 저장
 				adminMapper.insertMovie(movie);
 			}
 		}
