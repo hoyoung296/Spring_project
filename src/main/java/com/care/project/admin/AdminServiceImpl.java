@@ -161,7 +161,7 @@ public class AdminServiceImpl implements AdminService {
 		return null;
 	}
 
-	@Scheduled(fixedRate = 8640000, initialDelay = 180000) // 24시간/3분
+
 	
 	
 	public void scheduledFetchAndUpdateMovies() {
