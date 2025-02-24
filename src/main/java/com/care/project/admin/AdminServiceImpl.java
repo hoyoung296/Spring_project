@@ -1,5 +1,7 @@
 package com.care.project.admin;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -10,6 +12,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.care.project.main.dto.MovieDTO;
 import com.care.project.utils.MovieUtils;
@@ -160,8 +163,30 @@ public class AdminServiceImpl implements AdminService {
 
 		return null;
 	}
+	
+	@Override
+	public MovieDTO getMovieById(int movieID) {
+		//기존 영화 정보 가져오기
+		return adminMapper.findByMovieId(movieID);
+	}
+	
+	public int editMovie(MovieDTO movie, MultipartFile file) {
+		if (!file.isEmpty()) {
+			String IMG_REPO = "C:/movieproject/front/movieProjectFront/public";
+			File f = new File(IMG_REPO + "/" + movie.getPosterUrl());
+			try {
+				file.transferTo(f);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} 
+		
+		return adminMapper.editMovie(movie); //수정 가능한 영화정보 8개 업데이트
+	}
+	
+	
 
-	@Scheduled(fixedRate = 8640000, initialDelay = 180000) // 24시간/3분
+	@Scheduled(fixedRate = 8640000, initialDelay = 360000) // 24시간/1시간
 	
 	
 	public void scheduledFetchAndUpdateMovies() {

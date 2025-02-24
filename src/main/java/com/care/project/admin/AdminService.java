@@ -1,9 +1,19 @@
 package com.care.project.admin;
 
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.care.project.main.dto.MovieDTO;
 
 public interface AdminService {
-	public List<MovieDTO> getPopularBoxOfficeMovies();
+	//기존 메서드
+	public List<MovieDTO> getPopularBoxOfficeMovies(); 
 	public void scheduledFetchAndUpdateMovies();
+	
+	
+	// 추가한 메서드
+    MovieDTO getMovieById(int movieId);  // 기존 영화 정보 가져오기
+    int editMovie(MovieDTO movie, MultipartFile file);    // 영화 정보 업데이트
+	
 }
