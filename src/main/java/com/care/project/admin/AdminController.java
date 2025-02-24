@@ -15,4 +15,8 @@ public class AdminController {
 	public void getList() {
 		AdminService.getPopularBoxOfficeMovies();
 	}
+	
+	
+	
 }
+

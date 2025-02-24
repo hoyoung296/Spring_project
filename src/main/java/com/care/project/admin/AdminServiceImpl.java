@@ -48,7 +48,7 @@ public class AdminServiceImpl implements AdminService {
 		List<MovieDTO> allMovies = new ArrayList<>();
 		int daysAgo = 1;
 
-		while (allMovies.size() < 50) {
+		while (allMovies.size() < 10) {
 			try {
 				List<MovieDTO> kobisMovies = kobisApiClient.getBoxOfficeMovies(getDateNDaysAgo(daysAgo));
 				if (kobisMovies != null) {
@@ -161,7 +161,9 @@ public class AdminServiceImpl implements AdminService {
 		return null;
 	}
 
-	@Scheduled(fixedRate = 600000) // 100분
+	@Scheduled(fixedRate = 8640000, initialDelay = 180000) // 24시간/3분
+	
+	
 	public void scheduledFetchAndUpdateMovies() {
 		System.out.println("자동 업데이트 시작");
 		fetchAndUpdateMovies();
