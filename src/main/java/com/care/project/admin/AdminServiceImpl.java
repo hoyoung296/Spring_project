@@ -11,12 +11,25 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.care.project.main.dto.MemberDTO;
 import com.care.project.main.dto.MovieDTO;
+import com.care.project.main.mapper.MemberMapper;
 import com.care.project.utils.MovieUtils;
 
 @Service
 @Primary
 public class AdminServiceImpl implements AdminService {
+	
+	@Autowired
+    private MemberMapper memberMapper;
+
+    @Override
+    public List<MemberDTO> getUserList() {
+        return memberMapper.userData();  // userData SQL 호출
+    }
+	
+	
+	
 	@Autowired
 	KobisApiClient kobisApiClient;
 
@@ -25,6 +38,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	AdminMapper adminMapper;
+
 	
 	@Override
 	public List<MovieDTO> getPopularBoxOfficeMovies() {
@@ -202,4 +216,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 		}
 	}
+	
+
+	
 }
