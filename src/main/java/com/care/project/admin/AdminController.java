@@ -46,7 +46,7 @@ public class AdminController {
 		}
     }
     
- // 영화 이미지 저장
+    // 영화 이미지 저장
     @PostMapping("/upload_movie_image")
     public ResponseEntity<Map<String, Object>> uploadMovieImage(
             @RequestParam("basePath") String basePath, // 앞쪽 경로를 받아옴
