@@ -42,4 +42,20 @@
             open_dt = #{movie.openDt, jdbcType=VARCHAR}
         WHERE movie_id = #{movie.movieId}
     </update>
+    
+    <!-- 영화 정보 수정 -->
+    <update id="editMovie">
+        UPDATE movie
+        SET title = #{movie.title},
+        	entitle = #{movie.entitle, jdbcType=VARCHAR}, 
+            poster_url = #{movie.posterUrl},
+            still_url = #{movie.stillUrl},
+            synopsis = #{movie.movieSynopsis}, 
+            director = #{movie.directorName, jdbcType=VARCHAR}, 
+            actors = #{movie.actors, jdbcType=VARCHAR},
+            movie_rank = #{movie.movieRank},
+            open_dt = #{movie.openDt, jdbcType=VARCHAR}
+        WHERE movie_id = #{movie.movieId}
+    </update>
+    
 </mapper>
