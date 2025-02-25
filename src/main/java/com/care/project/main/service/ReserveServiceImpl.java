@@ -95,6 +95,8 @@ public class ReserveServiceImpl implements ReserveService {
 			try {
 		        // 1. 예약 좌석 삭제
 		        if (reserveMapper.deleteReservationSeats(reservationId) <= 0) {
+		        	System.out.println("@@@reservationId : "+reservationId);
+		        	System.out.println("@@@service부분 : "+reserveMapper.deleteReservationSeats(reservationId));
 		            System.err.println("❌ 예매 좌석 삭제 실패.");
 		            return false;
 		        }
