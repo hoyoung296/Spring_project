@@ -48,50 +48,7 @@ public class AdminController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map); // HTTP 500
 		}
     }
-    
-    // 영화 이미지 저장
-    @PostMapping("/upload_movie_image")
-    public ResponseEntity<Map<String, Object>> uploadMovieImage(
-            @RequestParam("basePath") String basePath, // 앞쪽 경로를 받아옴
-            @RequestParam("movieId") String movieId,
-            @RequestParam("image") MultipartFile file,
-            @RequestParam("field") String field) {
-
-        Map<String, Object> response = new HashMap<>();
-
-        // 파일이 비었는지 확인
-        if (file.isEmpty()) {
-            response.put("message", "파일이 비어있음");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-
-        try {
-            // 저장 경로 설정 (팀원별 앞쪽 경로를 basePath로 받음)
-            String uploadDir = Paths.get(basePath, "movieProjectFront", "public", "img", "poster").toString();
-
-            // 파일명 유지
-            String originalFilename = file.getOriginalFilename();
-            String filePath = Paths.get(uploadDir, originalFilename).toString();
-            File destFile = new File(filePath);
-
-            // 파일 저장
-            file.transferTo(destFile);
-
-            // 저장된 이미지의 URL 생성
-            String imageUrl = "/img/poster/" + originalFilename; // 프론트에서 접근할 수 있도록 경로 설정
-
-            // 프론트엔드로 응답 반환
-            response.put("message", "이미지 업로드 성공");
-            response.put("imageUrl", imageUrl);
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            response.put("message", "이미지 저장 실패");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }	
-    
-    
+     
     @GetMapping("/members")
     public List<MemberDTO> getUserList() {
         return AdminService.getUserList();  // 서비스 호출 및 반환
