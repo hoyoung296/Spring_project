@@ -48,7 +48,7 @@ public class AdminServiceImpl implements AdminService {
 		List<MovieDTO> allMovies = new ArrayList<>();
 		int daysAgo = 1;
 
-		while (allMovies.size() < 50) {
+		while (allMovies.size() < 10) {
 			try {
 				List<MovieDTO> kobisMovies = kobisApiClient.getBoxOfficeMovies(getDateNDaysAgo(daysAgo));
 				if (kobisMovies != null) {
