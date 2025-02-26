@@ -11,12 +11,18 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.care.project.main.dto.MemberDTO;
 import com.care.project.main.dto.MovieDTO;
+import com.care.project.main.mapper.MemberMapper;
 import com.care.project.utils.MovieUtils;
 
 @Service
 @Primary
 public class AdminServiceImpl implements AdminService {
+
+	@Autowired
+	private MemberMapper memberMapper;
+
 	@Autowired
 	KobisApiClient kobisApiClient;
 
@@ -25,7 +31,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	AdminMapper adminMapper;
-	
+
 	@Override
 	public List<MovieDTO> getPopularBoxOfficeMovies() {
 		try {
@@ -161,7 +167,17 @@ public class AdminServiceImpl implements AdminService {
 		return null;
 	}
 
-	@Scheduled(fixedRate = 600000) // 100분
+	@Override
+	public MovieDTO getMovieById(int movieID) {
+		// 기존 영화 정보 가져오기
+		return adminMapper.findByMovieId(movieID);
+	}
+
+	public int editMovie(MovieDTO movie) {
+		return adminMapper.editMovie(movie); // 수정 가능한 영화정보 8개 업데이트
+	}
+
+	@Scheduled(cron = "0 0 23 * * *") // 매일 밤 11시에 실행
 	public void scheduledFetchAndUpdateMovies() {
 		System.out.println("자동 업데이트 시작");
 		fetchAndUpdateMovies();
@@ -191,5 +207,10 @@ public class AdminServiceImpl implements AdminService {
 				adminMapper.insertMovie(movie);
 			}
 		}
+	}
+
+	@Override
+	public List<MemberDTO> getUserList() {
+		return memberMapper.userData(); // userData SQL 호출
 	}
 }
