@@ -83,9 +83,9 @@
 		from reservation r inner join reservation_seat rs on r.reservation_id = rs.reservation_id
 		inner join seat_status ss on rs.seat_status_id = ss.seat_status_id
 		inner join seat s on ss.seat_id = s.seat_id
-		inner join screen sc on s.screen_id = sc.screen_id
 		inner join schedule sch on r.schedule_id = sch.schedule_id
-		inner join movie m on sch.movie_id = m.movie_id 
+		inner join movie m on sch.movie_id = m.movie_id
+		inner join screen sc on sch.screen_id = sc.screen_id
 		where r.user_id=#{id}
 		order by sch.start_dt desc offset #{start} rows fetch next 5 rows only
 	</select>
@@ -94,9 +94,9 @@
 		from reservation r inner join reservation_seat rs on r.reservation_id = rs.reservation_id
 		inner join seat_status ss on rs.seat_status_id = ss.seat_status_id
 		inner join seat s on ss.seat_id = s.seat_id
-		inner join screen sc on s.screen_id = sc.screen_id
 		inner join schedule sch on r.schedule_id = sch.schedule_id
-		inner join movie m on sch.movie_id = m.movie_id 
+		inner join movie m on sch.movie_id = m.movie_id
+		inner join screen sc on sch.screen_id = sc.screen_id
 		where r.user_id=#{id}
 	</select>
 	<select id="reviewCheck">
