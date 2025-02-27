@@ -77,23 +77,27 @@
 		select count(*) from review inner join movie using (movie_id) where user_id=#{id}
 	</select>
 	<select id="getReserve" resultMap="reserve">
-		select r.*, TO_CHAR(s.start_dt, 'YYYY-MM-DD HH24:MI:SS') AS start_dt,
-		TO_CHAR(s.end_dt, 'YYYY-MM-DD HH24:MI:SS') AS end_dt,
-		m.*, ss.*, st.*, sc.*
-		from reservation r inner join schedule s on r.schedule_id = s.schedule_id
-		inner join movie m on s.movie_id = m.movie_id
-		inner join seat_status ss on s.schedule_id = ss.schedule_id
-		inner join seat st on ss.seat_id = st.seat_id
-		inner join screen sc on st.screen_id = sc.screen_id
-		where r.user_id=#{id} order by s.start_dt desc offset #{start} rows fetch next 5 rows only
+		select r.*, TO_CHAR(sch.start_dt, 'YYYY-MM-DD HH24:MI:SS') AS start_dt,
+		TO_CHAR(sch.end_dt, 'YYYY-MM-DD HH24:MI:SS') AS end_dt,
+		m.*, ss.*, s.*, sc.*, rs.*
+		from reservation r inner join reservation_seat rs on r.reservation_id = rs.reservation_id
+		inner join seat_status ss on rs.seat_status_id = ss.seat_status_id
+		inner join seat s on ss.seat_id = s.seat_id
+		inner join schedule sch on r.schedule_id = sch.schedule_id
+		inner join movie m on sch.movie_id = m.movie_id
+		inner join screen sc on sch.screen_id = sc.screen_id
+		where r.user_id=#{id}
+		order by sch.start_dt desc offset #{start} rows fetch next 5 rows only
 	</select>
 	<select id="getReserveCount">
-		select count(*) from reservation r inner join schedule s on r.schedule_id = s.schedule_id
-		inner join movie m on s.movie_id = m.movie_id
-		inner join seat_status ss on s.schedule_id = ss.schedule_id
-		inner join seat st on ss.seat_id = st.seat_id
-		inner join screen sc on
-		st.screen_id = sc.screen_id where r.user_id=#{id}
+		select count(*) 
+		from reservation r inner join reservation_seat rs on r.reservation_id = rs.reservation_id
+		inner join seat_status ss on rs.seat_status_id = ss.seat_status_id
+		inner join seat s on ss.seat_id = s.seat_id
+		inner join schedule sch on r.schedule_id = sch.schedule_id
+		inner join movie m on sch.movie_id = m.movie_id
+		inner join screen sc on sch.screen_id = sc.screen_id
+		where r.user_id=#{id}
 	</select>
 	<select id="reviewCheck">
 		select count(*) from review inner join movie using (movie_id) where user_id=#{id} and movie_id=#{movie_id}

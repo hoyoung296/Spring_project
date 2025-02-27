@@ -24,13 +24,8 @@ import com.care.project.utils.MovieUtils;
 public class AdminServiceImpl implements AdminService {
 
 	@Autowired
+
 	private MemberMapper memberMapper;
-
-	@Override
-	public List<MemberDTO> getUserList() {
-		return memberMapper.userData();  // userData SQL 호출
-	}
-
 
 
 	@Autowired
@@ -42,7 +37,7 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	AdminMapper adminMapper;
 
-
+	
 	@Override
 	public List<MovieDTO> getPopularBoxOfficeMovies() {
 		try {
@@ -76,7 +71,6 @@ public class AdminServiceImpl implements AdminService {
 			}
 			daysAgo++;
 		}
-
 		return allMovies.stream().distinct().collect(Collectors.toList());
 	}
 
@@ -140,7 +134,6 @@ public class AdminServiceImpl implements AdminService {
 			movie.setPosterUrl("데이터없음");
 			movie.setMovieSynopsis("데이터없음");
 		}
-
 		return movie;
 	}
 
@@ -180,15 +173,18 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public MovieDTO getMovieById(int movieID) {
-		//기존 영화 정보 가져오기
+		// 기존 영화 정보 가져오기
 		return adminMapper.findByMovieId(movieID);
 	}
 
 	public int editMovie(MovieDTO movie) {
-		return adminMapper.editMovie(movie); //수정 가능한 영화정보 8개 업데이트
+		return adminMapper.editMovie(movie); // 수정 가능한 영화정보 8개 업데이트
 	}
 
+
 	@Scheduled(cron = "0 0 23 * * *") //매일 밤 11시에 실행
+
+	@Scheduled(cron = "0 0 23 * * *") // 매일 밤 11시에 실행
 	public void scheduledFetchAndUpdateMovies() {
 		System.out.println("자동 업데이트 시작");
 		fetchAndUpdateMovies();
@@ -220,7 +216,6 @@ public class AdminServiceImpl implements AdminService {
 		}
 	}
 
-
 	@Autowired
 	private ScheduleMapper ScheduleMapper;
 
@@ -248,4 +243,10 @@ public class AdminServiceImpl implements AdminService {
 	    return ScheduleMapper.deleteSchedule(scheduleId);
 	}
 	
+
+	@Override
+	public List<MemberDTO> getUserList() {
+		return memberMapper.userData(); // userData SQL 호출
+	}
+
 }
