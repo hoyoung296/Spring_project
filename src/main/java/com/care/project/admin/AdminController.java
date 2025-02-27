@@ -1,7 +1,5 @@
 package com.care.project.admin;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.care.project.main.dto.MemberDTO;
 import com.care.project.main.dto.MovieDTO;
@@ -26,13 +22,13 @@ import com.care.project.main.dto.MovieDTO;
 public class AdminController {
 	@Autowired
 	AdminService AdminService;
-	
+
 	@PostMapping("/movie/popular")
 	public void getList() {
 		AdminService.getPopularBoxOfficeMovies();
 	}
 	
-	//수정된 영화 정보 업데이트
+	// 수정된 영화 정보 업데이트
     @PutMapping("/edit_movie")
     public ResponseEntity<Map<String, Object>> updateMovie(@RequestBody MovieDTO movie) {
     	int result = AdminService.editMovie(movie); // 영화 정보 업데이트
@@ -51,6 +47,6 @@ public class AdminController {
      
     @GetMapping("/members")
     public List<MemberDTO> getUserList() {
-        return AdminService.getUserList();  // 서비스 호출 및 반환
+        return AdminService.getUserList();
     }
 }

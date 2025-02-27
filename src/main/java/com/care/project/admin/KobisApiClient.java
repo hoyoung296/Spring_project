@@ -13,11 +13,7 @@ import java.util.List;
 
 @Component
 public class KobisApiClient {
-<<<<<<< HEAD
-    private static final String API_KEY = "b4c57f8af007ca1afabac2fed9a20ec7";
-=======
     private static final String API_KEY = "19d93a1467cc78d6b7f582a34ec66965";
->>>>>>> fb60d70435736a7772ca212929c9b4744408a7aa
     private static final String BASE_URL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json";
     private static final String MOVIE_INFO_URL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json";
 

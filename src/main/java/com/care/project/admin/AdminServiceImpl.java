@@ -21,7 +21,7 @@ import com.care.project.utils.MovieUtils;
 public class AdminServiceImpl implements AdminService {
 
 	@Autowired
-	private MemberMapper memberMapper;
+	MemberMapper memberMapper;
 
 	@Autowired
 	KobisApiClient kobisApiClient;
@@ -65,7 +65,6 @@ public class AdminServiceImpl implements AdminService {
 			}
 			daysAgo++;
 		}
-
 		return allMovies.stream().distinct().collect(Collectors.toList());
 	}
 
@@ -129,7 +128,6 @@ public class AdminServiceImpl implements AdminService {
 			movie.setPosterUrl("데이터없음");
 			movie.setMovieSynopsis("데이터없음");
 		}
-
 		return movie;
 	}
 
