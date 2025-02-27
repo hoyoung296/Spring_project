@@ -60,7 +60,7 @@ public class AdminController {
     }
 
     @GetMapping("/schedules")
-    public List<ScheduleDTO> getAllSchedules() {
+    public List<Map<String, Object>> getAllSchedules() {
         return AdminService.getAllSchedules();
     }
     

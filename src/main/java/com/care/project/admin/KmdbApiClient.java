@@ -45,7 +45,11 @@ public class KmdbApiClient {
         // 시놉시스 처리 (기존 방식 유지)
         movie.setMovieSynopsis(getFirstNonEmptyValue(firstMovie.path("plots").path("plot").path(0).path("plotText")));
         System.out.println("시놉 확인 : " + movie.getMovieSynopsis());
-
+        
+        // 러닝타임 처리
+        movie.setRuntime(firstMovie.path("runtime").asText());
+        System.out.println("러닝타임 확인 : " + movie.getRuntime());
+        
         return movie;
     }
 

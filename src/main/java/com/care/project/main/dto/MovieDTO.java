@@ -12,6 +12,7 @@ public class MovieDTO {
     private String movieRank; // movie_rank - > movieRank (영화데이터 api를 위한 추가, kobis에서 가져오는 rank의 자료형은 int이지만 날짜구별을 위해 앞에
     // "날짜 - 순위" 이런식으로 만들어서 데이터베이스 넣을거라서 String으로 작성
     private String openDt; // open_dt -> openDt (개봉일자까지 조건에 추가하여 정확한 영화데이터 가져오기)
+    private String runtime;
 
 	// Getters and Setters
     public int getMovieId() {
@@ -92,5 +93,13 @@ public class MovieDTO {
 
 	public void setOpenDt(String openDt) {
 		this.openDt = openDt;
+	}
+
+	public String getRuntime() {
+		return runtime;
+	}
+
+	public void setRuntime(String runtime) {
+		this.runtime = runtime;
 	}
 }

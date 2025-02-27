@@ -90,6 +90,7 @@ public class AdminServiceImpl implements AdminService {
 			movie.setPosterUrl(MovieUtils.getFirstPosterUrl(kmdbMovie.getPosterUrl()));
 			movie.setStillUrl(MovieUtils.getFirstPosterUrl(kmdbMovie.getStillUrl()));
 			movie.setMovieSynopsis(MovieUtils.getValidSynopsis(kmdbMovie.getMovieSynopsis()));
+			movie.setRuntime(MovieUtils.getValidRunntime(kmdbMovie.getRuntime()));
 
 			// 한글 제목 유지
 			if ((movie.getTitle() == null || movie.getTitle().trim().isEmpty()) && kmdbMovie.getTitle() != null
@@ -97,20 +98,20 @@ public class AdminServiceImpl implements AdminService {
 				movie.setTitle(kmdbMovie.getTitle());
 			}
 
-			// 영어 제목 유지 (NuLL 체크 추가)
+			// 영어 제목 유지 (NULL 체크 추가)
 			if (movie.getEntitle() == null || movie.getEntitle().trim().isEmpty()
 					|| movie.getEntitle().equals("데이터없음")) {
 				movie.setEntitle(kmdbMovie.getEntitle() != null && !kmdbMovie.getEntitle().trim().isEmpty()
 						? kmdbMovie.getEntitle()
-								: "데이터없음");
+						: "데이터없음");
 			}
 
-			// 감독 정보 유지 (NuLL 체크 추가)
+			// 감독 정보 유지 (NULL 체크 추가)
 			if (movie.getDirectorName() == null || movie.getDirectorName().trim().isEmpty()
 					|| movie.getDirectorName().equals("데이터없음")) {
 				movie.setDirectorName(
 						kmdbMovie.getDirectorName() != null && !kmdbMovie.getDirectorName().trim().isEmpty()
-						? kmdbMovie.getDirectorName()
+								? kmdbMovie.getDirectorName()
 								: "데이터없음");
 			}
 
@@ -132,6 +133,7 @@ public class AdminServiceImpl implements AdminService {
 			movie.setStillUrl("데이터없음");
 			movie.setPosterUrl("데이터없음");
 			movie.setMovieSynopsis("데이터없음");
+			movie.setRuntime("데이터없음");
 		}
 		return movie;
 	}
@@ -205,6 +207,8 @@ public class AdminServiceImpl implements AdminService {
 				existingMovie.setActors(movie.getActors());
 				existingMovie.setMovieRank(movie.getMovieRank());
 				existingMovie.setOpenDt(movie.getOpenDt());
+				existingMovie.setOpenDt(movie.getRuntime());
+
 				adminMapper.updateMovie(existingMovie);
 			} else {
 				adminMapper.insertMovie(movie);
@@ -218,20 +222,20 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<ScheduleDTO> getAllSchedules() {
+	public List<Map<String, Object>> getAllSchedules() {
 		return ScheduleMapper.getAllSchedules();
 	}
-	
+
 	@Override
 	public int insertSchedule(ScheduleDTO schedule) {
 		return ScheduleMapper.insertSchedule(schedule);
 	}
-	
+
 	@Override
 	public int deleteSchedule(int scheduleId) {
-	    return ScheduleMapper.deleteSchedule(scheduleId);
+		return ScheduleMapper.deleteSchedule(scheduleId);
 	}
-	
+
 	@Override
 	public List<MemberDTO> getUserList() {
 		return memberMapper.userData(); // userData SQL 호출

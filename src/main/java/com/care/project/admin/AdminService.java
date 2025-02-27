@@ -1,6 +1,7 @@
 package com.care.project.admin;
 
 import java.util.List;
+import java.util.Map;
 
 import com.care.project.main.dto.MemberDTO;
 import com.care.project.main.dto.MovieDTO;
@@ -17,7 +18,7 @@ public interface AdminService {
     //회원 리스트 가져오기
     public List<MemberDTO> getUserList();
     public List<ScreenDTO> getAllScreens();  // 모든 상영관 조회
-    public List<ScheduleDTO> getAllSchedules();  // 모든 상영 일정 조회
+    public List<Map<String, Object>> getAllSchedules();  // 모든 상영 일정 조회
     public int insertSchedule(ScheduleDTO scheduleDTO); //상영일정 업데이트
     public int deleteSchedule(int scheduleId); //상영일정 삭제
 }

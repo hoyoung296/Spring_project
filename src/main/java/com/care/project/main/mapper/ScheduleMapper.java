@@ -15,7 +15,7 @@ public interface ScheduleMapper {
 	public Map<String, Object> scheduleDetailData(Integer scheduleid);
 	public List<Map<String, Object>> reservedSeats(Integer scheduleid);
     public List<ScreenDTO> getAllScreens(); // 모든 상영관 조회
-    public List<ScheduleDTO> getAllSchedules(); // 모든 상영 일정 조회
+    public List<Map<String, Object>> getAllSchedules(); // 모든 상영 일정 조회
     public int insertSchedule(ScheduleDTO schedule); // 상영 일정 추가
     public int deleteSchedule(int scheduleId);  // 상영 일정 삭제
 }

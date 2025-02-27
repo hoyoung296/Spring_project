@@ -56,6 +56,16 @@
 		<id property="statusId" column="status_id" />
 		<result property="seatStatus" column="seat_status" />
 	</resultMap>
+	
+	<resultMap type="java.util.HashMap" id="movieschedule">
+		<id property="scheduleId" column="schedule_id" />
+		<result property="startDateTime" column="start_DT" javaType="java.sql.Timestamp" />
+		<result property="endDateTime" column="end_DT" javaType="java.sql.Timestamp" />
+		<result property="movieId" column="movie_id" />
+		<result property="screenId" column="screen_id" />
+		<result property="title" column="title" />
+		<result property="runtime" column="runtime" />
+	</resultMap>
 
 
 	<select id="getScheduleDate" resultType="map">
@@ -120,8 +130,8 @@
 	</select>
 
 	<!-- 상영일정 불러오기 -->
-	<select id="getAllSchedules" resultMap="schedule">
-		select * from Schedule
+	<select id="getAllSchedules" resultMap="movieschedule">
+		select * from Schedule inner join movie using (movie_id)
 	</select>
 
 	<!-- 상영일정 삽입 -->

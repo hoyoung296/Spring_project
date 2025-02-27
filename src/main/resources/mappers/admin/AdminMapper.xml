@@ -15,13 +15,16 @@
         <result property="actors" column="actors" />
         <result property="movieRank" column="movie_rank" />
         <result property="openDt" column="open_dt" />
+        <result property="runtime" column="runtime" />
     </resultMap>
 
     <insert id="insertMovie">
-        insert into movie (movie_id, title, entitle, poster_url, still_url, synopsis, director, actors, movie_rank, open_dt) 
+        insert into movie (movie_id, title, entitle, poster_url, still_url, synopsis, director, actors, movie_rank, open_dt,
+        runtime) 
         values (#{movie.movieId}, #{movie.title}, #{movie.entitle, jdbcType=VARCHAR}, #{movie.posterUrl}, #{movie.stillUrl},
                 #{movie.movieSynopsis}, #{movie.directorName, jdbcType=VARCHAR}, 
-                #{movie.actors, jdbcType=VARCHAR}, #{movie.movieRank}, #{movie.openDt, jdbcType=VARCHAR})
+                #{movie.actors, jdbcType=VARCHAR}, #{movie.movieRank}, 
+                #{movie.openDt, jdbcType=VARCHAR}, #{movie.runtime, jdbcType=VARCHAR})
     </insert>
 
    <!-- 기존 영화 찾기 SQL 추가 -->
@@ -39,7 +42,8 @@
             director = #{movie.directorName, jdbcType=VARCHAR}, 
             actors = #{movie.actors, jdbcType=VARCHAR},
             movie_rank = #{movie.movieRank},
-            open_dt = #{movie.openDt, jdbcType=VARCHAR}
+            open_dt = #{movie.openDt, jdbcType=VARCHAR},
+            runtime = #{movie.runtime, jdbcType=VARCHAR}
         WHERE movie_id = #{movie.movieId}
     </update>
     
@@ -54,7 +58,8 @@
             director = #{movie.directorName, jdbcType=VARCHAR}, 
             actors = #{movie.actors, jdbcType=VARCHAR},
             movie_rank = #{movie.movieRank},
-            open_dt = #{movie.openDt, jdbcType=VARCHAR}
+            open_dt = #{movie.openDt, jdbcType=VARCHAR},
+            runtime = #{movie.runtime, jdbcType=VARCHAR}
         WHERE movie_id = #{movie.movieId}
     </update>
 </mapper>

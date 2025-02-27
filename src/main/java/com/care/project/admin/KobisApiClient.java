@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 public class KobisApiClient {
-    private static final String API_KEY = "19d93a1467cc78d6b7f582a34ec66965";
+    private static final String API_KEY = "0a0b8e58997be826a63c954c589decce";
     private static final String BASE_URL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json";
     private static final String MOVIE_INFO_URL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json";
 
@@ -60,8 +60,11 @@ public class KobisApiClient {
             
             // 상세정보에서 영화 제목(영문)을 가져오기
             String movieEntitle = movieInfoNode.path("movieNmEn").asText();
-            System.out.println("영문 제목 확인 : " + movieEntitle);
+            if (movieEntitle == null || movieEntitle.trim().isEmpty()) {
+                movieEntitle = "데이터없음";  // 기본값 설정
+            }
             movie.setEntitle(movieEntitle);
+            System.out.println("영문 제목 확인 : " + movieEntitle);
             
             // 감독 정보 가져오기
             JsonNode directorsNode = movieInfoNode.path("directors");
