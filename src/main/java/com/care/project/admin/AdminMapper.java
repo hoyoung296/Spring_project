@@ -18,4 +18,3 @@ public interface AdminMapper {
 	
 	public int editMovie(@Param("movie") MovieDTO movie);
 }
-

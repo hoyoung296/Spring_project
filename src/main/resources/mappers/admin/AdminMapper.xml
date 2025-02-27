@@ -57,5 +57,4 @@
             open_dt = #{movie.openDt, jdbcType=VARCHAR}
         WHERE movie_id = #{movie.movieId}
     </update>
-    
 </mapper>

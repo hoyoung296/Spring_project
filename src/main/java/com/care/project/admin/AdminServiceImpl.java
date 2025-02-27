@@ -13,15 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.care.project.main.dto.MemberDTO;
 import com.care.project.main.dto.MovieDTO;
+import com.care.project.main.dto.ScheduleDTO;
+import com.care.project.main.dto.ScreenDTO;
 import com.care.project.main.mapper.MemberMapper;
+import com.care.project.main.mapper.ScheduleMapper;
 import com.care.project.utils.MovieUtils;
 
 @Service
 @Primary
 public class AdminServiceImpl implements AdminService {
-
 	@Autowired
 	MemberMapper memberMapper;
+
+	@Autowired
+	ScheduleMapper ScheduleMapper;
 
 	@Autowired
 	KobisApiClient kobisApiClient;
@@ -97,7 +102,7 @@ public class AdminServiceImpl implements AdminService {
 					|| movie.getEntitle().equals("데이터없음")) {
 				movie.setEntitle(kmdbMovie.getEntitle() != null && !kmdbMovie.getEntitle().trim().isEmpty()
 						? kmdbMovie.getEntitle()
-						: "데이터없음");
+								: "데이터없음");
 			}
 
 			// 감독 정보 유지 (NuLL 체크 추가)
@@ -105,7 +110,7 @@ public class AdminServiceImpl implements AdminService {
 					|| movie.getDirectorName().equals("데이터없음")) {
 				movie.setDirectorName(
 						kmdbMovie.getDirectorName() != null && !kmdbMovie.getDirectorName().trim().isEmpty()
-								? kmdbMovie.getDirectorName()
+						? kmdbMovie.getDirectorName()
 								: "데이터없음");
 			}
 
@@ -207,6 +212,26 @@ public class AdminServiceImpl implements AdminService {
 		}
 	}
 
+	@Override
+	public List<ScreenDTO> getAllScreens() {
+		return ScheduleMapper.getAllScreens();
+	}
+
+	@Override
+	public List<ScheduleDTO> getAllSchedules() {
+		return ScheduleMapper.getAllSchedules();
+	}
+	
+	@Override
+	public int insertSchedule(ScheduleDTO schedule) {
+		return ScheduleMapper.insertSchedule(schedule);
+	}
+	
+	@Override
+	public int deleteSchedule(int scheduleId) {
+	    return ScheduleMapper.deleteSchedule(scheduleId);
+	}
+	
 	@Override
 	public List<MemberDTO> getUserList() {
 		return memberMapper.userData(); // userData SQL 호출
