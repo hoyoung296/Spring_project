@@ -47,12 +47,6 @@
 		SELECT * FROM users WHERE user_id = #{userId}
 	</select>
 
-	<!-- 이메일 중복 체크 -->
-	<select id="getMemberByEmail" resultMap="member"
-		parameterType="String">
-		SELECT * FROM users WHERE email = #{email}
-	</select>
-
 
 	<select id="userData" resultMap="member">
 		select * from users

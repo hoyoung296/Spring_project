@@ -43,10 +43,7 @@ public class MemberController {
             }
 
             if (ms.isUserIdDuplicate(memberDTO.getUserId())) {
-                return createErrorResponse(ErrorType.INVALID_PARAMETER, "등록된 아이디입니다.");
-            }
-            if (ms.isEmailDuplicate(memberDTO.getEmail())) {
-                return createErrorResponse(ErrorType.INVALID_PARAMETER, "등록된 이메일입니다.");
+                return createErrorResponse(ErrorType.INVALID_PARAMETER, "이미 등록된 아이디입니다.");
             }
             ms.registerMember(memberDTO);
 
@@ -79,22 +76,6 @@ public class MemberController {
         }
     }
 
-    // 이메일 중복 체크
-    @GetMapping("/check-email")
-    public ResponseEntity<?> checkEmail(@RequestParam String email) {
-        try {
-            boolean isDuplicate = ms.isEmailDuplicate(email);
-            CommonResponse<Boolean> response = CommonResponse.<Boolean>builder()
-                    .code(Constant.Success.SUCCESS_CODE)
-                    .message(isDuplicate ? "이미 등록된 이메일입니다." : "사용 가능한 이메일입니다.")
-                    .data(isDuplicate)
-                    .build();
-            return CommonResponse.createResponse(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return createErrorResponse(ErrorType.SERVER_ERROR, "서버 내부 오류로 실패했습니다.");
-        }
-    }
-
     // 비밀번호 확인
     @PostMapping(value = "/check-password", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> checkPassword(@RequestBody MemberDTO memberDTO) {
@@ -111,21 +92,31 @@ public class MemberController {
         }
     }
 
-    // 로그인
+ // 로그인
     @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO) {
         try {
             boolean isValid = ms.loginMember(memberDTO);
-            String message = isValid ? "로그인 성공" : "아이디 또는 비밀번호가 일치하지 않습니다.";
-            
-            MemberDTO updatedMemberDTO = ms.getMember(memberDTO.getUserId());
-            
+            String message;
+            MemberDTO updatedMemberDTO = null;  // 초기화
+
+            // 로그인 성공 시 사용자 이름을 포함하여 메시지 수정
+            if (isValid) {
+                updatedMemberDTO = ms.getMember(memberDTO.getUserId());
+                String userName = updatedMemberDTO.getUserName();  // 사용자 이름 가져오기
+                message = userName + "님 반갑습니다!";  // 동적 메시지 생성
+            } else {
+                message = "아이디 또는 비밀번호가 일치하지 않습니다.";
+            }
+
             CommonResponse<MemberDTO> response = CommonResponse.<MemberDTO>builder()
                     .code(Constant.Success.SUCCESS_CODE)
                     .message(message)
-                    .data(updatedMemberDTO)
+                    .data(updatedMemberDTO)  // updatedMemberDTO가 null일 수 있음
                     .build();
+
             return CommonResponse.createResponse(response, HttpStatus.OK);
+            
         } catch (Exception e) {
             return createErrorResponse(ErrorType.SERVER_ERROR, "서버 내부 오류로 실패했습니다.");
         }
@@ -142,11 +133,18 @@ public class MemberController {
             if (!ms.isUserIdValid(memberDTO.getUserId())) {
                 return createErrorResponse(ErrorType.INVALID_PARAMETER, "아이디는 6자 이상 영문자와 숫자만 가능합니다.");
             }
-            if (!ms.isEmailValid(memberDTO.getEmail())) {
-                return createErrorResponse(ErrorType.INVALID_PARAMETER, "올바른 이메일 형식을 입력해주세요. (예: example@email.com)");
+         // 이메일 유효성 검사 제외 (기존 값으로 유지 처리)
+            if (memberDTO.getEmail() != null && !memberDTO.getEmail().isEmpty()) {
+                if (!ms.isEmailValid(memberDTO.getEmail())) {
+                    return createErrorResponse(ErrorType.INVALID_PARAMETER, "올바른 이메일 형식을 입력해주세요. (예: example@email.com)");
+                }
             }
-            if (!ms.isPhoneNumberValid(memberDTO.getPhoneNumber())) {
-                return createErrorResponse(ErrorType.INVALID_PARAMETER, "하이픈(-)이나 공백 없이 숫자만 입력해주세요. (예: 01012345678)");
+
+            // 폰번호 유효성 검사 제외 (기존 값으로 유지 처리)
+            if (memberDTO.getPhoneNumber() != null && !memberDTO.getPhoneNumber().isEmpty()) {
+                if (!ms.isPhoneNumberValid(memberDTO.getPhoneNumber())) {
+                    return createErrorResponse(ErrorType.INVALID_PARAMETER, "하이픈(-)이나 공백 없이 숫자만 입력해주세요. (예: 01012345678)");
+                }
             }
             // 새 비밀번호 유효성 검사 추가
             if (memberDTO.getNewPassword() != null && !memberDTO.getNewPassword().isEmpty()) {
