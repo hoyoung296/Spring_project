@@ -25,7 +25,7 @@ public class MemberController {
     private MemberService ms;
 
     // 회원가입
-    @PostMapping(value = "/register", produces = "application/json;charset=UTF-8")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody MemberDTO memberDTO) {
         try {
             // 유효성 검사
@@ -77,7 +77,7 @@ public class MemberController {
     }
 
     // 비밀번호 확인
-    @PostMapping(value = "/check-password", produces = "application/json;charset=UTF-8")
+    @PostMapping("/check-password")
     public ResponseEntity<?> checkPassword(@RequestBody MemberDTO memberDTO) {
         try {
             boolean isValid = ms.checkPassword(memberDTO);
@@ -92,8 +92,8 @@ public class MemberController {
         }
     }
 
- // 로그인
-    @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
+    // 로그인
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO) {
         try {
             boolean isValid = ms.loginMember(memberDTO);
@@ -123,7 +123,7 @@ public class MemberController {
     }
 
     // 회원정보 수정
-    @PutMapping(value = "/update", produces = "application/json;charset=UTF-8")
+    @PutMapping("/update")
     public ResponseEntity<?> updateMember(@RequestBody MemberDTO memberDTO) {
         try {
             if (!ms.checkPassword(memberDTO)) {
@@ -168,7 +168,7 @@ public class MemberController {
     }
 
     // 회원 탈퇴
-    @DeleteMapping(value = "/delete", produces = "application/json;charset=UTF-8")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteMember(@RequestBody MemberDTO memberDTO) {
         try {
             if (!ms.checkPassword(memberDTO)) {
@@ -187,7 +187,7 @@ public class MemberController {
     }
 
     // 사용자 정보 조회
-    @GetMapping(value = "/info", produces = "application/json;charset=UTF-8")
+    @GetMapping("/info")
     public ResponseEntity<?> getMemberInfo(@RequestParam String userId) {
         try {
             MemberDTO memberDTO = ms.getMember(userId);
