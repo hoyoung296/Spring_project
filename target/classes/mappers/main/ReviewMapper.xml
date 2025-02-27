@@ -64,7 +64,7 @@
 
 	<select id="getList" resultMap="search">
 		select * from movie <if test="id != null and id.trim() != ''"> where title = #{id} or director = #{id} or
-			INSTR(',' || REPLACE(actors, ' ', '') || ',', ',' || #{id} || ',') > 0</if>
+			INSTR(',' || REGEXP_REPLACE(actors, '\\s*,\\s*', ',') || ',', ',' || #{id} || ',') > 0</if>
 	</select>
 	<select id="searchInfo" resultMap="info">
 		select * from movie left join review using (movie_id) where movie_id=#{id}
@@ -79,13 +79,14 @@
 	<select id="getReserve" resultMap="reserve">
 		select r.*, TO_CHAR(sch.start_dt, 'YYYY-MM-DD HH24:MI:SS') AS start_dt,
 		TO_CHAR(sch.end_dt, 'YYYY-MM-DD HH24:MI:SS') AS end_dt,
-		m.*, ss.*, s.*, sc.*, rs.*
+		m.*, ss.*, s.*, sc.*, rs.*, sc2.*
 		from reservation r inner join reservation_seat rs on r.reservation_id = rs.reservation_id
 		inner join seat_status ss on rs.seat_status_id = ss.seat_status_id
 		inner join seat s on ss.seat_id = s.seat_id
 		inner join schedule sch on r.schedule_id = sch.schedule_id
 		inner join movie m on sch.movie_id = m.movie_id
 		inner join screen sc on sch.screen_id = sc.screen_id
+		inner join screen sc2 on s.screen_id = sc2.screen_id
 		where r.user_id=#{id}
 		order by sch.start_dt desc offset #{start} rows fetch next 5 rows only
 	</select>
@@ -97,6 +98,7 @@
 		inner join schedule sch on r.schedule_id = sch.schedule_id
 		inner join movie m on sch.movie_id = m.movie_id
 		inner join screen sc on sch.screen_id = sc.screen_id
+		inner join screen sc2 on s.screen_id = sc2.screen_id
 		where r.user_id=#{id}
 	</select>
 	<select id="reviewCheck">
