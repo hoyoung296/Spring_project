@@ -58,8 +58,6 @@
 		<result property="seatStatus" column="seat_status" />
 	</resultMap>
 	
-	
-	
 
 	<select id="getScheduleDate" resultType="map">
     SELECT
@@ -116,6 +114,29 @@
 	    INNER JOIN Seat s ON ss.seat_id = s.seat_id
 	    WHERE ss.schedule_id = #{scheduleid} AND (ss.status_id = 2 or ss.status_id = 3)
 	</select>
+	
+	
+	<!-- 상영스케쥴 불러오기 -->
+	<select id="getAllSchedules" resultMap="schedule">
+        select * from Schedule
+    </select>
+	
+	<!-- 상영일정 삽입 -->
+	<insert id="insertSchedule" parameterType="com.care.project.main.dto.ScheduleDTO">
+    INSERT INTO schedule (schedule_id, start_DT, end_DT, movie_id, screen_id)
+    VALUES (schedule_sequence.nextval, #{startDateTime}, #{endDateTime}, #{movieId}, #{screenId})
+	</insert>
+	
+	<!-- 상영관정보 불러오기 -->
+	<select id="getAllScreens" resultMap="screen">
+        select * from Screen
+    </select>
+    
+	
+	<!-- 상영 일정 삭제 -->
+	<delete id="deleteSchedule">
+    DELETE FROM schedule WHERE schedule_id = #{scheduleId}
+	</delete>
 	
 	
 </mapper>
