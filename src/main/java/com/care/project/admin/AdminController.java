@@ -65,10 +65,10 @@ public class AdminController {
     }
     
     @PostMapping("/schedule/insert")
-    public ResponseEntity<Map<String, Object>> insertSchedule(@RequestBody ScheduleDTO scheduleDTO) {
-        int result = AdminService.insertSchedule(scheduleDTO);
+    public ResponseEntity<Map<String, Object>> insertSchedule(@RequestBody List<ScheduleDTO> scheduleList) {
+        int result = AdminService.insertSchedule(scheduleList);
         Map<String, Object> map = new HashMap<String, Object>();
-    	if (result == 1) {
+    	if (result > 0 ) {
 			map.put("message", "상영 일정 입력 완료");
 			return ResponseEntity.ok(map); // HTTP 200
 		} else if (result == -1) { // 예를 들어 없는 ID
