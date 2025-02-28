@@ -11,8 +11,9 @@
 		<result property="password" column="password" />
 		<result property="email" column="email" />
 		<result property="phoneNumber" column="phone_number" />
-		<result property="addr" column="addr" />
 		<result property="postNum" column="postnum" />
+		<result property="addr" column="addr" />
+		<result property="detailAddr" column="detail_addr" /> <!-- 추가 -->
 		<result property="userBirthday" column="user_birthday" />
 		<result property="userGrade" column="user_grade" />
 	</resultMap>
@@ -20,10 +21,10 @@
 	<!-- 회원가입 -->
 	<insert id="register"
 		parameterType="com.care.project.main.dto.MemberDTO">
-		INSERT INTO users (user_id, username, password, email, phone_number, addr,
-		postnum, user_birthday, user_grade)
+		INSERT INTO users (user_id, username, password, email, phone_number, postnum,
+		addr, detail_addr,  user_birthday, user_grade)
 		VALUES (#{userId}, #{userName}, #{password}, #{email}, #{phoneNumber},
-		#{addr}, #{postNum}, #{userBirthday}, #{userGrade})
+		#{postNum}, #{addr}, #{detailAddr}, #{userBirthday}, #{userGrade})
 	</insert>
 
 	<!-- 회원 정보 수정 -->
@@ -31,8 +32,8 @@
 		parameterType="com.care.project.main.dto.MemberDTO">
 		UPDATE users
 		SET username = #{userName}, password = #{password}, email = #{email},
-		phone_number = #{phoneNumber},
-		addr = #{addr}, postnum = #{postNum}, user_birthday = #{userBirthday},
+		phone_number = #{phoneNumber}, postnum = #{postNum},
+		addr = #{addr}, detail_addr = #{detailAddr}, user_birthday = #{userBirthday},
 		user_grade = #{userGrade}
 		WHERE user_id = #{userId}
 	</update>

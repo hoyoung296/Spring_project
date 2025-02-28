@@ -1,7 +1,7 @@
 package com.care.project.main.dto;
 
 public class MemberDTO {
-	private String userId, userName, password, newPassword, email, phoneNumber, addr, postNum, userGrade;
+	private String userId, userName, password, newPassword, email, phoneNumber, postNum, addr, detailAddr, userGrade;
 	private Integer userBirthday;
 	
 	public String getUserId() {
@@ -40,17 +40,23 @@ public class MemberDTO {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	public String getPostNum() {
+		return postNum;
+	}
+	public void setPostNum(String postNum) {
+		this.postNum = postNum;
+	}
 	public String getAddr() {
 		return addr;
 	}
 	public void setAddr(String addr) {
 		this.addr = addr;
 	}
-	public String getPostNum() {
-		return postNum;
+	public String getDetailAddr() {
+		return detailAddr;
 	}
-	public void setPostNum(String postNum) {
-		this.postNum = postNum;
+	public void setDetailAddr(String detailAddr) {
+		this.detailAddr = detailAddr;
 	}
 	public String getUserGrade() {
 		return userGrade;
