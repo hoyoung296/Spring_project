@@ -19,6 +19,6 @@ public interface AdminService {
     public List<MemberDTO> getUserList();
     public List<ScreenDTO> getAllScreens();  // 모든 상영관 조회
     public List<Map<String, Object>> getAllSchedules();  // 모든 상영 일정 조회
-    public int insertSchedule(ScheduleDTO scheduleDTO); //상영일정 업데이트
+    public int insertSchedule(List<ScheduleDTO> scheduleList); //상영일정 업데이트
     public int deleteSchedule(int scheduleId); //상영일정 삭제
 }

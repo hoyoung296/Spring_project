@@ -134,7 +134,7 @@
 		select * from Schedule inner join movie using (movie_id)
 	</select>
 
-	<!-- 상영일정 삽입 -->
+	<!-- 상영일정 삽입
 	<insert id="insertSchedule"
 		parameterType="com.care.project.main.dto.ScheduleDTO">
 		INSERT INTO schedule (schedule_id, start_DT, end_DT, movie_id, screen_id)
@@ -144,6 +144,15 @@
 		#{movieId},
 		#{screenId})
 	</insert>
+	 -->
+	
+	<insert id="insertSchedule" parameterType="com.care.project.main.dto.ScheduleDTO">
+    INSERT INTO schedule (schedule_id, movie_id, screen_id, start_DT, end_DT)
+    VALUES (schedule_sequence.nextval, #{movieId}, #{screenId}, 
+        TO_TIMESTAMP(#{startDateTime}, 'YYYY-MM-DD HH24:MI:SS'), 
+        TO_TIMESTAMP(#{endDateTime}, 'YYYY-MM-DD HH24:MI:SS'))
+</insert>
+	
 
 	<!-- 상영관정보 불러오기 -->
 	<select id="getAllScreens" resultMap="screen">

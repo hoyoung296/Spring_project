@@ -103,7 +103,7 @@ public class AdminServiceImpl implements AdminService {
 					|| movie.getEntitle().equals("데이터없음")) {
 				movie.setEntitle(kmdbMovie.getEntitle() != null && !kmdbMovie.getEntitle().trim().isEmpty()
 						? kmdbMovie.getEntitle()
-						: "데이터없음");
+								: "데이터없음");
 			}
 
 			// 감독 정보 유지 (NULL 체크 추가)
@@ -111,7 +111,7 @@ public class AdminServiceImpl implements AdminService {
 					|| movie.getDirectorName().equals("데이터없음")) {
 				movie.setDirectorName(
 						kmdbMovie.getDirectorName() != null && !kmdbMovie.getDirectorName().trim().isEmpty()
-								? kmdbMovie.getDirectorName()
+						? kmdbMovie.getDirectorName()
 								: "데이터없음");
 			}
 
@@ -227,8 +227,12 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public int insertSchedule(ScheduleDTO schedule) {
-		return ScheduleMapper.insertSchedule(schedule);
+	public int insertSchedule(List<ScheduleDTO> scheduleList) {
+		int result = 0;
+		for (ScheduleDTO schedule : scheduleList) {
+			result += ScheduleMapper.insertSchedule(schedule);
+		}
+		return result;
 	}
 
 	@Override
