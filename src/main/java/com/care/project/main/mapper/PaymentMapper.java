@@ -1,15 +1,25 @@
 package com.care.project.main.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import com.care.project.main.dto.PaymentDTO;
 
+@Mapper
 public interface PaymentMapper {
 	
-	// Payment 레코드 삽입 (pending 상태)
-    void insertPayment(PaymentDTO payment);
+	// 결제 정보 저장 (pending 상태)
+    Integer insertPayment(PaymentDTO payment);
     
-    // paymentId를 이용하여 Payment 레코드 조회
-    PaymentDTO selectPayment(Long paymentId);
+    // paymentId로 Payment 조회
+    PaymentDTO selectPayment(@Param("paymentId") Long paymentId);
     
-    // Payment 레코드의 결제 상태 업데이트
-    void updatePaymentStatus(PaymentDTO payment);
+    // portonePaymentId (imp_uid)로 Payment 조회
+    PaymentDTO selectPaymentByPortoneId(@Param("portonePaymentId") String portonePaymentId);
+    
+    // 결제 상태 업데이트 (paymentId 사용)
+    Integer updatePaymentStatus(@Param("paymentId") Long paymentId, @Param("paymentStatus") String paymentStatus);
+
+    // portonePaymentId (imp_uid)로 결제 상태 업데이트 추가
+    Integer updatePaymentStatusByPortoneId(@Param("portonePaymentId") String portonePaymentId, @Param("paymentStatus") String paymentStatus);
 }

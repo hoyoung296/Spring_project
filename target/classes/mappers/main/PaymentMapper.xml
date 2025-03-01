@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.mapper.PaymentMapper">
+<mapper namespace="com.care.project.main.mapper.PaymentMapper">
 
     <!-- PaymentDTO ResultMap -->
     <resultMap id="PaymentResultMap" type="com.care.project.main.dto.PaymentDTO">
@@ -18,45 +18,47 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
+	<!-- 결제 정보 저장 -->
     <insert id="insertPayment" parameterType="com.care.project.main.dto.PaymentDTO">
         INSERT INTO PAYMENT (
+       		payment_id,
             reservation_id,
             payment_method_id,
             amount,
             payment_status,
             portone_payment_id,
-            receipt_url,
             created_at
         ) VALUES (
+        	#{paymentId},
             #{reservationId},
             #{paymentMethodId},
             #{amount},
             #{paymentStatus},
             #{portonePaymentId},
-            #{receiptUrl},
             SYSTIMESTAMP
         )
     </insert>
     
+    <!-- paymentId로 결제 조회 -->
     <select id="selectPayment" parameterType="long" resultMap="PaymentResultMap">
-        SELECT 
-            payment_id,
-            reservation_id,
-            payment_method_id,
-            amount,
-            payment_status,
-            portone_payment_id,
-            receipt_url,
-            TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') AS createdAt,
-            TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updatedAt
-        FROM PAYMENT
-        WHERE payment_id = #{paymentId}
+        SELECT * FROM PAYMENT WHERE payment_id = #{paymentId}
+    </select>
+
+    <!-- portonePaymentId로 결제 조회 -->
+    <select id="selectPaymentByPortoneId" parameterType="string" resultMap="PaymentResultMap">
+        SELECT * FROM PAYMENT WHERE portone_payment_id = #{portonePaymentId}
     </select>
     
-    <update id="updatePaymentStatus" parameterType="com.care.project.main.dto.PaymentDTO">
-        UPDATE PAYMENT
-           SET payment_status = #{paymentStatus},
-               updated_at = SYSTIMESTAMP
-         WHERE payment_id = #{paymentId}
+    <!-- 결제 상태 업데이트 -->
+    <update id="updatePaymentStatus">
+        UPDATE PAYMENT SET payment_status = #{paymentStatus} WHERE payment_id = #{paymentId}
     </update>
+    
+    <!-- 결제 상태 업데이트 (portonePaymentId 기준) -->
+    <update id="updatePaymentStatusByPortoneId">
+        UPDATE PAYMENT 
+        SET payment_status = #{paymentStatus}, updated_at = SYSTIMESTAMP
+        WHERE portone_payment_id = #{portonePaymentId}
+    </update>
+    
 </mapper>
