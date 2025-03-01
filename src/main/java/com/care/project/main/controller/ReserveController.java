@@ -143,7 +143,7 @@ public class ReserveController {
     @DeleteMapping("/cancel")
     public ResponseEntity<?> cancelReservation(
     		@RequestBody Map<String, Object> reserveData) {
-    	System.out.println("reserveData : " + reserveData);
+    	
     	try {
         	 // ✅ 요청 데이터 유효성 검사
 	        if (reserveData == null) {
