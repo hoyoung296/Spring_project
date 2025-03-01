@@ -10,5 +10,5 @@ public interface MemberMapper {
     void deleteMember(String userId);
     MemberDTO getMember(String userId);
     MemberDTO getMemberByEmail(String email);  // 이메일 중복 체크
-    List<MemberDTO> userData(); //유저데이터 호출
+    List<MemberDTO> userData(); //유저데이터 호출(관리자 페이지에서 사용)
 }

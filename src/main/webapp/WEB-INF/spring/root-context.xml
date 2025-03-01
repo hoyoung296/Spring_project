@@ -14,7 +14,8 @@
     <!-- Root Context: defines shared resources visible to all other web components -->
 
     <!-- 히카리 커넥션풀 빈 등록 -->
-    <!--  
+    <!-- 이전 sinema 설정은 주석 처리 -->
+    <!--
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"> 
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> 
         <property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.51.95:1522:xe" /> 
@@ -43,4 +44,5 @@
     <!-- 마이바티스 XML 파일과 DAO 빈 연결 -->
     <mybatis-spring:scan base-package="com.care.project.main.mapper"/>
     <mybatis-spring:scan base-package="com.care.project.admin"/>
+
 </beans>

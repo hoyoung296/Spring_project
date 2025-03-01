@@ -84,11 +84,14 @@ public class MemberServiceImpl implements MemberService {
         if (memberDTO.getPhoneNumber() == null || memberDTO.getPhoneNumber().isEmpty()) {
             memberDTO.setPhoneNumber(user.getPhoneNumber());
         }
+        if (memberDTO.getPostNum() == null || memberDTO.getPostNum().isEmpty()) {
+            memberDTO.setPostNum(user.getPostNum());
+        }
         if (memberDTO.getAddr() == null || memberDTO.getAddr().isEmpty()) {
             memberDTO.setAddr(user.getAddr());
         }
-        if (memberDTO.getPostNum() == null || memberDTO.getPostNum().isEmpty()) {
-            memberDTO.setPostNum(user.getPostNum());
+        if (memberDTO.getDetailAddr() == null || memberDTO.getDetailAddr().isEmpty()) {
+            memberDTO.setDetailAddr(user.getDetailAddr()); // 상세 주소를 기존 값으로 유지
         }
         if (memberDTO.getUserGrade() == null || memberDTO.getUserGrade().isEmpty()) {
             memberDTO.setUserGrade(user.getUserGrade());
@@ -117,11 +120,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean isUserIdDuplicate(String userId) {
         return memberMapper.getMember(userId) != null;// 아이디 중복 체크
-    }
-
-    @Override
-    public boolean isEmailDuplicate(String email) {
-        return memberMapper.getMemberByEmail(email) != null;// 이메일 중복 체크
     }
     
     @Override
