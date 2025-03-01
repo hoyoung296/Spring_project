@@ -207,7 +207,7 @@ public class AdminServiceImpl implements AdminService {
 				existingMovie.setActors(movie.getActors());
 				existingMovie.setMovieRank(movie.getMovieRank());
 				existingMovie.setOpenDt(movie.getOpenDt());
-				existingMovie.setOpenDt(movie.getRuntime());
+				existingMovie.setRuntime(movie.getRuntime());
 
 				adminMapper.updateMovie(existingMovie);
 			} else {
