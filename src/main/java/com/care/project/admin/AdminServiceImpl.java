@@ -244,4 +244,8 @@ public class AdminServiceImpl implements AdminService {
 	public List<MemberDTO> getUserList() {
 		return memberMapper.userData(); // userData SQL 호출
 	}
+	
+	public int insertMovie(MovieDTO dto) {
+		return adminMapper.insertMovie(dto);
+	}
 }
