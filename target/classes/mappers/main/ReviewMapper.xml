@@ -4,8 +4,7 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.care.project.main.mapper.ReviewMapper">
-	<resultMap type="com.care.project.main.dto.MovieDTO"
-		id="search">
+	<resultMap type="com.care.project.main.dto.MovieDTO" id="search">
 		<id property="movieId" column="movie_id" />
 		<result property="title" column="title" />
 		<result property="entitle" column="entitle" />
@@ -44,8 +43,7 @@
 		<result property="screenId" column="screen_id" />
 		<result property="userId" column="user_id" />
 		<result property="seatId" column="seat_id" />
-		<result property="reservationStatusId"
-			column="reservation_status_id" />
+		<result property="reservationStatusId" column="reservation_status_id" />
 		<result property="totalAmount" column="total_amount" />
 		<result property="seatRow" column="seat_row" />
 		<result property="seatNumber" column="seat_number" />
