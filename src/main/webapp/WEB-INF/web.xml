@@ -73,7 +73,11 @@
 	    </init-param>
 	    <init-param>
 	        <param-name>cors.allowed.headers</param-name>
-	        <param-value>Content-Type,Authorization</param-value>
+	        <param-value>*</param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>cors.allow.credentials</param-name>
+	        <param-value>true</param-value>
 	    </init-param>
 	</filter>
 	
