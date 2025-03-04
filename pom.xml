@@ -212,17 +212,38 @@
 			<artifactId>spring-tx</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-		<dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-databind</artifactId>
-		    <version>2.13.3</version> <!-- 최신 버전 확인 -->
-		</dependency>
 		<!-- PortOne API 호출을 위해 OkHttp -->
 		<dependency>
 		    <groupId>com.squareup.okhttp3</groupId>
 		    <artifactId>okhttp</artifactId>
 		    <version>4.9.3</version>
 		</dependency>
+		 <!-- Java 8 날짜/시간 모듈 -->
+	    <dependency>
+	        <groupId>com.fasterxml.jackson.datatype</groupId>
+	        <artifactId>jackson-datatype-jsr310</artifactId>
+	        <version>2.15.0</version>
+	    </dependency>
+	    
+	     <!-- JWT (jjwt) -->
+	    <dependency>
+	      <groupId>io.jsonwebtoken</groupId>
+	      <artifactId>jjwt</artifactId>
+	      <version>0.9.1</version>
+	    </dependency>
+	    
+	    <!--  JAXB API 의존성 -->
+	    <dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		    <version>2.3.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.glassfish.jaxb</groupId>
+		    <artifactId>jaxb-runtime</artifactId>
+		    <version>2.3.1</version>
+		</dependency>
+		
 	</dependencies>
 	<build>
 		<plugins>
