@@ -105,7 +105,7 @@ public class ReviewServiceImpl implements ReviewService {
 	    }
 	    
 	    // ObjectMapper 설정
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");  // 최종 출력 형식
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  // 최종 출력 형식
 
 	    List<Map<String, Object>> formattedList = list.stream().map(map -> {
 	        try {
