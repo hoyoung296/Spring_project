@@ -90,7 +90,6 @@ public class AdminServiceImpl implements AdminService {
 			movie.setPosterUrl(MovieUtils.getFirstPosterUrl(kmdbMovie.getPosterUrl()));
 			movie.setStillUrl(MovieUtils.getFirstPosterUrl(kmdbMovie.getStillUrl()));
 			movie.setMovieSynopsis(MovieUtils.getValidSynopsis(kmdbMovie.getMovieSynopsis()));
-			movie.setRuntime(MovieUtils.getValidRunntime(kmdbMovie.getRuntime()));
 
 			// 한글 제목 유지
 			if ((movie.getTitle() == null || movie.getTitle().trim().isEmpty()) && kmdbMovie.getTitle() != null
@@ -103,7 +102,7 @@ public class AdminServiceImpl implements AdminService {
 					|| movie.getEntitle().equals("데이터없음")) {
 				movie.setEntitle(kmdbMovie.getEntitle() != null && !kmdbMovie.getEntitle().trim().isEmpty()
 						? kmdbMovie.getEntitle()
-								: "데이터없음");
+						: "데이터없음");
 			}
 
 			// 감독 정보 유지 (NULL 체크 추가)
@@ -111,7 +110,7 @@ public class AdminServiceImpl implements AdminService {
 					|| movie.getDirectorName().equals("데이터없음")) {
 				movie.setDirectorName(
 						kmdbMovie.getDirectorName() != null && !kmdbMovie.getDirectorName().trim().isEmpty()
-						? kmdbMovie.getDirectorName()
+								? kmdbMovie.getDirectorName()
 								: "데이터없음");
 			}
 
@@ -133,7 +132,6 @@ public class AdminServiceImpl implements AdminService {
 			movie.setStillUrl("데이터없음");
 			movie.setPosterUrl("데이터없음");
 			movie.setMovieSynopsis("데이터없음");
-			movie.setRuntime("데이터없음");
 		}
 		return movie;
 	}
@@ -179,7 +177,13 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	public int editMovie(MovieDTO movie) {
-		return adminMapper.editMovie(movie); // 수정 가능한 영화정보 8개 업데이트
+		int result = 0;
+		try {
+			result = adminMapper.editMovie(movie);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	@Scheduled(cron = "0 0 23 * * *") // 매일 밤 11시에 실행
@@ -207,7 +211,6 @@ public class AdminServiceImpl implements AdminService {
 				existingMovie.setActors(movie.getActors());
 				existingMovie.setMovieRank(movie.getMovieRank());
 				existingMovie.setOpenDt(movie.getOpenDt());
-				existingMovie.setRuntime(movie.getRuntime());
 
 				adminMapper.updateMovie(existingMovie);
 			} else {
@@ -226,26 +229,63 @@ public class AdminServiceImpl implements AdminService {
 		return ScheduleMapper.getAllSchedules();
 	}
 
+	public static List<String> generateSeatList() {
+		List<String> seats = new ArrayList<>();
+		String[] rows = { "A", "B", "C", "D", "E", "F", "G" };
+		for (String row : rows) {
+			for (int i = 1; i <= 10; i++) {
+				seats.add(row + i);
+			}
+		}
+		return seats;
+	}
+
 	@Override
 	public int insertSchedule(List<ScheduleDTO> scheduleList) {
 		int result = 0;
+		List<String> seatList = generateSeatList(); // A1 ~ G10 좌석 리스트 생성
+
 		for (ScheduleDTO schedule : scheduleList) {
-			result += ScheduleMapper.insertSchedule(schedule);
+			result += ScheduleMapper.insertSchedule(schedule); // DB에서 schedule_id 생성됨
+
+			int scheduleId = adminMapper.getscheduleId(); // 여기서 방금 생성된 schedule_id 사용 가능
+			int seatIndex = 0; // 좌석 인덱스 초기화
+			System.out.println("scheduleId 확인 : " + adminMapper.getscheduleId());
+
+			for (int i = 0; i < 70; i++) {
+				if (seatIndex >= seatList.size()) {
+					break; // 모든 좌석이 할당되었으면 종료
+				}
+				String seatId = seatList.get(seatIndex++); // 순서대로 seat_id 할당.
+				adminMapper.insertSeat(scheduleId, seatId); // 생성된 schedule_id 사용
+			}
 		}
 		return result;
 	}
 
 	@Override
 	public int deleteSchedule(int scheduleId) {
-		return ScheduleMapper.deleteSchedule(scheduleId);
+		int result = 0;
+		try {
+			result = ScheduleMapper.deleteSchedule(scheduleId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	@Override
 	public List<MemberDTO> getUserList() {
 		return memberMapper.userData(); // userData SQL 호출
 	}
-	
+
 	public int insertMovie(MovieDTO dto) {
-		return adminMapper.insertMovie(dto);
+		int result = 0;
+		try {
+			result = adminMapper.insertMovie(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

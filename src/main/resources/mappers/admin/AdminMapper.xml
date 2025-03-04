@@ -15,16 +15,14 @@
         <result property="actors" column="actors" />
         <result property="movieRank" column="movie_rank" />
         <result property="openDt" column="open_dt" />
-        <result property="runtime" column="runtime" />
     </resultMap>
 
     <insert id="insertMovie">
-        insert into movie (movie_id, title, entitle, poster_url, still_url, synopsis, director, actors, movie_rank, open_dt,
-        runtime) 
+        insert into movie (movie_id, title, entitle, poster_url, still_url, synopsis, director, actors, movie_rank, open_dt) 
         values (#{movie.movieId}, #{movie.title}, #{movie.entitle, jdbcType=VARCHAR}, #{movie.posterUrl}, #{movie.stillUrl},
                 #{movie.movieSynopsis}, #{movie.directorName, jdbcType=VARCHAR}, 
                 #{movie.actors, jdbcType=VARCHAR}, #{movie.movieRank}, 
-                #{movie.openDt, jdbcType=VARCHAR}, #{movie.runtime, jdbcType=VARCHAR})
+                #{movie.openDt, jdbcType=VARCHAR})
     </insert>
 
    <!-- 기존 영화 찾기 SQL 추가 -->
@@ -42,8 +40,7 @@
             director = #{movie.directorName, jdbcType=VARCHAR}, 
             actors = #{movie.actors, jdbcType=VARCHAR},
             movie_rank = #{movie.movieRank},
-            open_dt = #{movie.openDt, jdbcType=VARCHAR},
-            runtime = #{movie.runtime, jdbcType=VARCHAR}
+            open_dt = #{movie.openDt, jdbcType=VARCHAR}
         WHERE movie_id = #{movie.movieId}
     </update>
     
@@ -58,8 +55,16 @@
             director = #{movie.directorName, jdbcType=VARCHAR}, 
             actors = #{movie.actors, jdbcType=VARCHAR},
             movie_rank = #{movie.movieRank},
-            open_dt = #{movie.openDt, jdbcType=VARCHAR},
-            runtime = #{movie.runtime, jdbcType=VARCHAR}
+            open_dt = #{movie.openDt, jdbcType=VARCHAR}
         WHERE movie_id = #{movie.movieId}
     </update>
+    
+    <select id="getscheduleId">
+    	SELECT MAX(schedule_id) FROM Schedule
+    </select>
+    
+    <!-- 좌석 상태 삽입 -->
+    <insert id="insertSeat">
+    	insert into seat_status (seat_status_id, seat_id, schedule_id) values(seat_status_sequence.nextval, #{seatId} ,#{scheduleId})
+    </insert>
 </mapper>

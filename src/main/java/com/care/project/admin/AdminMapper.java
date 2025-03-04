@@ -14,4 +14,6 @@ public interface AdminMapper {
 	// 기존 영화 업데이트
 	public void updateMovie(@Param("movie") MovieDTO movie);
 	public int editMovie(@Param("movie") MovieDTO movie);
+	public int getscheduleId();
+	public void insertSeat(@Param("scheduleId") int scheduleId, @Param("seatId") String seatId);
 }

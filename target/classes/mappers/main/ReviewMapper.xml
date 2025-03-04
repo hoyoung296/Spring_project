@@ -15,7 +15,6 @@
 		<result property="actors" column="actors" />
 		<result property="movieRank" column="movie_rank" />
 		<result property="openDt" column="open_dt" />
-		<result property="runtime" column="runtime" />
 	</resultMap>
 
 	<resultMap type="java.util.HashMap" id="info">
@@ -31,7 +30,6 @@
 		<result property="actors" column="actors" />
 		<result property="movieRank" column="movie_rank" />
 		<result property="openDt" column="open_dt" />
-		<result property="runtime" column="runtime" />
 		<result property="userId" column="user_id" />
 		<result property="reviewDate" column="review_date" />
 	</resultMap>
@@ -59,14 +57,13 @@
 		<result property="actors" column="actors" />
 		<result property="movieRank" column="movie_rank" />
 		<result property="openDt" column="open_dt" />
-		<result property="runtime" column="runtime" />
 		<result property="seatStatusId" column="seat_status_id" />
 		<result property="statusId" column="status_id" />
 	</resultMap>
 
 	<select id="getList" resultMap="search">
 		SELECT * FROM movie<if test="id != null and id.trim() != ''">
-		WHERE title = #{id} OR director = #{id} OR REGEXP_LIKE(actors, '(^|, )' || #{id} || '($|, )') </if>
+		WHERE title LIKE '%' || #{id} || '%' OR director = #{id} OR REGEXP_LIKE(actors, '(^|, )' || #{id} || '($|, )') </if>
 	</select>
 	<select id="searchInfo" resultMap="info">
 		select * from movie left join review using (movie_id) where movie_id=#{id}
