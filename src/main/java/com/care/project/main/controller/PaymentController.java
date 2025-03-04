@@ -1,12 +1,18 @@
 package com.care.project.main.controller;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.care.project.common.CommonResponse;
@@ -17,43 +23,71 @@ import com.care.project.main.service.PaymentService;
 
 import lombok.extern.slf4j.Slf4j;
 
+
 @Slf4j
 @RestController
+@RequestMapping("member/payment")
 public class PaymentController {
 	
+	@Autowired
 	private PaymentService paymentService;
+
 	
-	@PostMapping("/payment/create")
-	public ResponseEntity<?> createPayment(@RequestParam Long reservationId,
-            @RequestParam Long paymentMethodId,
-            @RequestParam Double amount,
-            @RequestParam String portonePaymentId,
-            @RequestParam(required = false) String receiptUrl) {
-		try {
-			PaymentDTO payment = new PaymentDTO();
-			payment.setReservationId(reservationId);
-			payment.setPaymentMethodId(paymentMethodId);
-			payment.setAmount(amount);
-			payment.setPaymentStatus("pending");
-			payment.setPortonePaymentId(portonePaymentId);
-			payment.setReceiptUrl(receiptUrl);
-			
-			// 결제 생성 처리 (paymentId가 세팅된다고 가정)
-			paymentService.createPayment(payment);
-			
-			return CommonResponse.createResponse(
-					CommonResponse.builder()
-					.code(Constant.Success.SUCCESS_CODE)  // 또는 직접 숫자(예:200)를 사용할 수 있습니다.
-					.message("Payment created successfully")
-					.data(Collections.singletonMap("paymentId", payment.getPaymentId()))
-					.build(), HttpStatus.OK);
-		} catch (Exception e) {
-			log.info("createPayment Error ");
+	// 결제 정보 저장 (pending 상태)
+    @PostMapping("/create")
+    @ResponseBody
+    public ResponseEntity<?> createPayment(@RequestBody PaymentDTO payment) {
+    	try {
+    		payment.setPaymentId(payment.getReservationId());
+    		//System.out.println("값@@@@@ : " + payment.toString());
+	    	int result = paymentService.createPayment(payment);
+	    	System.out.println("!!!!result controller : " + result);
+	    	Map<String, Object> responseData = new HashMap<>();
+	    	if(result>0) {
+	    		responseData.put("paymentId", payment.getPaymentId().toString());
+	    		System.out.println("responseData : "+responseData); 
+	    	}
+	    	return CommonResponse.createResponse(
+ 	                CommonResponse.builder()
+ 	                        .code(Constant.Success.SUCCESS_CODE)
+ 	                        .message("Success")
+ 	                        .data(responseData)
+ 	                        .build(),
+ 	                HttpStatus.OK
+ 	        );
+    	} catch (Exception e) {
+    		log.info("createPayment Error ");
 			e.printStackTrace();
 
 			return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
 					.message(ErrorType.ETC_FAIL.getErrorMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-	}
+    }
+    
+    @PostMapping("/confirm")
+    public ResponseEntity<?> confirmPayment(@RequestBody Map<String, String> request) {
+        String portonePaymentId = request.get("portonePaymentId");
+        System.out.println("@@portonePaymentId" + portonePaymentId);
+        boolean isValid = paymentService.verifyPayment(portonePaymentId, 0); // 금액 검증 포함
+        
+        Map<String, Object> responseData = new HashMap<>();
+        
+        if (isValid) {
+        	responseData.put("rs", "성공");
+            return CommonResponse.createResponse(
+ 	                CommonResponse.builder()
+                     .code(Constant.Success.SUCCESS_CODE)
+                     .message("Success")
+                     .data(responseData)
+                     .build(),
+             HttpStatus.OK
+            		 );
+        } else {
+        	responseData.put("rs", "실패");
+        	return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
+					.message(ErrorType.ETC_FAIL.getErrorMessage())
+					.data(responseData).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

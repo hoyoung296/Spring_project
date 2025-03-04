@@ -92,7 +92,7 @@ public class ReserveController {
 	        // ✅ 7. 응답 데이터 구성
 	        Map<String, Object> responseData = new HashMap<>();
 	        responseData.put("message", "예매가 성공적으로 완료되었습니다.");
-	        responseData.put("reservationId", reservationId);
+	        responseData.put("reservationId", reservationId.toString());
 	        responseData.put("userId", userId);
 	        responseData.put("scheduleId", scheduleid);
 	        responseData.put("seatIds", seatIds);
@@ -143,8 +143,8 @@ public class ReserveController {
     @DeleteMapping("/cancel")
     public ResponseEntity<?> cancelReservation(
     		@RequestBody Map<String, Object> reserveData) {
-        try {
-        	
+    	
+    	try {
         	 // ✅ 요청 데이터 유효성 검사
 	        if (reserveData == null) {
 	            throw new IllegalArgumentException("요청 데이터가 누락되었습니다.");
@@ -175,6 +175,4 @@ public class ReserveController {
                     .body(Map.of("error", "서버 내부 오류가 발생했습니다."));
         }
     }
-	
-
 }

@@ -1,29 +1,17 @@
 package com.care.project;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Handles requests for the application home page.
  */
 @Controller
 public class HomeController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	
-	 @GetMapping("/")
-	    public String home() {
-	        // ¸®¾×Æ® ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÇ È¨ ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
-	        return "forward:/index.html";  // React ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÌ ¹èÆ÷µÈ °æ·Î¸¦ ÁöÁ¤
-	    }
-	
+	@GetMapping("/")
+	public String home() {
+		// ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ È¨ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®
+		return "forward:/index.html"; // React ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+	}
+
 }
