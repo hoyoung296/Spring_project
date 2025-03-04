@@ -21,7 +21,6 @@ public class ReviewServiceImpl implements ReviewService {
 	@Autowired
 	ReviewMapper rev;
 
-	// 불필요한 필드를 무시하는 Mixin 클래스
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private abstract class IgnoreUnknownMixin {
 	}

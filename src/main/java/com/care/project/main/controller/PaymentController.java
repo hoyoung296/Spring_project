@@ -39,7 +39,7 @@ public class PaymentController {
     public ResponseEntity<?> createPayment(@RequestBody PaymentDTO payment) {
     	try {
     		payment.setPaymentId(payment.getReservationId());
-//    		System.out.println("값@@@@@ : " + payment.toString());
+    		//System.out.println("값@@@@@ : " + payment.toString());
 	    	int result = paymentService.createPayment(payment);
 	    	System.out.println("!!!!result controller : " + result);
 	    	Map<String, Object> responseData = new HashMap<>();

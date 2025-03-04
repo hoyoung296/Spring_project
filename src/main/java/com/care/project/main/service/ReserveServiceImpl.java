@@ -120,9 +120,5 @@ public class ReserveServiceImpl implements ReserveService {
 		        System.err.println("❌ 예매 취소 실패: " + e.getMessage());
 		        return false;
 		    }
-
 		}
-		
-		
-		
 }
