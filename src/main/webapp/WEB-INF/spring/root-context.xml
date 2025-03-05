@@ -11,9 +11,28 @@
     <!-- 프로퍼티 파일 로드 설정 -->
     <context:property-placeholder location="classpath:application.properties"/>
 
+	<!-- 히카리 커넥션풀 빈 등록 -->
+	  <!--
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"> 
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> 
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.51.95:1522:xe" /> 
+		<property name="username" value="c##sinema" /> 
+		<property name="password" value="1234" /> 
+	</bean>
+	 -->
+	
+	<!--  
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"> 
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> 
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:xe" /> 
+		<property name="username" value="c##java" /> 
+		<property name="password" value="1234" /> 
+	</bean>
+	-->
+	
+
     <!-- Root Context: defines shared resources visible to all other web components -->
 
-    <!-- 히카리 커넥션풀 빈 등록 -->
     <!-- 이전 sinema 설정은 주석 처리 -->
     
     <!--  
@@ -24,7 +43,7 @@
         <property name="password" value="1234" /> 
     </bean>
     -->
-    
+        
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
         <property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:xe"/>
