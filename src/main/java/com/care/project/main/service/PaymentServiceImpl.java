@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private PaymentMapper paymentMapper;
+    @Autowired
+    private ReserveService reserver;
 
     @Value("${portone.store.id}")
     private String storeId;
@@ -35,7 +38,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
-
+    
     @Override
     @Transactional
     public Integer createPayment(PaymentDTO payment) {
@@ -83,15 +86,15 @@ public class PaymentServiceImpl implements PaymentService {
      * 결제 검증 (paymentId 기반, V2 API)
      */
     @Override
-    public boolean verifyPayment(String portonePaymentId, int expectedAmount) {
+    public boolean verifyPayment(String portonePaymentId, int expectedAmount,int scheduleId,List<Integer> seatStatusIds) {
         String token = getAccessToken();
         if (token == null) return false;
 
-        // portonePaymentId가 V2의 paymentId (포트원 거래번호)라고 가정
-        String url = "https://api.portone.io/payments/" + portonePaymentId;
+        String url = "https://api.portone.io/payments/" + portonePaymentId + "?storeId=store-e78aba4d-3df0-4c76-896c-ba009858ddcd";
         
-        System.out.println("@portonePaymentId : "+portonePaymentId);
-        System.out.println("@token : "+token);
+        System.out.println("@portonePaymentId : " + portonePaymentId);
+        System.out.println("@expectedAmount : " + expectedAmount);
+        System.out.println("@token : " + token);
         
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -100,27 +103,98 @@ public class PaymentServiceImpl implements PaymentService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<String> response =
-                    restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                // V2 API의 응답 구조에 맞춰 파싱
+                // 응답 전체 JSON 객체를 파싱 및 로그 출력
                 JsonNode responseBody = objectMapper.readTree(response.getBody());
+                System.out.println("Response JSON: " + responseBody.toString());
+                
+                // amount 객체에서 total 필드를 가져옴
+                JsonNode amountNode = responseBody.get("amount");
+                if (amountNode == null) {
+                    System.err.println("❌ 응답 JSON에 'amount' 필드가 없습니다.");
+                    return false;
+                }
+                int actualAmount = amountNode.get("total").asInt();
 
-                // V2에서는 "response" 필드 없이 바로 "paymentId", "status", "totalAmount" 등이 루트에 존재
-                int actualAmount = responseBody.get("totalAmount").asInt();
-                String status = responseBody.get("status").asText();
+                // status 필드는 그대로 가져옴
+                JsonNode statusNode = responseBody.get("status");
+                if (statusNode == null) {
+                    System.err.println("❌ 응답 JSON에 'status' 필드가 없습니다.");
+                    return false;
+                }
+                String status = statusNode.asText();
 
-                // 결제 성공(paid) && 금액 일치
-                if ("paid".equals(status) && actualAmount == expectedAmount) {
-                    // DB에 결제 상태 업데이트
-                    paymentMapper.updatePaymentStatusByPortoneId(portonePaymentId, "completed");
+                // 결제 성공(PAID) && 금액 일치 여부 확인 (대소문자 무시)
+                if ("PAID".equalsIgnoreCase(status) && actualAmount == expectedAmount) {
+                    int result = paymentMapper.updatePaymentStatusByPortoneId(portonePaymentId, status);
+                    System.out.println("result : " +result);
                     return true;
+                }else {
+                	cancelPayment(portonePaymentId, "결제 검증 실패");
+//                	int result = paymentMapper.deletePayment(Long.parseLong(portonePaymentId));
+                	int result = paymentMapper.updatePaymentStatusByPortoneId(portonePaymentId, "cancel");
+                	System.out.println("del result : " + result);
+                	if(result >0) {
+                		 boolean isDeleted = reserver.cancelReservation(Long.parseLong(portonePaymentId), scheduleId, seatStatusIds);
+                		 System.out.println("isDeleted : " + isDeleted);
+                	}
+                	return false;
                 }
             }
         } catch (Exception e) {
+        	cancelPayment(portonePaymentId, "결제 검증 실패");
+//        	int result = paymentMapper.deletePayment(Long.parseLong(portonePaymentId));
+        	int result = paymentMapper.updatePaymentStatusByPortoneId(portonePaymentId, "cancel");
+        	System.out.println("del result : " + result);
+        	if(result >0) {
+        		 boolean isDeleted = reserver.cancelReservation(Long.parseLong(portonePaymentId), scheduleId, seatStatusIds);
+        		 System.out.println("isDeleted : " + isDeleted);
+        	}
             System.err.println("❌ PortOne 결제 검증 실패: " + e.getMessage());
         }
         return false;
     }
+
+	@Override
+	public boolean cancelPayment(String paymentId, String reason) {
+	    // 토큰 발급
+	    String token = getAccessToken();
+	    if (token == null) return false;
+
+	    // paymentId는 경로 변수로 포함, 취소 API 엔드포인트 호출
+	    String url = "https://api.portone.io/payments/" + paymentId + "/cancel";
+	    
+	    System.out.println("@paymentId : " + paymentId);
+	    System.out.println("@reason : " + reason);
+	    System.out.println("@token : " + token);
+
+	    // HTTP 헤더 설정
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_JSON);
+	    headers.set("Authorization", "Bearer " + token);
+
+	    // 필수 항목인 취소 사유(reason)만 요청 본문에 포함
+	    Map<String, Object> requestBody = new HashMap<>();
+	    requestBody.put("reason", reason);
+	    requestBody.put("storeId", "store-e78aba4d-3df0-4c76-896c-ba009858ddcd");
+	    
+
+	    HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+	    try {
+	        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+	        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+	            System.out.println("Cancel Payment Response: " + response.getBody());
+	            return true;
+	        } else {
+	            System.err.println("❌ Cancel payment failed. Status code: " + response.getStatusCode());
+	        }
+	    } catch (Exception e) {
+	        System.err.println("❌ Cancel payment exception: " + e.getMessage());
+	    }
+	    return false;
+	}
+
 }

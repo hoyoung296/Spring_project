@@ -250,8 +250,7 @@ public class AdminServiceImpl implements AdminService {
 
 			int scheduleId = adminMapper.getscheduleId(); // 여기서 방금 생성된 schedule_id 사용 가능
 			int seatIndex = 0; // 좌석 인덱스 초기화
-			System.out.println("scheduleId 확인 : " + adminMapper.getscheduleId());
-
+			
 			for (int i = 0; i < 70; i++) {
 				if (seatIndex >= seatList.size()) {
 					break; // 모든 좌석이 할당되었으면 종료
@@ -300,11 +299,11 @@ public class AdminServiceImpl implements AdminService {
 		}
 	    return result;
 	}
+
 	
 	@Override
     public List<Map<String, Object>> getPayment() {
         return adminMapper.getPayment();
     }
-	
 	
 }

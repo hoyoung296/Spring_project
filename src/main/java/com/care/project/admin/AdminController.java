@@ -134,5 +134,4 @@ public class AdminController {
 		return AdminService.getPayment();
     }
 	
-	
 }

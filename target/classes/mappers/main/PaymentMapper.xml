@@ -58,7 +58,11 @@
     <update id="updatePaymentStatusByPortoneId">
         UPDATE PAYMENT 
         SET payment_status = #{paymentStatus}, updated_at = SYSTIMESTAMP
-        WHERE portone_payment_id = #{portonePaymentId}
+        WHERE payment_id = #{portonePaymentId}
     </update>
     
+     <!-- 결제 삭제 (paymentId 기준) -->
+    <delete id="deletePayment" parameterType="long">
+        DELETE FROM PAYMENT WHERE payment_id = #{paymentId}
+    </delete>
 </mapper>

@@ -2,6 +2,7 @@ package com.care.project.main.controller;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.care.project.common.CommonResponse;
 import com.care.project.common.Constant;
 import com.care.project.common.ErrorType;
+import com.care.project.main.dto.PaymentCancelRequest;
 import com.care.project.main.dto.PaymentDTO;
 import com.care.project.main.service.PaymentService;
+import com.care.project.main.service.ReserveService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +34,8 @@ public class PaymentController {
 	
 	@Autowired
 	private PaymentService paymentService;
+	@Autowired
+	ReserveService reserver;
 
 	
 	// 결제 정보 저장 (pending 상태)
@@ -65,10 +70,18 @@ public class PaymentController {
     }
     
     @PostMapping("/confirm")
-    public ResponseEntity<?> confirmPayment(@RequestBody Map<String, String> request) {
-        String portonePaymentId = request.get("portonePaymentId");
+    public ResponseEntity<?> confirmPayment(@RequestBody PaymentCancelRequest request) {
+        String portonePaymentId = request.getPortonePaymentId();
+        int expectedAmount = request.getAmount();
+        int scheduleId = request.getScheduleId();
+        List<String> seatIds = request.getSeatIds();
+        List<Integer> seatStatusIds = reserver.seatStatus(scheduleId, seatIds);
+        System.out.println("@@expectedAmount" + expectedAmount);
         System.out.println("@@portonePaymentId" + portonePaymentId);
-        boolean isValid = paymentService.verifyPayment(portonePaymentId, 0); // 금액 검증 포함
+        System.out.println("@@scheduleId" + scheduleId);
+        System.out.println("@@seatIds" + seatIds);
+        System.out.println("@@seatStatusIds" + seatStatusIds);
+        boolean isValid = paymentService.verifyPayment(portonePaymentId, expectedAmount,scheduleId,seatStatusIds); // 금액 검증 포함
         
         Map<String, Object> responseData = new HashMap<>();
         
