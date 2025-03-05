@@ -24,7 +24,8 @@ public class MemberController {
     @Autowired
     private MemberService ms;
 
-    // 회원가입
+    
+// 회원가입
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody MemberDTO memberDTO) {
         try {
@@ -41,6 +42,12 @@ public class MemberController {
             if (!ms.isPasswordValid(memberDTO.getPassword())) {
                 return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호는 최소 8자 이상이어야 하며, 영문/숫자/특수문자를 포함해야 합니다.");
             }
+            
+            
+         // 🔥 비밀번호 확인 추가 (여기서 문제 확인 가능)
+            if (!memberDTO.getPassword().equals(memberDTO.getConfirmPassword())) {
+                return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            }
 
             if (ms.isUserIdDuplicate(memberDTO.getUserId())) {
                 return createErrorResponse(ErrorType.INVALID_PARAMETER, "이미 등록된 아이디입니다.");
@@ -56,10 +63,10 @@ public class MemberController {
             return CommonResponse.createResponse(response, HttpStatus.OK);
 
         } catch (Exception e) {
+        	e.printStackTrace();
             return createErrorResponse(ErrorType.SERVER_ERROR, "서버 내부 오류로 실패했습니다.");
         }
     }
-
     // 아이디 중복 체크
     @GetMapping("/check-id")
     public ResponseEntity<?> checkUserId(@RequestParam String userId) {
