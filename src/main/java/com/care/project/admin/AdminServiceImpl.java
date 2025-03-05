@@ -258,6 +258,7 @@ public class AdminServiceImpl implements AdminService {
 				String seatId = seatList.get(seatIndex++); // 순서대로 seat_id 할당.
 				adminMapper.insertSeat(scheduleId, seatId); // 생성된 schedule_id 사용
 			}
+			
 		}
 		return result;
 	}
@@ -283,8 +284,19 @@ public class AdminServiceImpl implements AdminService {
 		try {
 			result = adminMapper.insertMovie(dto);
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 		return result;
+	}
+	
+	@Override
+	public int deleteMovie(int movieId) {
+		int result = 0;
+		try {
+			return adminMapper.deleteMovie(movieId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    return result;
 	}
 }

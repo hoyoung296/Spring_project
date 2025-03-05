@@ -16,4 +16,5 @@ public interface AdminMapper {
 	public int editMovie(@Param("movie") MovieDTO movie);
 	public int getscheduleId();
 	public void insertSeat(@Param("scheduleId") int scheduleId, @Param("seatId") String seatId);
+	public int deleteMovie(@Param("movieId") int movieId);
 }
