@@ -56,22 +56,24 @@
 		<id property="statusId" column="status_id" />
 		<result property="seatStatus" column="seat_status" />
 	</resultMap>
-	
+
 	<resultMap type="java.util.HashMap" id="movieschedule">
 		<id property="scheduleId" column="schedule_id" />
-		<result property="startDateTime" column="start_DT" javaType="java.sql.Timestamp" />
-		<result property="endDateTime" column="end_DT" javaType="java.sql.Timestamp" />
+		<result property="startDateTime" column="start_DT"
+			javaType="java.sql.Timestamp" />
+		<result property="endDateTime" column="end_DT"
+			javaType="java.sql.Timestamp" />
 		<result property="movieId" column="movie_id" />
 		<result property="screenId" column="screen_id" />
 		<result property="title" column="title" />
 		<result property="runtime" column="runtime" />
 	</resultMap>
 
-
 	<select id="getScheduleDate" resultType="map">
 		SELECT
 		TO_CHAR(s.start_DT, 'YYYY-MM-DD') AS startDate,
-		MIN(s.schedule_id) AS schedule_id,
+		MIN(s.schedule_id) AS
+		schedule_id,
 		MAX(m.title) AS title,
 		MAX(m.director) AS director,
 		MAX(m.actors) AS actors,
@@ -119,41 +121,35 @@
 	<!-- 해당영화 예매된 좌석 표시 -->
 	<select id="reservedSeats" resultType="map">
 		SELECT
-		ss.seat_status_id AS seatStatusId,
+		ss.seat_status_id AS
+		seatStatusId,
 		ss.seat_id AS seatId,
 		s.seat_row AS seatRow,
-		s.seat_number AS seatCol
+		s.seat_number
+		AS seatCol
 		FROM seat_status ss
-		INNER JOIN Seat s ON ss.seat_id = s.seat_id
-		WHERE ss.schedule_id = #{scheduleid} AND (ss.status_id = 2 or ss.status_id
+		INNER JOIN Seat s ON ss.seat_id =
+		s.seat_id
+		WHERE ss.schedule_id = #{scheduleid} AND (ss.status_id = 2 or
+		ss.status_id
 		= 3)
 	</select>
 
 	<!-- 상영일정 불러오기 -->
 	<select id="getAllSchedules" resultMap="movieschedule">
-		select * from Schedule inner join movie using (movie_id)
+		select * from Schedule
+		inner join movie using (movie_id)
 	</select>
-
-	<!-- 상영일정 삽입
+	
+	<!-- 상영일정 삽입 -->
 	<insert id="insertSchedule"
 		parameterType="com.care.project.main.dto.ScheduleDTO">
-		INSERT INTO schedule (schedule_id, start_DT, end_DT, movie_id, screen_id)
-		VALUES (schedule_sequence.nextval,
-		TO_DATE(#{startDateTime}, 'YYYY-MM-DD"T"HH24:MI'),
-		TO_DATE(#{endDateTime}, 'YYYY-MM-DD"T"HH24:MI'),
-		#{movieId},
-		#{screenId})
+		INSERT INTO schedule (schedule_id, movie_id, screen_id, start_DT, end_DT)
+		VALUES (schedule_sequence.nextval, #{movieId}, #{screenId},
+		TO_TIMESTAMP(#{startDateTime}, 'YYYY-MM-DD HH24:MI:SS'),
+		TO_TIMESTAMP(#{endDateTime}, 'YYYY-MM-DD HH24:MI:SS'))
 	</insert>
-	 -->
 	
-	<insert id="insertSchedule" parameterType="com.care.project.main.dto.ScheduleDTO">
-    INSERT INTO schedule (schedule_id, movie_id, screen_id, start_DT, end_DT)
-    VALUES (schedule_sequence.nextval, #{movieId}, #{screenId}, 
-        TO_TIMESTAMP(#{startDateTime}, 'YYYY-MM-DD HH24:MI:SS'), 
-        TO_TIMESTAMP(#{endDateTime}, 'YYYY-MM-DD HH24:MI:SS'))
-</insert>
-	
-
 	<!-- 상영관정보 불러오기 -->
 	<select id="getAllScreens" resultMap="screen">
 		select * from Screen
@@ -161,6 +157,7 @@
 
 	<!-- 상영 일정 삭제 -->
 	<delete id="deleteSchedule">
-		DELETE FROM schedule WHERE schedule_id = #{scheduleId}
+		DELETE FROM schedule WHERE schedule_id =
+		#{scheduleId}
 	</delete>
 </mapper>
