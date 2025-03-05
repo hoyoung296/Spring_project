@@ -19,4 +19,5 @@ public interface AdminService {
     public int insertSchedule(List<ScheduleDTO> scheduleList); //상영일정 업데이트
     public int deleteSchedule(int scheduleId); //상영일정 삭제
     public int insertMovie(MovieDTO dto);
+    public int deleteMovie(int movieId);
 }
