@@ -129,7 +129,10 @@ public class AdminController {
 		}
 	}
 	
-	
+	@GetMapping("/paymentList")
+    public List<Map<String, Object>> getPayments() {
+		return AdminService.getPayment();
+    }
 	
 	
 }
