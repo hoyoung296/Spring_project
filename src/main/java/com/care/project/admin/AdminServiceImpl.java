@@ -250,8 +250,7 @@ public class AdminServiceImpl implements AdminService {
 
 			int scheduleId = adminMapper.getscheduleId(); // 여기서 방금 생성된 schedule_id 사용 가능
 			int seatIndex = 0; // 좌석 인덱스 초기화
-			System.out.println("scheduleId 확인 : " + adminMapper.getscheduleId());
-
+			
 			for (int i = 0; i < 70; i++) {
 				if (seatIndex >= seatList.size()) {
 					break; // 모든 좌석이 할당되었으면 종료
@@ -259,6 +258,7 @@ public class AdminServiceImpl implements AdminService {
 				String seatId = seatList.get(seatIndex++); // 순서대로 seat_id 할당.
 				adminMapper.insertSeat(scheduleId, seatId); // 생성된 schedule_id 사용
 			}
+			
 		}
 		return result;
 	}
@@ -284,8 +284,19 @@ public class AdminServiceImpl implements AdminService {
 		try {
 			result = adminMapper.insertMovie(dto);
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 		return result;
+	}
+	
+	@Override
+	public int deleteMovie(int movieId) {
+		int result = 0;
+		try {
+			return adminMapper.deleteMovie(movieId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    return result;
 	}
 }

@@ -67,4 +67,10 @@
     <insert id="insertSeat">
     	insert into seat_status (seat_status_id, seat_id, schedule_id) values(seat_status_sequence.nextval, #{seatId} ,#{scheduleId})
     </insert>
+    
+    <delete id="deleteMovie">
+    	delete from movie where movie_id=#{movieId}
+    </delete>
+    
+    
 </mapper>
