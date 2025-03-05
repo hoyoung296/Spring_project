@@ -104,10 +104,27 @@ public class AdminController {
 			map.put("message", "영화 추가 성공");
 			return ResponseEntity.ok(map); // HTTP 200
 		} else if (result == -1) { // 예를 들어 없는 ID
-			map.put("message", "해당 영화를 찾을 수 없음");
+			map.put("message", "해당 영화를 추가 할 수 없음");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map); // HTTP 404
 		} else {
 			map.put("message", "영화 추가 실패");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map); // HTTP 500
+		}
+	}
+	
+	@DeleteMapping("/movie/delete")
+	public ResponseEntity<Map<String, Object>> deleteMovie(@RequestParam String id) {
+		int movie = Integer.parseInt(id);
+		int result = AdminService.deleteMovie(movie);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (result == 1) {
+			map.put("message", "영화 삭제 성공");
+			return ResponseEntity.ok(map); // HTTP 200
+		} else if (result == -1) { // 예를 들어 없는 ID
+			map.put("message", "해당 영화를 찾을 수 없음");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map); // HTTP 404
+		} else {
+			map.put("message", "영화 삭제 실패");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map); // HTTP 500
 		}
 	}
