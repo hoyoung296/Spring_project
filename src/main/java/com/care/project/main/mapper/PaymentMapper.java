@@ -22,4 +22,7 @@ public interface PaymentMapper {
 
     // portonePaymentId (imp_uid)로 결제 상태 업데이트 추가
     Integer updatePaymentStatusByPortoneId(@Param("portonePaymentId") String portonePaymentId, @Param("paymentStatus") String paymentStatus);
+    
+    // 결제 삭제 (paymentId를 기준으로 삭제)
+    Integer deletePayment(@Param("paymentId") Long paymentId);
 }
