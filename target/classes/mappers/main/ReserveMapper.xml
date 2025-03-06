@@ -49,6 +49,13 @@
 		FROM Reservation
 		WHERE RESERVATION_ID = #{reservationId}
 	</select>
+	
+	<select id="getReserveSeatStatusId" resultType="int">
+	    SELECT seat_status_id
+	    FROM reservation_seat
+	    WHERE reservation_id = #{reservationId}
+	</select>
+
 </mapper>
 
 

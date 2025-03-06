@@ -108,17 +108,26 @@ public class PaymentController {
     
     @DeleteMapping("/cancel")
     public ResponseEntity<?> cancelPayment(@RequestParam long id) {
+    	boolean isDeleted = false;
     	System.out.println("paymentId @@ " + id);
     	int scheduleId = reserver.getSchedulId(id);
     	System.out.println("@@@scheduleId " + scheduleId);
+    	List<Integer> seatStatusIds = reserver.reserveSeatStatus(id);
+    	System.out.println("@@@seatStatusIds " + seatStatusIds);
+    	boolean rs = paymentService.cancelPayment(Long.toString(id), "예매취소");
+    	if(rs) {
+    		 isDeleted = reserver.cancelReservation(id, scheduleId, seatStatusIds);
+    		 System.out.println("isDeleted : " + isDeleted);
+    	}
+    	
         Map<String, Object> responseData = new HashMap<>();
         
-        if (true) {
+        if (isDeleted) {
         	responseData.put("rs", "성공");
             return CommonResponse.createResponse(
  	                CommonResponse.builder()
                      .code(Constant.Success.SUCCESS_CODE)
-                     .message("Success")
+                     .message("예매 삭제 성공")
                      .data(responseData)
                      .build(),
              HttpStatus.OK

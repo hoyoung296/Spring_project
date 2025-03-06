@@ -1,5 +1,7 @@
 package com.care.project.main.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,5 +30,8 @@ public interface ReserveMapper {
 	
 	//스케줄아이디 구하기
 	public Integer getSchedulId(@Param("reservationId") long reservationId);
+	
+	// 예매된 좌석번호 구하기
+	public List<Integer> getReserveSeatStatusId(@Param("reservationId") long reservationId);
 	
 }

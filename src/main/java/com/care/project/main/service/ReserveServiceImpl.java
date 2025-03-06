@@ -145,6 +145,17 @@ public class ReserveServiceImpl implements ReserveService {
 			
 			return reserveMapper.getSchedulId(reservationId);
 		}
+
+		// 예매된 좌석아이디 구하기
+		@Override
+		public List<Integer> reserveSeatStatus(Long reservationId) {
+			System.out.println("예매된 좌석 아이디 : " + reserveMapper.getReserveSeatStatusId(reservationId));
+			
+			return reserveMapper.getReserveSeatStatusId(reservationId);
+		}
+		
+		
+		
 		
 		
 		
