@@ -17,5 +17,5 @@ public interface ReviewMapper {
 	public int getReserveCount(String id);
 	public int reviewCheck(@Param("id") String id, @Param("movie_id") int movieid);
 	public int writeReview(ReviewDTO dto);
-	public int delReserve(int id);
+	public int delReserve(long id);
 }
