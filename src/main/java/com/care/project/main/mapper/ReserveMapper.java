@@ -20,11 +20,9 @@ public interface ReserveMapper {
 			@Param("reservationId") long reservationId,
 			@Param("seatStatusId") int seatStatusId );
 	public Integer updateSeatStatusType(
-			@Param("seatStatusId") int seatStatusId);
+			@Param("seatStatusId") int seatStatusId,@Param("seatStatusTypeId") int seatStatusTypeId);
 	public Integer deleteReservationSeats(
 			@Param("reservationId") long reservationId);
-	public Integer updateSeatStatusTypeOn(
-			@Param("seatStatusId") int seatStatusId);
 	public Integer updateReservation(
 			@Param("reservationId") long reservationId);
 	

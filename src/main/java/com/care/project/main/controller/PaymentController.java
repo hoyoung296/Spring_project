@@ -82,7 +82,9 @@ public class PaymentController {
         System.out.println("@@seatIds" + seatIds);
         System.out.println("@@seatStatusIds" + seatStatusIds);
         boolean isValid = paymentService.verifyPayment(portonePaymentId, expectedAmount,scheduleId,seatStatusIds); // 금액 검증 포함
-        
+        if(isValid) {
+        	reserver.updateSeatStatusType2(seatStatusIds);
+        }
         Map<String, Object> responseData = new HashMap<>();
         
         if (isValid) {

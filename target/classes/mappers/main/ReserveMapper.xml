@@ -24,7 +24,7 @@
 	
 	<update id="updateSeatStatusType" parameterType="int">
 	    UPDATE Seat_Status
-	    SET status_id = 3
+	    SET status_id = #{seatStatusTypeId}
 	    WHERE seat_status_id = #{seatStatusId}
 	</update>
 	
