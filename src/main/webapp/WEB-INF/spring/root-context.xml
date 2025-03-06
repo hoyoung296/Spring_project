@@ -21,14 +21,14 @@
 	</bean>
 	 -->
 	
-	<!--  
+	  
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"> 
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> 
 		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:xe" /> 
 		<property name="username" value="c##java" /> 
 		<property name="password" value="1234" /> 
 	</bean>
-	-->
+	
 	
 
     <!-- Root Context: defines shared resources visible to all other web components -->
@@ -42,7 +42,6 @@
         <property name="username" value="c##sinema" /> 
         <property name="password" value="1234" /> 
     </bean>
-    -->
         
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
@@ -50,6 +49,7 @@
         <property name="username" value="c##ghdud024"/>
         <property name="password" value="ghdud1532"/>
     </bean>
+    -->
 
     <!-- 히카리 데이터소스 빈 등록 -->
     <bean id="ds" class="com.zaxxer.hikari.HikariDataSource">
