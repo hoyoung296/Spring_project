@@ -44,7 +44,11 @@
 	    WHERE reservation_id  = #{reservationId}
 	</update>
 	
-	
+	<select id="getSchedulId" resultType="java.lang.Integer">
+		SELECT SCHEDULE_ID
+		FROM Reservation
+		WHERE RESERVATION_ID = #{reservationId}
+	</select>
 </mapper>
 
 

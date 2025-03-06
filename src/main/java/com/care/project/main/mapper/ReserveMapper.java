@@ -26,4 +26,7 @@ public interface ReserveMapper {
 	public Integer updateReservation(
 			@Param("reservationId") long reservationId);
 	
+	//스케줄아이디 구하기
+	public Integer getSchedulId(@Param("reservationId") long reservationId);
+	
 }

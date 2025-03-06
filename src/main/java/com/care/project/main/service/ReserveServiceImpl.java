@@ -137,4 +137,15 @@ public class ReserveServiceImpl implements ReserveService {
 		        return false;
 		    }
 		}
+
+
+		// 스케줄 아이디 구하기
+		@Override
+		public int getSchedulId(Long reservationId) {
+			
+			return reserveMapper.getSchedulId(reservationId);
+		}
+		
+		
+		
 }
