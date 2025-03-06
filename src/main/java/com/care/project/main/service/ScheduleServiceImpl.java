@@ -22,9 +22,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
 	@Override
-	public List<Map<String, Object>> scheduleInfo(String startdate) {
+	public List<Map<String, Object>> scheduleInfo(String startdate,String title) {
 		
-		return scheduleMapper.getScheduleInfo(startdate);
+		return scheduleMapper.getScheduleInfo(startdate,title);
 	}
 	
 	@Override

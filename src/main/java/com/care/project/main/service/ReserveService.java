@@ -9,4 +9,8 @@ public interface ReserveService {
 	public boolean updateSeatStatusType(List<Integer> seatStatusIds);
 	public boolean updateSeatStatusType2(List<Integer> seatStatusIds);
 	public boolean cancelReservation(Long reservationId,Integer scheduleid, List<Integer> seatStatusIds);
+	//예매아디로 스케줄 아이디 구하기
+	public int getSchedulId(Long reservationId);
+	// 예매된 좌석아이디 구하기
+	public List<Integer> reserveSeatStatus(Long reservationId);
 }
