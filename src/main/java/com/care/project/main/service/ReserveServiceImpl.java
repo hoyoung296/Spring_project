@@ -76,7 +76,7 @@ public class ReserveServiceImpl implements ReserveService {
 			int successCount = 0;  // ✅ 성공한 행 수 카운트
 
 		    for (Integer seatStatusId : seatStatusIds) {
-		        int result = reserveMapper.updateSeatStatusType(seatStatusId);
+		        int result = reserveMapper.updateSeatStatusType(seatStatusId,3);
 		        if (result > 0) {
 		            successCount++;  // ✅ 성공하면 증가
 		        } else {
@@ -85,11 +85,27 @@ public class ReserveServiceImpl implements ReserveService {
 		    }
 
 		    return successCount == seatStatusIds.size();  // ✅
-			
-			
+		}
+		
+		// 해당하는 좌석상태id의 좌석상태아이디를 예매 완료로 변경
+		@Override
+		@Transactional
+		public boolean updateSeatStatusType2(List<Integer> seatStatusIds) {
+			int successCount = 0;  // ✅ 성공한 행 수 카운트
+
+		    for (Integer seatStatusId : seatStatusIds) {
+		        int result = reserveMapper.updateSeatStatusType(seatStatusId,2);
+		        if (result > 0) {
+		            successCount++;  // ✅ 성공하면 증가
+		        } else {
+		            return false; // ✅ 하나라도 실패하면 전체 실패 반환
+		        }
+		    }
+
+		    return successCount == seatStatusIds.size();  // ✅
 		}
 
-
+		
 		@Override
 		public boolean cancelReservation(Long reservationId, Integer scheduleid, List<Integer> seatStatusIds) {
 			try {
@@ -103,7 +119,7 @@ public class ReserveServiceImpl implements ReserveService {
 
 		        // 2. 좌석 상태 예매 가능으로 변경
 		        for (Integer seatStatusId : seatStatusIds) {
-		            if (reserveMapper.updateSeatStatusTypeOn(seatStatusId) <= 0) {
+		            if (reserveMapper.updateSeatStatusType(seatStatusId,1) <= 0) {
 		                System.err.println("❌ 좌석 상태 변경 실패. SeatStatusId: " + seatStatusId);
 		                return false;
 		            }
@@ -121,4 +137,26 @@ public class ReserveServiceImpl implements ReserveService {
 		        return false;
 		    }
 		}
+
+
+		// 스케줄 아이디 구하기
+		@Override
+		public int getSchedulId(Long reservationId) {
+			
+			return reserveMapper.getSchedulId(reservationId);
+		}
+
+		// 예매된 좌석아이디 구하기
+		@Override
+		public List<Integer> reserveSeatStatus(Long reservationId) {
+			System.out.println("예매된 좌석 아이디 : " + reserveMapper.getReserveSeatStatusId(reservationId));
+			
+			return reserveMapper.getReserveSeatStatusId(reservationId);
+		}
+		
+		
+		
+		
+		
+		
 }

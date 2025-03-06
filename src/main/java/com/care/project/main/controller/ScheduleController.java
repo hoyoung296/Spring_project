@@ -56,9 +56,10 @@ public class ScheduleController {
 	}
 
 	@GetMapping("/startdate")
-	public ResponseEntity<?> getScheduleInfo(@RequestParam("startdate") String startdate) {
+	public ResponseEntity<?> getScheduleInfo(@RequestParam("startdate") String startdate, @RequestParam("title") String title) {
+		System.out.println("startdate : " + startdate);
 		try {
-			List<Map<String, Object>> scheduleInfo = scheduleser.scheduleInfo(startdate);
+			List<Map<String, Object>> scheduleInfo = scheduleser.scheduleInfo(startdate,title);
 			System.out.println("scheduleInfo : " + scheduleInfo);
 			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
 					.message("Success").data(scheduleInfo).build(), HttpStatus.OK);

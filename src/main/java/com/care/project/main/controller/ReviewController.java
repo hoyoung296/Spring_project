@@ -65,9 +65,10 @@ public class ReviewController {
 	}
 
 	@DeleteMapping("/del")
-	public ResponseEntity<Map<String, Object>> delReserve(@RequestParam int id) {
+	public ResponseEntity<Map<String, Object>> delReserve(@RequestParam String id) {
+		long num = Long.parseLong(id);
 		Map<String, Object> map = new HashMap<>();
-		int result = rvs.delReserve(id);
+		int result = rvs.delReserve(num);
 		if (result == 1) {
 			map.put("message", "예매 취소 성공");
 			return ResponseEntity.ok(map); // HTTP 200

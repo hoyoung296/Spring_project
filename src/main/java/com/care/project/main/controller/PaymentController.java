@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,7 +83,9 @@ public class PaymentController {
         System.out.println("@@seatIds" + seatIds);
         System.out.println("@@seatStatusIds" + seatStatusIds);
         boolean isValid = paymentService.verifyPayment(portonePaymentId, expectedAmount,scheduleId,seatStatusIds); // 금액 검증 포함
-        
+        if(isValid) {
+        	reserver.updateSeatStatusType2(seatStatusIds);
+        }
         Map<String, Object> responseData = new HashMap<>();
         
         if (isValid) {
@@ -102,5 +105,40 @@ public class PaymentController {
 					.data(responseData).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @DeleteMapping("/cancel")
+    public ResponseEntity<?> cancelPayment(@RequestParam long id) {
+    	boolean isDeleted = false;
+    	System.out.println("paymentId @@ " + id);
+    	int scheduleId = reserver.getSchedulId(id);
+    	System.out.println("@@@scheduleId " + scheduleId);
+    	List<Integer> seatStatusIds = reserver.reserveSeatStatus(id);
+    	System.out.println("@@@seatStatusIds " + seatStatusIds);
+    	boolean rs = paymentService.cancelPayment(Long.toString(id), "예매취소");
+    	if(rs) {
+    		 isDeleted = reserver.cancelReservation(id, scheduleId, seatStatusIds);
+    		 System.out.println("isDeleted : " + isDeleted);
+    	}
+    	
+        Map<String, Object> responseData = new HashMap<>();
+        
+        if (isDeleted) {
+        	responseData.put("rs", "성공");
+            return CommonResponse.createResponse(
+ 	                CommonResponse.builder()
+                     .code(Constant.Success.SUCCESS_CODE)
+                     .message("예매 삭제 성공")
+                     .data(responseData)
+                     .build(),
+             HttpStatus.OK
+            		 );
+        } else {
+        	responseData.put("rs", "실패");
+        	return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
+					.message(ErrorType.ETC_FAIL.getErrorMessage())
+					.data(responseData).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 
 }
