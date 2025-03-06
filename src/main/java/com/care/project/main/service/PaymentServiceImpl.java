@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.care.project.main.dto.PaymentDTO;
 import com.care.project.main.mapper.PaymentMapper;
+import com.care.project.main.mapper.ReserveMapper;
 
 @Slf4j
 @PropertySource("classpath:application.properties")
