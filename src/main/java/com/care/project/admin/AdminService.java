@@ -20,4 +20,5 @@ public interface AdminService {
     public int deleteSchedule(int scheduleId); //상영일정 삭제
     public int insertMovie(MovieDTO dto);
     public int deleteMovie(int movieId);
+    public List<Map<String, Object>> getPayment();
 }

@@ -128,4 +128,9 @@ public class AdminController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map); // HTTP 500
 		}
 	}
+	
+	@GetMapping("/paymentList")
+    public List<Map<String, Object>> getPayments() {
+		return AdminService.getPayment();
+    }
 }

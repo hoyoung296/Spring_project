@@ -17,6 +17,15 @@
         <result property="openDt" column="open_dt" />
     </resultMap>
 
+
+<resultMap type="java.util.HashMap" id="paymentList">
+		<id property="paymentId" column="payment_id" />
+		<result property="amount" column="amount"/>
+		<result property="paymentStatus" column="payment_status"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="userId" column="user_id" />
+	</resultMap>
+
     <insert id="insertMovie">
         insert into movie (movie_id, title, entitle, poster_url, still_url, synopsis, director, actors, movie_rank, open_dt) 
         values (#{movie.movieId}, #{movie.title}, #{movie.entitle, jdbcType=VARCHAR}, #{movie.posterUrl}, #{movie.stillUrl},
@@ -72,5 +81,7 @@
     	delete from movie where movie_id=#{movieId}
     </delete>
     
-    
+    <select id="getPayment" resultMap="paymentList">
+        select * from payment inner join reservation using (reservation_id)
+    </select>
 </mapper>

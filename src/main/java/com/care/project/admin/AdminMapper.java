@@ -1,5 +1,8 @@
 package com.care.project.admin;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,4 +20,5 @@ public interface AdminMapper {
 	public int getscheduleId();
 	public void insertSeat(@Param("scheduleId") int scheduleId, @Param("seatId") String seatId);
 	public int deleteMovie(@Param("movieId") int movieId);
+	public List<Map<String, Object>> getPayment();
 }

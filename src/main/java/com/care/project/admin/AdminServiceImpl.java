@@ -299,4 +299,9 @@ public class AdminServiceImpl implements AdminService {
 		}
 	    return result;
 	}
+
+	@Override
+    public List<Map<String, Object>> getPayment() {
+        return adminMapper.getPayment();
+    }
 }
