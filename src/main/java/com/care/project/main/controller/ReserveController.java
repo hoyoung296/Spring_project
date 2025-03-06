@@ -39,19 +39,22 @@ public class ReserveController {
 	        @RequestBody Map<String, Object> requestData) {
 
 	    try {
-	        // ✅ 1. 세션에서 사용자 ID 가져오기 (기본값: "aaa")
-	        HttpSession session = req.getSession(false);
-	        String userId = (session != null) ? (String) session.getAttribute("userId") : "aaa";
-
-	        // ✅ 2. 요청 데이터 유효성 검사
+	        // ✅ 1. 요청 데이터 유효성 검사
 	        if (requestData == null) {
 	            throw new IllegalArgumentException("요청 데이터가 누락되었습니다.");
 	        }
 
-	        // ✅ 3. 필수 파라미터 확인
+	        // ✅ 2. 필수 파라미터 확인
 	        if (!requestData.containsKey("scheduleId") || !requestData.containsKey("seatIds") || !requestData.containsKey("totalAmount")) {
 	            throw new IllegalArgumentException("필수 요청 파라미터가 누락되었습니다.");
 	        }
+	        
+	     // ✅ 3.userId는 세션이 아닌 requestBody에서 가져옴
+	    	 String userId = (String) requestData.get("userId");
+	         if (userId == null) {
+	             userId = "aaa"; // 기본값
+	         }
+
 
 	        // ✅ 4. 안전하게 값 추출
 	        int scheduleid = Integer.parseInt(String.valueOf(requestData.get("scheduleId")));
