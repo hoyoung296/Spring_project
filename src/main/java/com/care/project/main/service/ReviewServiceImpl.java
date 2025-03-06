@@ -112,6 +112,14 @@ public class ReviewServiceImpl implements ReviewService {
 	        }
 	    });
 	    
+	    // 결제번호를 String으로 처리
+	    list.forEach(map -> {
+	        if (map.containsKey("paymentId")) {
+	            String paymentId = map.get("paymentId").toString();
+	            map.put("paymentId", paymentId); // 결제 번호를 String으로 변환
+	        }
+	    });
+	    
 	    // ObjectMapper 설정
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  // 최종 출력 형식
 
