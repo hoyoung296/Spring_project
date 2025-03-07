@@ -346,6 +346,21 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
     public List<Map<String, Object>> getPayment() {
-        return adminMapper.getPayment();
+		List<Map<String, Object>> list= adminMapper.getPayment();
+	    list.forEach(map -> {
+	        if (map.containsKey("reservationId")) {
+	            String reservationId = map.get("reservationId").toString();
+	            map.put("reservationId", reservationId);
+	        }
+	    });
+	    
+	    list.forEach(map -> {
+	        if (map.containsKey("paymentId")) {
+	            String paymentId = map.get("paymentId").toString();
+	            map.put("paymentId", paymentId);
+	        }
+	    });
+		
+	    return list;
     }
 }

@@ -95,11 +95,10 @@ public class ReviewServiceImpl implements ReviewService {
 		return page;
 	}
 
-	public List<Map<String, Object>> getReserve(String id, int start) {
+	public List<Map<String, Object>> getReserve(String id) {
 	    List<Map<String, Object>> list = null;
-	    start = (start - 1) * 5;
 	    try {
-	        list = rev.getReserve(id, start);  // 예약 내역 가져오기
+	        list = rev.getReserve(id);  // 예약 내역 가져오기
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
@@ -143,22 +142,6 @@ public class ReviewServiceImpl implements ReviewService {
 	    }).collect(Collectors.toList());
 
 	    return formattedList;
-	}
-
-	public int getReserveCount(String id) {
-		int count = 0;
-		try {
-			count = rev.getReserveCount(id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		int page = count / 5;
-		if (count % 5 != 0) {
-			page += 1;
-		}
-
-		return page;
 	}
 
 	public int reviewCheck(String id, int movieid) {
