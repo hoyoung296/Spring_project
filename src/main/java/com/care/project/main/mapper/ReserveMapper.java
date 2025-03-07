@@ -26,7 +26,7 @@ public interface ReserveMapper {
 	public Integer deleteReservationSeats(
 			@Param("reservationId") long reservationId);
 	public Integer updateReservation(
-			@Param("reservationId") long reservationId);
+			@Param("reservationId") long reservationId,@Param("status") int status);
 	
 	//스케줄아이디 구하기
 	public Integer getSchedulId(@Param("reservationId") long reservationId);

@@ -38,9 +38,9 @@
 	    WHERE seat_status_id = #{seatStatusId}
 	</update>
 	
-	<update id="updateReservation" parameterType="long">
+	<update id="updateReservation">
 	    UPDATE Reservation
-	    SET reservation_status_id = 3
+	    SET reservation_status_id = #{status}
 	    WHERE reservation_id  = #{reservationId}
 	</update>
 	
