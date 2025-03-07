@@ -229,7 +229,9 @@ public class AdminServiceImpl implements AdminService {
             movie.setMovieSynopsis(MovieUtils.getValidSynopsis(existingMovie.getMovieSynopsis(), movie.getMovieSynopsis()));
             movie.setPosterUrl(MovieUtils.getValidData(existingMovie.getPosterUrl(), movie.getPosterUrl()));
             movie.setStillUrl(MovieUtils.getValidData(existingMovie.getStillUrl(), movie.getStillUrl()));
-
+            
+            movie.setMovieRank(movie.getMovieRank()); //랭크는 무조건 업데이트
+            
             adminMapper.updateMovie(movie);
         }
     }
