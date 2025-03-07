@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -154,8 +155,43 @@ public class ReserveServiceImpl implements ReserveService {
 			return reserveMapper.getReserveSeatStatusId(reservationId);
 		}
 		
-		
-		
+		// 만료된 예약 조회: Reservation 테이블에서 created_at이 지정된 시각 이전이고, 예약 상태가 대기(1)인 예약 ID 목록 반환
+	    @Override
+	    public List<Long> findExpiredReservations(int reservationStatusId) {
+//	    	System.out.println("createdBefore : " + createdBefore);
+//	    	System.out.println("reservationStatusId : " + reservationStatusId);
+	    	
+	        return reserveMapper.findExpiredReservations(reservationStatusId);
+	    }
+
+	    // ========================
+	    // 예약 자동 취소 스케줄러 메서드: 1분마다 실행하여 10분 이상 미결제(대기 상태)인 예약 자동 취소
+	    // ========================
+	    @Override
+	    @Scheduled(fixedRate = 60000)  // 1분마다 실행
+	    public void cancelExpiredReservations() {
+	    	System.out.println("예약 자동 취소 실행");
+//	        long tenMinutesAgo = System.currentTimeMillis() - (10 * 60 * 1000);
+	        // 예약 상태 1: 대기 상태
+	        List<Long> expiredReservationIds = findExpiredReservations(1);
+	        System.out.println("expiredReservationIds : " + expiredReservationIds);
+	        if (expiredReservationIds != null && !expiredReservationIds.isEmpty()) {
+	            for (Long reservationId : expiredReservationIds) {
+	                try {
+	                    int scheduleId = getSchedulId(reservationId);
+	                    List<Integer> seatStatusIds = reserveSeatStatus(reservationId);
+	                    boolean canceled = cancelReservation(reservationId, scheduleId, seatStatusIds);
+	                    if (canceled) {
+	                        System.out.println("예약 자동 취소 성공: " + reservationId);
+	                    } else {
+	                        System.err.println("예약 자동 취소 실패: " + reservationId);
+	                    }
+	                } catch (Exception e) {
+	                    System.err.println("예약 자동 취소 처리 중 오류 발생: " + e.getMessage());
+	                }
+	            }
+	        }
+	    }
 		
 		
 		
