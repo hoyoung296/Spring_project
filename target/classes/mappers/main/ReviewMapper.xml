@@ -4,7 +4,8 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.care.project.main.mapper.ReviewMapper">
-	<resultMap type="com.care.project.main.dto.MovieDTO" id="search">
+	<resultMap type="com.care.project.main.dto.MovieDTO"
+		id="search">
 		<id property="movieId" column="movie_id" />
 		<result property="title" column="title" />
 		<result property="entitle" column="entitle" />
@@ -41,7 +42,8 @@
 		<result property="screenId" column="screen_id" />
 		<result property="userId" column="user_id" />
 		<result property="seatId" column="seat_id" />
-		<result property="reservationStatusId" column="reservation_status_id" />
+		<result property="reservationStatusId"
+			column="reservation_status_id" />
 		<result property="totalAmount" column="total_amount" />
 		<result property="seatRow" column="seat_row" />
 		<result property="seatNumber" column="seat_number" />
@@ -64,55 +66,66 @@
 		<result property="paymentStatus" column="payment_status" />
 		<result property="portonePaymentId" column="portone_payment_id" />
 		<result property="receiptUrl" column="receipt_url" />
-		<result property="createdAt" column="created_at" javaType="java.util.Date" />
-		<result property="updatedAt" column="updated_at" javaType="java.util.Date" />
+		<result property="createdAt" column="created_at"
+			javaType="java.util.Date" />
+		<result property="updatedAt" column="updated_at"
+			javaType="java.util.Date" />
 	</resultMap>
 
 	<select id="getList" resultMap="search">
-		SELECT * FROM movie<if test="id != null and id.trim() != ''">
-		WHERE title LIKE '%' || #{id} || '%' OR director = #{id} OR REGEXP_LIKE(actors, '(^|, )' || #{id} || '($|, )') </if>
+		SELECT * FROM movie
+		<if test="id != null and id.trim() != ''">
+			WHERE title LIKE '%' || #{id} || '%' OR director = #{id} OR
+			REGEXP_LIKE(actors, '(^|, )' || #{id} || '($|, )') </if>
 	</select>
 	<select id="searchInfo" resultMap="info">
-		select * from movie left join review using (movie_id) where movie_id=#{id}
+		select * from movie left join
+		review using (movie_id) where movie_id=#{id}
 	</select>
 	<select id="getInfo" resultMap="info">
-		select * from review inner join movie using (movie_id) where user_id=#{id} 
+		select * from review inner join
+		movie using (movie_id) where user_id=#{id}
 		order by user_id ASC offset #{start} rows fetch next 5 rows only
 	</select>
 	<select id="getCount">
-		select count(*) from review inner join movie using (movie_id) where user_id=#{id}
+		select count(*) from review inner join movie using
+		(movie_id) where user_id=#{id}
 	</select>
 	<select id="getReserve" resultMap="reserve">
 		SELECT r.*,
 		TO_CHAR(sch.start_dt, 'YYYY-MM-DD HH24:MI:SS') AS start_dt,
 		TO_CHAR(sch.end_dt, 'YYYY-MM-DD HH24:MI:SS') AS end_dt,
 		m.*, ss.*, s.*, sc.*, rs.*, pay.*
-		FROM reservation r INNER JOIN reservation_seat rs ON r.reservation_id = rs.reservation_id
-		left join payment pay on r.reservation_id = pay.reservation_id
-		INNER JOIN seat_status ss ON rs.seat_status_id = ss.seat_status_id
-		INNER JOIN seat s ON ss.seat_id = s.seat_id
+		FROM reservation r
+		LEFT JOIN reservation_seat rs ON r.reservation_id = rs.reservation_id
+		LEFT JOIN seat_status ss ON rs.seat_status_id = ss.seat_status_id
+		LEFT JOIN seat s ON ss.seat_id = s.seat_id
+		LEFT JOIN payment pay ON r.reservation_id = pay.reservation_id
 		INNER JOIN schedule sch ON r.schedule_id = sch.schedule_id
 		INNER JOIN movie m ON sch.movie_id = m.movie_id
 		INNER JOIN screen sc ON sch.screen_id = sc.screen_id
 		WHERE r.user_id = #{id}
-		ORDER BY sch.start_dt ASC OFFSET #{start} ROWS FETCH NEXT 5 ROWS ONLY
+		ORDER BY sch.start_dt ASC
+		OFFSET #{start} ROWS FETCH NEXT 5 ROWS ONLY
 	</select>
 	<select id="getReserveCount">
-		SELECT COUNT(*) 
-		FROM reservation r 
-		INNER JOIN reservation_seat rs ON r.reservation_id = rs.reservation_id
-		INNER JOIN seat_status ss ON rs.seat_status_id = ss.seat_status_id
-		INNER JOIN seat s ON ss.seat_id = s.seat_id
+		SELECT COUNT(*) FROM reservation r
+		LEFT JOIN reservation_seat rs ON r.reservation_id = rs.reservation_id
+		LEFT JOIN seat_status ss ON rs.seat_status_id = ss.seat_status_id
+		LEFT JOIN seat s ON ss.seat_id = s.seat_id
+		LEFT JOIN payment pay ON r.reservation_id = pay.reservation_id
 		INNER JOIN schedule sch ON r.schedule_id = sch.schedule_id
 		INNER JOIN movie m ON sch.movie_id = m.movie_id
 		INNER JOIN screen sc ON sch.screen_id = sc.screen_id
-		left join payment pay on r.reservation_id = pay.reservation_id
 		WHERE r.user_id = #{id}
 	</select>
 	<select id="reviewCheck">
-		select count(*) from review inner join movie using (movie_id) where user_id=#{id} and movie_id=#{movie_id}
+		select count(*) from review inner join movie using
+		(movie_id) where user_id=#{id} and movie_id=#{movie_id}
 	</select>
 	<insert id="writeReview">
-		insert into review(review_no,content,user_id,movie_id) values(review_sequence.nextval,#{content},#{userId},#{movieId})
+		insert into
+		review(review_no,content,user_id,movie_id)
+		values(review_sequence.nextval,#{content},#{userId},#{movieId})
 	</insert>
 </mapper>
