@@ -96,7 +96,7 @@
 		m ON s.movie_id = m.movie_id
 		LEFT JOIN screen sc ON s.screen_id =
 		sc.screen_id
-		WHERE TO_CHAR(s.start_DT, 'YYYY-MM-DD') = #{startdate} and m.title = #{title}
+		WHERE TO_CHAR(s.start_DT, 'YYYY-MM-DD') = #{startdate} and m.title = #{title} AND s.start_DT >= SYSDATE
 	</select>
 
 	<!-- 해당영화 정보 -->

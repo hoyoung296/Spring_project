@@ -126,7 +126,7 @@ public class ReserveServiceImpl implements ReserveService {
 		        }
 
 		        // 3. 예약 상태 변경
-		        if (reserveMapper.updateReservation(reservationId) <= 0) {
+		        if (reserveMapper.updateReservation(reservationId,3) <= 0) {
 		            System.err.println("❌ 예매 상태 변경 실패 또는 이미 처리됨.");
 		            return false;
 		        }
