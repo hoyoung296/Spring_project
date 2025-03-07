@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.care.project.main.dto.PaymentDTO;
 import com.care.project.main.mapper.PaymentMapper;
+import com.care.project.main.mapper.ReserveMapper;
 
 @Slf4j
 @PropertySource("classpath:application.properties")
@@ -29,6 +30,8 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentMapper paymentMapper;
     @Autowired
     private ReserveService reserver;
+    @Autowired 
+    private ReserveMapper reserveMapper;
 
     @Value("${portone.store.id}")
     private String storeId;
@@ -129,14 +132,16 @@ public class PaymentServiceImpl implements PaymentService {
                 // 결제 성공(PAID) && 금액 일치 여부 확인 (대소문자 무시)
                 if ("PAID".equalsIgnoreCase(status) && actualAmount == expectedAmount) {
                     int result = paymentMapper.updatePaymentStatusByPortoneId(portonePaymentId, status);
+                    int rs = reserveMapper.updateReservation(Long.parseLong(portonePaymentId), 2);
                     System.out.println("result : " +result);
+                    System.out.println("rs : " +rs);
                     return true;
                 }else {
-                	cancelPayment(portonePaymentId, "결제 검증 실패");
+                	boolean result= cancelPayment(portonePaymentId, "결제 검증 실패");
 //                	int result = paymentMapper.deletePayment(Long.parseLong(portonePaymentId));
-                	int result = paymentMapper.updatePaymentStatusByPortoneId(portonePaymentId, "cancel");
+//                	int result = paymentMapper.updatePaymentStatusByPortoneId(portonePaymentId, "cancel");
                 	System.out.println("del result : " + result);
-                	if(result >0) {
+                	if(result) {
                 		 boolean isDeleted = reserver.cancelReservation(Long.parseLong(portonePaymentId), scheduleId, seatStatusIds);
                 		 System.out.println("isDeleted : " + isDeleted);
                 	}
@@ -144,11 +149,11 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
         } catch (Exception e) {
-        	cancelPayment(portonePaymentId, "결제 검증 실패");
+        	boolean result= cancelPayment(portonePaymentId, "결제 검증 실패");
 //        	int result = paymentMapper.deletePayment(Long.parseLong(portonePaymentId));
-        	int result = paymentMapper.updatePaymentStatusByPortoneId(portonePaymentId, "cancel");
+//        	int result = paymentMapper.updatePaymentStatusByPortoneId(portonePaymentId, "cancel");
         	System.out.println("del result : " + result);
-        	if(result >0) {
+        	if(result) {
         		 boolean isDeleted = reserver.cancelReservation(Long.parseLong(portonePaymentId), scheduleId, seatStatusIds);
         		 System.out.println("isDeleted : " + isDeleted);
         	}
@@ -178,7 +183,7 @@ public class PaymentServiceImpl implements PaymentService {
 	    // 필수 항목인 취소 사유(reason)만 요청 본문에 포함
 	    Map<String, Object> requestBody = new HashMap<>();
 	    requestBody.put("reason", reason);
-	    requestBody.put("storeId", "store-e78aba4d-3df0-4c76-896c-ba009858ddcd");
+	    requestBody.put("storeId", storeId);
 	    
 
 	    HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
@@ -187,6 +192,7 @@ public class PaymentServiceImpl implements PaymentService {
 	        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 	        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
 	            System.out.println("Cancel Payment Response: " + response.getBody());
+	            paymentMapper.updatePaymentStatusByPortoneId(paymentId, "cancel");
 	            return true;
 	        } else {
 	            System.err.println("❌ Cancel payment failed. Status code: " + response.getStatusCode());

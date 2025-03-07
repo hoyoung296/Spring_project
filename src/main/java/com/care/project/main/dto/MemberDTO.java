@@ -1,8 +1,8 @@
 package com.care.project.main.dto;
 
 public class MemberDTO {
-	private String userId, userName, password, newPassword, email, phoneNumber, postNum, addr, detailAddr, userGrade;
-	private Integer userBirthday;
+	private String userId, userName, password, confirmPassword, newPassword, email, phoneNumber, postNum, addr, detailAddr, userGrade;
+	private Long userBirthday;
 	
 	public String getUserId() {
 		return userId;
@@ -21,6 +21,12 @@ public class MemberDTO {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
 	}
 	public String getNewPassword() {
 		return newPassword;
@@ -64,10 +70,10 @@ public class MemberDTO {
 	public void setUserGrade(String userGrade) {
 		this.userGrade = userGrade;
 	}
-	public Integer getUserBirthday() {
+	public Long getUserBirthday() {
 		return userBirthday;
 	}
-	public void setUserBirthday(Integer userBirthday) {
+	public void setUserBirthday(Long userBirthday) {
 		this.userBirthday = userBirthday;
 	}
 }

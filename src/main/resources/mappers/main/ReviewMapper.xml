@@ -58,7 +58,14 @@
 		<result property="movieRank" column="movie_rank" />
 		<result property="openDt" column="open_dt" />
 		<result property="seatStatusId" column="seat_status_id" />
-		<result property="statusId" column="status_id" />
+		<result property="paymentId" column="payment_id" />
+		<result property="paymentMethodId" column="payment_method_id" />
+		<result property="amount" column="amount" />
+		<result property="paymentStatus" column="payment_status" />
+		<result property="portonePaymentId" column="portone_payment_id" />
+		<result property="receiptUrl" column="receipt_url" />
+		<result property="createdAt" column="created_at" javaType="java.util.Date" />
+		<result property="updatedAt" column="updated_at" javaType="java.util.Date" />
 	</resultMap>
 
 	<select id="getList" resultMap="search">
@@ -79,14 +86,14 @@
 		SELECT r.*,
 		TO_CHAR(sch.start_dt, 'YYYY-MM-DD HH24:MI:SS') AS start_dt,
 		TO_CHAR(sch.end_dt, 'YYYY-MM-DD HH24:MI:SS') AS end_dt,
-		m.*, ss.*, s.*, sc.*, rs.*, sc2.*
+		m.*, ss.*, s.*, sc.*, rs.*, pay.*
 		FROM reservation r INNER JOIN reservation_seat rs ON r.reservation_id = rs.reservation_id
+		left join payment pay on r.reservation_id = pay.reservation_id
 		INNER JOIN seat_status ss ON rs.seat_status_id = ss.seat_status_id
 		INNER JOIN seat s ON ss.seat_id = s.seat_id
 		INNER JOIN schedule sch ON r.schedule_id = sch.schedule_id
 		INNER JOIN movie m ON sch.movie_id = m.movie_id
 		INNER JOIN screen sc ON sch.screen_id = sc.screen_id
-		INNER JOIN screen sc2 ON s.screen_id = sc2.screen_id
 		WHERE r.user_id = #{id}
 		ORDER BY sch.start_dt ASC OFFSET #{start} ROWS FETCH NEXT 5 ROWS ONLY
 	</select>
@@ -99,7 +106,7 @@
 		INNER JOIN schedule sch ON r.schedule_id = sch.schedule_id
 		INNER JOIN movie m ON sch.movie_id = m.movie_id
 		INNER JOIN screen sc ON sch.screen_id = sc.screen_id
-		INNER JOIN screen sc2 ON s.screen_id = sc2.screen_id
+		left join payment pay on r.reservation_id = pay.reservation_id
 		WHERE r.user_id = #{id}
 	</select>
 	<select id="reviewCheck">
@@ -108,7 +115,4 @@
 	<insert id="writeReview">
 		insert into review(review_no,content,user_id,movie_id) values(review_sequence.nextval,#{content},#{userId},#{movieId})
 	</insert>
-	<delete id="delReserve">
-		delete from reservation where reservation_id=#{id}
-	</delete>
 </mapper>

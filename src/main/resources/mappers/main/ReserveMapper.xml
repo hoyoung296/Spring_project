@@ -24,7 +24,7 @@
 	
 	<update id="updateSeatStatusType" parameterType="int">
 	    UPDATE Seat_Status
-	    SET status_id = 3
+	    SET status_id = #{seatStatusTypeId}
 	    WHERE seat_status_id = #{seatStatusId}
 	</update>
 	
@@ -38,12 +38,33 @@
 	    WHERE seat_status_id = #{seatStatusId}
 	</update>
 	
-	<update id="updateReservation" parameterType="long">
+	<update id="updateReservation">
 	    UPDATE Reservation
-	    SET reservation_status_id = 3
+	    SET reservation_status_id = #{status}
 	    WHERE reservation_id  = #{reservationId}
 	</update>
 	
+	<select id="getSchedulId" resultType="java.lang.Integer">
+		SELECT SCHEDULE_ID
+		FROM Reservation
+		WHERE RESERVATION_ID = #{reservationId}
+	</select>
+	
+	<select id="getReserveSeatStatusId" resultType="int">
+	    SELECT seat_status_id
+	    FROM reservation_seat
+	    WHERE reservation_id = #{reservationId}
+	</select>
+	
+	<select id="findExpiredReservations" resultType="long">
+	  <![CDATA[
+	    SELECT reservation_id
+		FROM Reservation
+		WHERE created_at < SYSTIMESTAMP - INTERVAL '10' MINUTE
+		AND reservation_status_id = #{reservationStatusId}
+	  ]]>
+	</select>
+
 	
 </mapper>
 

@@ -133,5 +133,4 @@ public class AdminController {
     public List<Map<String, Object>> getPayments() {
 		return AdminService.getPayment();
     }
-	
 }

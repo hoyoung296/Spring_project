@@ -104,6 +104,22 @@ public class ReviewServiceImpl implements ReviewService {
 	        e.printStackTrace();
 	    }
 	    
+	    // 예매번호를 String으로 처리
+	    list.forEach(map -> {
+	        if (map.containsKey("reservationId")) {
+	            String reservationId = map.get("reservationId").toString();
+	            map.put("reservationId", reservationId); // 예매 번호를 String으로 변환
+	        }
+	    });
+	    
+	    // 결제번호를 String으로 처리
+	    list.forEach(map -> {
+	        if (map.containsKey("paymentId")) {
+	            String paymentId = map.get("paymentId").toString();
+	            map.put("paymentId", paymentId); // 결제 번호를 String으로 변환
+	        }
+	    });
+	    
 	    // ObjectMapper 설정
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  // 최종 출력 형식
 
@@ -165,7 +181,7 @@ public class ReviewServiceImpl implements ReviewService {
 		return result;
 	}
 
-	public int delReserve(int id) {
+	public int delReserve(long id) {
 		int result = 0;
 		try {
 			result = rev.delReserve(id);

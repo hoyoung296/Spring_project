@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd
+          http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!-- ✅ 프로퍼티 파일 로드 
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+            </list>
+        </property>
+    </bean>
+-->
+    <!-- ✅ 컴포넌트 스캔 -->
+    <context:component-scan base-package="com.care.project" />   <!-- 패키지 수정 -->
+
+	<!-- 스케줄러 기능 활성화 (CGLIB 프록시 사용하여 인터페이스에 없는 메서드도 노출) -->
+    <task:annotation-driven proxy-target-class="true" />
+	
+
+    <!-- ✅ @Transactional 사용을 위한 설정 -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="ds" />  <!-- root-context.xml의 ds와 연결 -->
+    </bean>
+
+</beans>

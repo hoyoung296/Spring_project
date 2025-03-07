@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,7 +77,7 @@ public class ReserveServiceImpl implements ReserveService {
 			int successCount = 0;  // ✅ 성공한 행 수 카운트
 
 		    for (Integer seatStatusId : seatStatusIds) {
-		        int result = reserveMapper.updateSeatStatusType(seatStatusId);
+		        int result = reserveMapper.updateSeatStatusType(seatStatusId,3);
 		        if (result > 0) {
 		            successCount++;  // ✅ 성공하면 증가
 		        } else {
@@ -85,11 +86,27 @@ public class ReserveServiceImpl implements ReserveService {
 		    }
 
 		    return successCount == seatStatusIds.size();  // ✅
-			
-			
+		}
+		
+		// 해당하는 좌석상태id의 좌석상태아이디를 예매 완료로 변경
+		@Override
+		@Transactional
+		public boolean updateSeatStatusType2(List<Integer> seatStatusIds) {
+			int successCount = 0;  // ✅ 성공한 행 수 카운트
+
+		    for (Integer seatStatusId : seatStatusIds) {
+		        int result = reserveMapper.updateSeatStatusType(seatStatusId,2);
+		        if (result > 0) {
+		            successCount++;  // ✅ 성공하면 증가
+		        } else {
+		            return false; // ✅ 하나라도 실패하면 전체 실패 반환
+		        }
+		    }
+
+		    return successCount == seatStatusIds.size();  // ✅
 		}
 
-
+		
 		@Override
 		public boolean cancelReservation(Long reservationId, Integer scheduleid, List<Integer> seatStatusIds) {
 			try {
@@ -103,14 +120,14 @@ public class ReserveServiceImpl implements ReserveService {
 
 		        // 2. 좌석 상태 예매 가능으로 변경
 		        for (Integer seatStatusId : seatStatusIds) {
-		            if (reserveMapper.updateSeatStatusTypeOn(seatStatusId) <= 0) {
+		            if (reserveMapper.updateSeatStatusType(seatStatusId,1) <= 0) {
 		                System.err.println("❌ 좌석 상태 변경 실패. SeatStatusId: " + seatStatusId);
 		                return false;
 		            }
 		        }
 
 		        // 3. 예약 상태 변경
-		        if (reserveMapper.updateReservation(reservationId) <= 0) {
+		        if (reserveMapper.updateReservation(reservationId,3) <= 0) {
 		            System.err.println("❌ 예매 상태 변경 실패 또는 이미 처리됨.");
 		            return false;
 		        }
@@ -121,4 +138,61 @@ public class ReserveServiceImpl implements ReserveService {
 		        return false;
 		    }
 		}
+
+
+		// 스케줄 아이디 구하기
+		@Override
+		public int getSchedulId(Long reservationId) {
+			
+			return reserveMapper.getSchedulId(reservationId);
+		}
+
+		// 예매된 좌석아이디 구하기
+		@Override
+		public List<Integer> reserveSeatStatus(Long reservationId) {
+			System.out.println("예매된 좌석 아이디 : " + reserveMapper.getReserveSeatStatusId(reservationId));
+			
+			return reserveMapper.getReserveSeatStatusId(reservationId);
+		}
+		
+		// 만료된 예약 조회: Reservation 테이블에서 created_at이 지정된 시각 이전이고, 예약 상태가 대기(1)인 예약 ID 목록 반환
+	    @Override
+	    public List<Long> findExpiredReservations(int reservationStatusId) {
+//	    	System.out.println("createdBefore : " + createdBefore);
+//	    	System.out.println("reservationStatusId : " + reservationStatusId);
+	    	
+	        return reserveMapper.findExpiredReservations(reservationStatusId);
+	    }
+
+	    // ========================
+	    // 예약 자동 취소 스케줄러 메서드: 1분마다 실행하여 10분 이상 미결제(대기 상태)인 예약 자동 취소
+	    // ========================
+	    @Override
+	    @Scheduled(fixedRate = 60000)  // 1분마다 실행
+	    public void cancelExpiredReservations() {
+	    	System.out.println("예약 자동 취소 실행");
+//	        long tenMinutesAgo = System.currentTimeMillis() - (10 * 60 * 1000);
+	        // 예약 상태 1: 대기 상태
+	        List<Long> expiredReservationIds = findExpiredReservations(1);
+	        System.out.println("expiredReservationIds : " + expiredReservationIds);
+	        if (expiredReservationIds != null && !expiredReservationIds.isEmpty()) {
+	            for (Long reservationId : expiredReservationIds) {
+	                try {
+	                    int scheduleId = getSchedulId(reservationId);
+	                    List<Integer> seatStatusIds = reserveSeatStatus(reservationId);
+	                    boolean canceled = cancelReservation(reservationId, scheduleId, seatStatusIds);
+	                    if (canceled) {
+	                        System.out.println("예약 자동 취소 성공: " + reservationId);
+	                    } else {
+	                        System.err.println("예약 자동 취소 실패: " + reservationId);
+	                    }
+	                } catch (Exception e) {
+	                    System.err.println("예약 자동 취소 처리 중 오류 발생: " + e.getMessage());
+	                }
+	            }
+	        }
+	    }
+		
+		
+		
 }

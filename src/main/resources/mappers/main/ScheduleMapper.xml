@@ -80,7 +80,7 @@
 		MAX(m.poster_url) AS posterUrl
 		FROM schedule s
 		LEFT JOIN movie m ON s.movie_id = m.movie_id
-		WHERE m.title = #{title}
+		WHERE m.title = #{title} AND s.start_DT >= TRUNC(SYSDATE)
 		GROUP BY TO_CHAR(s.start_DT, 'YYYY-MM-DD')
 	</select>
 
@@ -96,7 +96,7 @@
 		m ON s.movie_id = m.movie_id
 		LEFT JOIN screen sc ON s.screen_id =
 		sc.screen_id
-		WHERE TO_CHAR(s.start_DT, 'YYYY-MM-DD') = #{startdate}
+		WHERE TO_CHAR(s.start_DT, 'YYYY-MM-DD') = #{startdate} and m.title = #{title} AND s.start_DT >= SYSDATE
 	</select>
 
 	<!-- 해당영화 정보 -->

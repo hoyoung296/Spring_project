@@ -84,6 +84,4 @@
     <select id="getPayment" resultMap="paymentList">
         select * from payment inner join reservation using (reservation_id)
     </select>
-    
-    
 </mapper>

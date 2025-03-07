@@ -7,5 +7,12 @@ public interface ReserveService {
 	public List<Integer> seatStatus(Integer scheduleid, List<String> seatIds);
 	public boolean reserveSeats(Long reservationId,List<Integer> seatStatusIds);
 	public boolean updateSeatStatusType(List<Integer> seatStatusIds);
+	public boolean updateSeatStatusType2(List<Integer> seatStatusIds);
 	public boolean cancelReservation(Long reservationId,Integer scheduleid, List<Integer> seatStatusIds);
+	//예매아디로 스케줄 아이디 구하기
+	public int getSchedulId(Long reservationId);
+	// 예매된 좌석아이디 구하기
+	public List<Integer> reserveSeatStatus(Long reservationId);
+	public List<Long> findExpiredReservations(int reservationStatusId);
+	public void cancelExpiredReservations();
 }
