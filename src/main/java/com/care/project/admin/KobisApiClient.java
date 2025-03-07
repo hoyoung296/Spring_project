@@ -49,66 +49,72 @@ public class KobisApiClient {
 
 	public void addMovieDetailsFromKobis(MovieDTO movie, String movieCd) {
 		try {
-			String url = MOVIE_INFO_URL + "?key=" + API_KEY + "&movieCd=" + movieCd;
-			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-			JsonNode rootNode = objectMapper.readTree(response.getBody());
-			JsonNode movieInfoNode = rootNode.path("movieInfoResult").path("movieInfo");
+	        // Kobis API에서 영화 기본 정보 가져오기
+	        String url = MOVIE_INFO_URL + "?key=" + API_KEY + "&movieCd=" + movieCd;
+	        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+	        JsonNode rootNode = objectMapper.readTree(response.getBody());
+	        JsonNode movieInfoNode = rootNode.path("movieInfoResult").path("movieInfo");
 
-			// 상세정보에서 영화 제목(한글)을 가져오기
-			String movieTitle = movieInfoNode.path("movieNm").asText();
-			System.out.println("한글 제목 확인 : " + movieTitle);
-			movie.setTitle(movieTitle);
+	        // 영화 제목 (한글) 가져오기
+	        String movieTitle = movieInfoNode.path("movieNm").asText();
+	        if (movie.getTitle() == null || "데이터없음".equals(movie.getTitle())) {
+	            movie.setTitle(movieTitle); // 기존 값이 없다면 최신 값으로 설정
+	        }
 
-			// 상세정보에서 영화 제목(영문)을 가져오기
-			String movieEntitle = movieInfoNode.path("movieNmEn").asText();
-			if (movieEntitle == null || movieEntitle.trim().isEmpty()) {
-				movieEntitle = "데이터없음"; // 기본값 설정
-			}
-			movie.setEntitle(movieEntitle);
-			System.out.println("영문 제목 확인 : " + movieEntitle);
+	        // 영화 제목 (영문) 가져오기
+	        String movieEntitle = movieInfoNode.path("movieNmEn").asText();
+	        if (movie.getEntitle() == null || "데이터없음".equals(movie.getEntitle())) {
+	            movie.setEntitle(movieEntitle.isEmpty() ? "데이터없음" : movieEntitle);
+	        }
 
-			// 감독 정보 가져오기 (Optional 활용)
-			JsonNode directorsNode = movieInfoNode.path("directors");
+	        // 감독 정보 가져오기
+	        JsonNode directorsNode = movieInfoNode.path("directors");
+	        String director = Optional.ofNullable(directorsNode).filter(JsonNode::isArray)
+	                .filter(node -> node.size() > 0).map(node -> node.get(0).path("peopleNm").asText().trim())
+	                .filter(text -> !text.isEmpty())
+	                .orElse("데이터없음");
+	        if (movie.getDirectorName() == null || "데이터없음".equals(movie.getDirectorName())) {
+	            movie.setDirectorName(director);
+	        }
 
-			String director = Optional.ofNullable(directorsNode).filter(JsonNode::isArray)
-					.filter(node -> node.size() > 0).map(node -> node.get(0).path("peopleNm").asText().trim())
-					.filter(text -> !text.isEmpty()) // 빈 문자열 방지
-					.orElse("데이터없음"); // 기본값 설정
+	        // 배우 정보 가져오기
+	        JsonNode actorsNode = movieInfoNode.path("actors");
+	        String actors = Optional.ofNullable(actorsNode).filter(JsonNode::isArray)
+	                .filter(node -> node.size() > 0)
+	                .map(node -> {
+	                    List<String> actorList = new ArrayList<>();
+	                    for (JsonNode actorNode : node) {
+	                        if (actorList.size() >= 3)
+	                            break;
+	                        if (actorNode != null && actorNode.has("peopleNm")) {
+	                            String actorName = actorNode.path("peopleNm").asText().trim();
+	                            if (!actorName.isEmpty()) {
+	                                actorList.add(actorName);
+	                            }
+	                        }
+	                    }
+	                    return String.join(", ", actorList);
+	                })
+	                .filter(text -> !text.isEmpty())
+	                .orElse("데이터없음");
+	        if (movie.getActors() == null || "데이터없음".equals(movie.getActors())) {
+	            movie.setActors(actors);
+	        }
 
-			movie.setDirectorName(director);
-			System.out.println("감독 확인 : " + movie.getDirectorName());
+	        // 시놉시스 가져오기 (KMDb에서 가져온 시놉시스를 덮어씌우지 않음)
+	        String synopsis = movieInfoNode.path("synopsis").asText();
+	        if (movie.getMovieSynopsis() == null || "데이터없음".equals(movie.getMovieSynopsis())) {
+	            movie.setMovieSynopsis(synopsis.isEmpty() ? "데이터없음" : synopsis);
+	        }
 
-			// 배우 정보 가져오기 (상위 3명만, Optional 사용)
-			JsonNode actorsNode = movieInfoNode.path("actors");
+	        // 포스터 URL 가져오기 (Kobis에서 제공하는 포스터 URL)
+	        String posterUrl = movieInfoNode.path("poster").asText();
+	        if (movie.getPosterUrl() == null || "데이터없음".equals(movie.getPosterUrl())) {
+	            movie.setPosterUrl(posterUrl.isEmpty() ? "데이터없음" : posterUrl);
+	        }
 
-			String actors = Optional.ofNullable(actorsNode).filter(JsonNode::isArray).filter(node -> node.size() > 0)
-					.map(node -> {
-						List<String> actorList = new ArrayList<>();
-						for (JsonNode actorNode : node) {
-							if (actorList.size() >= 3)
-								break;
-							if (actorNode != null && actorNode.has("peopleNm")) { // Null 체크
-								String actorName = actorNode.path("peopleNm").asText().trim();
-								if (!actorName.isEmpty()) {
-									actorList.add(actorName);
-								}
-							}
-						}
-						return String.join(", ", actorList);
-					}).filter(text -> !text.isEmpty()) // 빈 문자열 방지
-					.orElse("데이터없음"); // 기본값 설정
-
-			movie.setActors(actors);
-			System.out.println("배우 확인 : " + movie.getActors());
-
-			movie.setMovieSynopsis(MovieUtils.getValidSynopsis(movieInfoNode.path("synopsis").asText("")));
-
-			movie.setPosterUrl(movieInfoNode.path("posters").asText("").isEmpty() ? "데이터없음"
-					: movieInfoNode.path("posters").asText());
-		} catch (Exception e) {
-			System.out.println("KOBIS 상세정보 API 호출 오류: " + e);
-			movie.setMovieSynopsis("데이터없음");
-			movie.setPosterUrl("데이터없음");
-		}
+	    } catch (Exception e) {
+	        System.out.println("KOBIS 상세정보 API 호출 오류: " + e);
+	    }
 	}
 }
