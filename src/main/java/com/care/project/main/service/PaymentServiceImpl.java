@@ -30,6 +30,8 @@ public class PaymentServiceImpl implements PaymentService {
     private PaymentMapper paymentMapper;
     @Autowired
     private ReserveService reserver;
+    @Autowired 
+    private ReserveMapper reserveMapper;
 
     @Value("${portone.store.id}")
     private String storeId;
@@ -130,7 +132,9 @@ public class PaymentServiceImpl implements PaymentService {
                 // 결제 성공(PAID) && 금액 일치 여부 확인 (대소문자 무시)
                 if ("PAID".equalsIgnoreCase(status) && actualAmount == expectedAmount) {
                     int result = paymentMapper.updatePaymentStatusByPortoneId(portonePaymentId, status);
+                    int rs = reserveMapper.updateReservation(Long.parseLong(portonePaymentId), 2);
                     System.out.println("result : " +result);
+                    System.out.println("rs : " +rs);
                     return true;
                 }else {
                 	boolean result= cancelPayment(portonePaymentId, "결제 검증 실패");

@@ -17,8 +17,9 @@
         </property>
     </bean>
 -->
-    <!-- ✅ 컴포넌트 스캔 -->
-    <context:component-scan base-package="com.care.project" />   <!-- 패키지 수정 -->
+    <!-- ✅ 컴포넌트 스캔 
+    <context:component-scan base-package="com.care.project" />  
+    -->
 
     <!-- ✅ @Transactional 사용을 위한 설정 -->
     <tx:annotation-driven transaction-manager="transactionManager" />

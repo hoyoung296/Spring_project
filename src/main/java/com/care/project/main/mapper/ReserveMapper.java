@@ -26,12 +26,16 @@ public interface ReserveMapper {
 	public Integer deleteReservationSeats(
 			@Param("reservationId") long reservationId);
 	public Integer updateReservation(
-			@Param("reservationId") long reservationId);
+			@Param("reservationId") long reservationId,@Param("status") int status);
 	
 	//스케줄아이디 구하기
 	public Integer getSchedulId(@Param("reservationId") long reservationId);
 	
 	// 예매된 좌석번호 구하기
 	public List<Integer> getReserveSeatStatusId(@Param("reservationId") long reservationId);
+	
+	public List<Long> findExpiredReservations(
+		        @Param("reservationStatusId") int reservationStatusId
+		    );
 	
 }

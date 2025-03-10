@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000")); // ✅ React 프론트엔드 도메인 허용
+        config.setAllowedOriginPatterns(Arrays.asList("*")); // ✅ React 프론트엔드 도메인 허용
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         config.setExposedHeaders(Arrays.asList("Authorization")); // ✅ 클라이언트에서 Authorization 헤더 접근 가능하게 설정

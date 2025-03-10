@@ -13,4 +13,6 @@ public interface ReserveService {
 	public int getSchedulId(Long reservationId);
 	// 예매된 좌석아이디 구하기
 	public List<Integer> reserveSeatStatus(Long reservationId);
+	public List<Long> findExpiredReservations(int reservationStatusId);
+	public void cancelExpiredReservations();
 }
