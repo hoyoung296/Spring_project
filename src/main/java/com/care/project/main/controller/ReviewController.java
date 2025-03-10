@@ -45,11 +45,9 @@ public class ReviewController {
 	}
 
 	@GetMapping("/reserve")
-	public Map<String, Object> getReserve(@RequestParam String id,
-			@RequestParam(required = false, defaultValue = "1") int start) {
+	public Map<String, Object> getReserve(@RequestParam String id) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("dto", rvs.getReserve(id, start));
-		map.put("page", rvs.getReserveCount(id));
+		map.put("dto", rvs.getReserve(id));
 		return map;
 	}
 
