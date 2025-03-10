@@ -44,7 +44,7 @@ public class MemberController {
             }
             
             
-         // 🔥 비밀번호 확인 추가 (여기서 문제 확인 가능)
+            // 비밀번호 확인 추가
             if (!memberDTO.getPassword().equals(memberDTO.getConfirmPassword())) {
                 return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             }
@@ -53,6 +53,9 @@ public class MemberController {
                 return createErrorResponse(ErrorType.INVALID_PARAMETER, "이미 등록된 아이디입니다.");
             }
             ms.registerMember(memberDTO);
+            
+            // confirmPassword 제거 후 응답 반환
+            memberDTO.setConfirmPassword(null);
 
             // 성공 응답
             CommonResponse<MemberDTO> response = CommonResponse.<MemberDTO>builder()
