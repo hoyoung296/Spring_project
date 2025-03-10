@@ -14,7 +14,7 @@ import com.care.project.main.dto.LoginResponseDto;
 import com.care.project.main.service.AuthService;
 
 @Controller
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("member")
 //@RequestMapping("/login/oauth2/callback/kakao")
 public class AuthController {
