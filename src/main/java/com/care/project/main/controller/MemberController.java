@@ -1,5 +1,7 @@
 package com.care.project.main.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +29,13 @@ public class MemberController {
     
 // 회원가입
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody MemberDTO memberDTO) {
+    public ResponseEntity<?> register(@RequestBody MemberDTO memberDTO, HttpSession session) {
         try {
+        	// ✅ 1. 이메일 인증 여부 확인
+            String isAuthenticated = (String) session.getAttribute("emailAuthenticated");
+            if (isAuthenticated == null || !isAuthenticated.equals(memberDTO.getEmail())) {
+                return createErrorResponse(ErrorType.INVALID_PARAMETER, "이메일 인증을 완료해야 회원가입이 가능합니다.");
+            }
             // 유효성 검사
             if (!ms.isUserIdValid(memberDTO.getUserId())) {
                 return createErrorResponse(ErrorType.INVALID_PARAMETER, "아이디는 6자 이상 영문자와 숫자만 가능합니다.");
@@ -50,9 +57,17 @@ public class MemberController {
             }
 
             if (ms.isUserIdDuplicate(memberDTO.getUserId())) {
-                return createErrorResponse(ErrorType.INVALID_PARAMETER, "이미 등록된 아이디입니다.");
+                return createErrorResponse(ErrorType.INVALID_PARAMETER, "사용중인 아이디입니다.");
             }
+            if (ms.isEmailDuplicate(memberDTO.getEmail())) {
+                return createErrorResponse(ErrorType.INVALID_PARAMETER, "사용중인 이메일입니다.");
+            }
+            
             ms.registerMember(memberDTO);
+            
+            
+            // ✅ 5. 세션에서 인증 정보 삭제 (보안 강화)
+            session.removeAttribute("emailAuthenticated");
             
             // confirmPassword 제거 후 응답 반환
             memberDTO.setConfirmPassword(null);
@@ -78,6 +93,21 @@ public class MemberController {
             CommonResponse<Boolean> response = CommonResponse.<Boolean>builder()
                     .code(Constant.Success.SUCCESS_CODE)
                     .message(isDuplicate ? "이미 등록된 아이디입니다." : "사용 가능한 아이디입니다.")
+                    .data(isDuplicate)
+                    .build();
+            return CommonResponse.createResponse(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return createErrorResponse(ErrorType.SERVER_ERROR, "서버 내부 오류로 실패했습니다.");
+        }
+    }
+    // 이메일 중복 체크
+    @GetMapping("/check-email")
+    public ResponseEntity<?> checkEmail(@RequestParam String email) {
+        try {
+            boolean isDuplicate = ms.isEmailDuplicate(email);
+            CommonResponse<Boolean> response = CommonResponse.<Boolean>builder()
+                    .code(Constant.Success.SUCCESS_CODE)
+                    .message(isDuplicate ? "이미 등록된 이메일입니다." : "사용 가능한 이메일입니다.")
                     .data(isDuplicate)
                     .build();
             return CommonResponse.createResponse(response, HttpStatus.OK);
