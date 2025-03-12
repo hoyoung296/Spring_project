@@ -31,9 +31,18 @@ public class MemberController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody MemberDTO memberDTO, HttpSession session) {
         try {
+        	String sessionId = session.getId(); // 세션 ID 가져오기
+            System.out.println("현재 세션 ID: " + sessionId);
+            boolean isEmailVerified = false;
         	// ✅ 1. 이메일 인증 여부 확인
-            String isAuthenticated = (String) session.getAttribute("emailAuthenticated");
-            if (isAuthenticated == null || !isAuthenticated.equals(memberDTO.getEmail())) {
+            if(sessionId!=null) {
+            	isEmailVerified = true;
+            }
+            
+         // 이메일 인증 여부 로그 추가
+            System.out.println("이메일 인증 여부: " + isEmailVerified);  // 여기서 확인 가능
+
+            if (!isEmailVerified) {
                 return createErrorResponse(ErrorType.INVALID_PARAMETER, "이메일 인증을 완료해야 회원가입이 가능합니다.");
             }
             // 유효성 검사
@@ -67,7 +76,7 @@ public class MemberController {
             
             
             // ✅ 5. 세션에서 인증 정보 삭제 (보안 강화)
-            session.removeAttribute("emailAuthenticated");
+            session.removeAttribute("isEmailVerified");
             
             // confirmPassword 제거 후 응답 반환
             memberDTO.setConfirmPassword(null);
