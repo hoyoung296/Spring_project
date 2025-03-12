@@ -129,10 +129,14 @@ public class MemberController {
     @PostMapping("/check-password")
     public ResponseEntity<?> checkPassword(@RequestBody MemberDTO memberDTO) {
         try {
+        	System.out.println("memberDTO확인 : " + memberDTO.getUserId());
+        	System.out.println("memberDTO확인 : " + memberDTO.getPassword());
             boolean isValid = ms.checkPassword(memberDTO);
+            System.out.println("결과확인 : " + isValid);
+            int num = isValid ? 1 : 0 ;
             String message = isValid ? "비밀번호 확인 성공" : "비밀번호가 일치하지 않습니다.";
             CommonResponse<String> response = CommonResponse.<String>builder()
-                    .code(Constant.Success.SUCCESS_CODE)
+                    .code(num)
                     .message(message)
                     .build();
             return CommonResponse.createResponse(response, HttpStatus.OK);
