@@ -127,7 +127,7 @@ public class PaymentController {
             return CommonResponse.createResponse(
  	                CommonResponse.builder()
                      .code(Constant.Success.SUCCESS_CODE)
-                     .message("예매 삭제 성공")
+                     .message("예매 취소 성공")
                      .data(responseData)
                      .build(),
              HttpStatus.OK

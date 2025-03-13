@@ -14,5 +14,4 @@ public interface ReviewService {
 	public List<Map<String, Object>> getReserve(String id);
 	public int reviewCheck(String id, int movieid);
 	public int writeReview (ReviewDTO dto);
-	public int delReserve(long id);
  }

@@ -163,14 +163,4 @@ public class ReviewServiceImpl implements ReviewService {
 		}
 		return result;
 	}
-
-	public int delReserve(long id) {
-		int result = 0;
-		try {
-			result = rev.delReserve(id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
 }
