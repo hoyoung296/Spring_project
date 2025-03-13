@@ -21,6 +21,7 @@ D:\movieProjectBack\src\main\java\com\care\project\admin\AdminService.java
 D:\movieProjectBack\src\main\java\com\care\project\admin\KobisApiClient.java
 D:\movieProjectBack\src\main\java\com\care\project\common\CommonResponse.java
 D:\movieProjectBack\src\main\java\com\care\project\main\service\MemberServiceImpl.java
+D:\movieProjectBack\src\main\java\com\care\project\filter\JwtAuthenticationFilter.java
 D:\movieProjectBack\src\main\java\com\care\project\main\controller\PaymentController.java
 D:\movieProjectBack\src\main\java\com\care\project\main\dto\KakaoTokenDto.java
 D:\movieProjectBack\src\main\java\com\care\project\main\controller\AuthController.java
