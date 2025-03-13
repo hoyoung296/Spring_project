@@ -26,4 +26,11 @@
         INSERT INTO Users (user_id, username, password, email, phone_number, addr, postnum, user_birthday, detail_addr, user_grade)
         VALUES (#{userId}, #{username}, #{password}, #{email}, #{phoneNumber}, #{addr}, #{postnum}, #{userBirthday}, #{detailAddr}, #{userGrade})
     </insert>
+    
+    <update id="updateUser" parameterType="com.care.project.main.dto.UserDto">
+        UPDATE Users
+        SET
+            password = #{password}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>
