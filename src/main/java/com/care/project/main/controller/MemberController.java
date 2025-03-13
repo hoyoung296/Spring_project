@@ -170,25 +170,21 @@ public class MemberController {
     }
 
     // 비밀번호 찾기 (사용자 확인)
-    @PostMapping("/findPassword")
+    @PutMapping("/updatePassword")
     public ResponseEntity<?> findPasswordCheck(@RequestBody MemberDTO memberDTO) {
         boolean exists = ms.findPasswordCheck(memberDTO);
-        return ResponseEntity.ok(exists);
-    }
-
-    // 비밀번호 재설정
-    @PutMapping("/updatePassword")
-    public ResponseEntity<?> updatePassword(@RequestBody MemberDTO memberDTO) {
+        if(exists) {
+        
         if (!ms.isPasswordValid(memberDTO.getNewPassword())) {
             return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호는 최소 8자 이상이며, 영문/숫자/특수문자를 포함해야 합니다.");
         }
         boolean updated = ms.updatePassword(memberDTO);
         return ResponseEntity.ok(updated);
+        }
+        return createErrorResponse(ErrorType.SERVER_ERROR, "비밀번호 변경 실패");
     }
+
     
-
-
-			
 
 	// 회원정보 수정
 	@PutMapping("/update")
