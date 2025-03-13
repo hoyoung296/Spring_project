@@ -19,6 +19,7 @@ com\care\project\main\dto\MemberDTO.class
 com\care\project\main\dto\RefundDTO.class
 com\care\project\main\mapper\ScheduleMapper.class
 com\care\project\main\controller\ReviewController.class
+com\care\project\filter\JwtAuthenticationFilter.class
 com\care\project\main\service\PaymentServiceImpl.class
 com\care\project\main\controller\MemberController.class
 com\care\project\main\dto\LoginResponseDto.class
