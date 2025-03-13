@@ -223,4 +223,32 @@ public class MemberController {
                 .build();
         return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
     }
+    
+ // 아이디 찾기
+    @PostMapping("/findId")
+    public ResponseEntity<?> findUserId(@RequestBody MemberDTO memberDTO) {
+        String userId = ms.findUserId(memberDTO);
+        if (userId == null) {
+            return createErrorResponse(ErrorType.INVALID_PARAMETER, "입력한 정보와 일치하는 아이디가 없습니다.");
+        }
+        return ResponseEntity.ok(userId);
+    }
+
+    // 비밀번호 찾기 (사용자 확인)
+    @PostMapping("/findPassword")
+    public ResponseEntity<?> findPasswordCheck(@RequestBody MemberDTO memberDTO) {
+        boolean exists = ms.findPasswordCheck(memberDTO);
+        return ResponseEntity.ok(exists);
+    }
+
+    // 비밀번호 재설정
+    @PutMapping("/updatePassword")
+    public ResponseEntity<?> updatePassword(@RequestBody MemberDTO memberDTO) {
+        if (!ms.isPasswordValid(memberDTO.getNewPassword())) {
+            return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호는 최소 8자 이상이며, 영문/숫자/특수문자를 포함해야 합니다.");
+        }
+        boolean updated = ms.updatePassword(memberDTO);
+        return ResponseEntity.ok(updated);
+    }
+    
 }
