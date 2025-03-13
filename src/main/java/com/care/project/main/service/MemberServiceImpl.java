@@ -162,4 +162,23 @@ public class MemberServiceImpl implements MemberService {
 		MemberDTO user = memberMapper.getMember(memberDTO.getUserId());
 		return user != null && memberDTO.getPassword().equals(user.getPassword());
 	}
+
+	// 아이디 찾기
+	@Override
+	public String findUserId(MemberDTO memberDTO) {
+		return memberMapper.findUserId(memberDTO);
+	}
+
+	// 비밀번호 찾기 (사용자 확인)
+	@Override
+	public boolean findPasswordCheck(MemberDTO memberDTO) {
+		return memberMapper.findPasswordCheck(memberDTO) > 0;
+	}
+
+	// 비밀번호 재설정
+	@Override
+	public boolean updatePassword(MemberDTO memberDTO) {
+		memberDTO.setNewPassword(passwordEncoder.encode(memberDTO.getNewPassword()));// 비밀번호 암호화
+		return memberMapper.updatePassword(memberDTO) > 0;
+	}
 }
