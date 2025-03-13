@@ -70,6 +70,7 @@ public class AuthServiceImpl implements AuthService {
         KakaoTokenDto tokenDto = null;
         try {
             tokenDto = mapper.readValue(response.getBody(), KakaoTokenDto.class);
+            System.out.println("카카오토큰dto : " + tokenDto);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,15 +131,20 @@ public class AuthServiceImpl implements AuthService {
             user = existingUser;
         }
 
+        JwtUtil jwtUtil = new JwtUtil();
+        
         // 5. JWT 생성 (예: 사용자 id, username, email 포함)
-        String jwtToken = JwtUtil.generateToken(user.getUserId(), user.getUsername(), user.getEmail());
+        String jwtToken = jwtUtil.generateToken(user.getUserId(), user.getUsername(), user.getEmail());
+        String refreshToken = JwtUtil.generateRefreshToken(user.getUserId(), user.getUsername(), user.getEmail());
         System.out.println("jwtToken : " + jwtToken);
+        System.out.println("refreshToken : " + refreshToken);
         
         // 6. 응답 DTO 구성
         LoginResponseDto responseDto = new LoginResponseDto();
         responseDto.setLoginSuccess(true);
         responseDto.setUser(user);
         responseDto.setJwtToken(jwtToken);
+        responseDto.setRefreshToken(refreshToken);
         return responseDto;
     }
 
