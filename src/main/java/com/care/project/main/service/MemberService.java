@@ -1,10 +1,11 @@
 package com.care.project.main.service;
 
+import com.care.project.main.dto.LoginResponseDto;
 import com.care.project.main.dto.MemberDTO;
 
 public interface MemberService {
 	void registerMember(MemberDTO memberDTO);
-    boolean loginMember(MemberDTO memberDTO);
+	LoginResponseDto loginMember(MemberDTO memberDTO);
     boolean updateMember(MemberDTO memberDTO);
     boolean deleteMember(String userId);
     MemberDTO getMember(String userId);
