@@ -44,10 +44,11 @@ public class MemberController {
 			if (!isEmailVerified) {
 				return createErrorResponse(ErrorType.INVALID_PARAMETER, "이메일 인증을 완료해야 회원가입이 가능합니다.");
 			}
+			
 			// 유효성 검사
-			if (!ms.isUserIdValid(memberDTO.getUserId())) {
-				return createErrorResponse(ErrorType.INVALID_PARAMETER, "아이디는 6자 이상 영문자와 숫자만 가능합니다.");
-			}
+	        if (!ms.isEmailValid(memberDTO.getUserId())) { // 아이디를 이메일 형식으로 검사
+	            return createErrorResponse(ErrorType.INVALID_PARAMETER, "아이디는 이메일 형식이어야 합니다. (예: example@email.com)");
+	        }
 			if (!ms.isEmailValid(memberDTO.getEmail())) {
 				return createErrorResponse(ErrorType.INVALID_PARAMETER, "올바른 이메일 형식을 입력해주세요. (예: example@email.com)");
 			}

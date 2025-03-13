@@ -16,8 +16,8 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public boolean isUserIdValid(String userId) {
-		String userIdPattern = "^[a-zA-Z0-9]{6,}$"; // 아이디 : 6자 이상 영문자, 숫자만 포함
-		return userId != null && userId.matches(userIdPattern);
+	    String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"; // 이메일 형식 검증
+	    return userId != null && userId.matches(emailPattern); // 이메일 형식 검증
 	}
 
 	@Override
