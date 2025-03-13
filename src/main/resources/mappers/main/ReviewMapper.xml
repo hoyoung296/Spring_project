@@ -90,10 +90,10 @@
 		TO_CHAR(sch.end_dt, 'YYYY-MM-DD HH24:MI:SS') AS end_dt,
 		m.*, ss.*, s.*, sc.*, rs.*, pay.* 
 		FROM reservation r
-		inner JOIN reservation_seat rs ON r.reservation_id = rs.reservation_id
-		inner JOIN seat_status ss ON rs.seat_status_id = ss.seat_status_id
-		inner JOIN seat s ON ss.seat_id = s.seat_id
 		LEFT JOIN payment pay ON r.reservation_id = pay.reservation_id
+		left JOIN reservation_seat rs ON r.reservation_id = rs.reservation_id
+		left JOIN seat_status ss ON rs.seat_status_id = ss.seat_status_id
+		left JOIN seat s ON ss.seat_id = s.seat_id
 		INNER JOIN schedule sch ON r.schedule_id = sch.schedule_id
 		INNER JOIN movie m ON sch.movie_id = m.movie_id
 		INNER JOIN screen sc ON sch.screen_id = sc.screen_id

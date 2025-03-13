@@ -54,7 +54,6 @@
  		SELECT * FROM users WHERE email = #{email}
  	</select>
 
-
 	<select id="userData" resultMap="member">
 		select * from users
 	</select>
