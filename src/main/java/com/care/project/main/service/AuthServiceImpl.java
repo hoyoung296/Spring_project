@@ -142,7 +142,6 @@ public class AuthServiceImpl implements AuthService {
         // 6. 응답 DTO 구성
         LoginResponseDto responseDto = new LoginResponseDto();
         responseDto.setLoginSuccess(true);
-        responseDto.setUser(user);
         responseDto.setJwtToken(jwtToken);
         responseDto.setRefreshToken(refreshToken);
         return responseDto;

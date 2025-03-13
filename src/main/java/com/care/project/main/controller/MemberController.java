@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.care.project.common.CommonResponse;
 import com.care.project.common.Constant;
 import com.care.project.common.ErrorType;
+import com.care.project.main.dto.LoginResponseDto;
 import com.care.project.main.dto.MemberDTO;
 import com.care.project.main.service.MemberService;
 
@@ -135,20 +136,18 @@ public class MemberController {
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO) {
 		try {
-			boolean isValid = ms.loginMember(memberDTO);
+			LoginResponseDto isValid = ms.loginMember(memberDTO);
 			String message;
-			MemberDTO updatedMemberDTO = null; // 초기화
 
 			// 로그인 성공 시 사용자 이름을 포함하여 메시지 수정
-			if (isValid) {
-				updatedMemberDTO = ms.getMember(memberDTO.getUserId());
-				String userName = updatedMemberDTO.getUserName(); // 사용자 이름 가져오기
-				message = userName + "님 반갑습니다!"; // 동적 메시지 생성
+			if (isValid != null ) {
+				System.out.println("isValid" + isValid);
+				message = "로그인 성공"; // 동적 메시지 생성
 			} else {
 				message = "아이디 또는 비밀번호가 일치하지 않습니다.";
 			}
-			CommonResponse<MemberDTO> response = CommonResponse.<MemberDTO>builder().code(Constant.Success.SUCCESS_CODE)
-					.message(message).data(updatedMemberDTO) // updatedMemberDTO가 null일 수 있음
+			CommonResponse<LoginResponseDto> response = CommonResponse.<LoginResponseDto>builder().code(Constant.Success.SUCCESS_CODE)
+					.message(message).data(isValid) // updatedMemberDTO가 null일 수 있음
 					.build();
 
 			return CommonResponse.createResponse(response, HttpStatus.OK);

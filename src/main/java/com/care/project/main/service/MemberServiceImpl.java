@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.care.project.main.dto.LoginResponseDto;
 import com.care.project.main.dto.MemberDTO;
 import com.care.project.main.mapper.MemberMapper;
+import com.care.project.utils.JwtUtil;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -38,6 +40,31 @@ public class MemberServiceImpl implements MemberService {
 		return password != null && password.matches(passwordPattern);
 	}
 
+    @Override
+    public LoginResponseDto loginMember(MemberDTO memberDTO) {
+        MemberDTO user = memberMapper.getMember(memberDTO.getUserId());// 회원 조회
+        JwtUtil jwtUtil = new JwtUtil();
+        String jwtToken = jwtUtil.generateToken(user.getUserId(), user.getUserName(), user.getEmail());
+        String refreshToken = JwtUtil.generateRefreshToken(user.getUserId(), user.getUserName(), user.getEmail());
+        
+        // JWT 생성 (예: 사용자 id, username, email 포함)
+        System.out.println("jwtToken : " + jwtToken);
+        System.out.println("refreshToken : " + refreshToken);
+        
+        // 응답 DTO 구성
+        LoginResponseDto responseDto = new LoginResponseDto();
+        responseDto.setLoginSuccess(true);
+        responseDto.setJwtToken(jwtToken);
+        responseDto.setRefreshToken(refreshToken);
+        
+        if(user != null && passwordEncoder.matches(memberDTO.getPassword(), user.getPassword())){
+        	return responseDto;
+        }
+        return null;
+        
+        
+    }
+
 	@Override
 	public void registerMember(MemberDTO memberDTO) {
 		if (memberDTO.getUserGrade() == null || memberDTO.getUserGrade().isEmpty()) {
@@ -55,12 +82,6 @@ public class MemberServiceImpl implements MemberService {
 		}
 		memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));// 비밀번호 암호화
 		memberMapper.register(memberDTO);// 회원 등록
-	}
-
-	@Override
-	public boolean loginMember(MemberDTO memberDTO) {
-		MemberDTO user = memberMapper.getMember(memberDTO.getUserId());// 회원 조회
-		return user != null && passwordEncoder.matches(memberDTO.getPassword(), user.getPassword());// 비밀번호 검증
 	}
 
 	@Override
