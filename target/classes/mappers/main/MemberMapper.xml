@@ -54,6 +54,22 @@
  		SELECT * FROM users WHERE email = #{email}
  	</select>
 
+	<!-- 아이디 찾기 -->
+    <select id="findUserId" resultType="string">
+        SELECT user_id FROM users WHERE email = #{email}
+    </select>
+
+	<!-- 비밀번호 찾기 (사용자 확인) -->
+    <select id="findPasswordCheck" resultType="int">
+        SELECT COUNT(*) FROM users WHERE user_id = #{userId} AND email = #{email}
+    </select>
+
+    <!-- 비밀번호 변경 -->
+    <update id="updatePassword">
+        UPDATE users SET password = #{newPassword} WHERE user_id = #{userId}
+    </update>
+
+
 
 	<select id="userData" resultMap="member">
 		select * from users

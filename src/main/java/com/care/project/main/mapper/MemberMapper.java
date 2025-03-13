@@ -11,4 +11,8 @@ public interface MemberMapper {
     MemberDTO getMember(String userId);
     MemberDTO getMemberByEmail(String email);  // 이메일 중복 체크
     List<MemberDTO> userData(); //유저데이터 호출(관리자 페이지에서 사용)
+    
+    String findUserId(MemberDTO memberDTO); //아이디 찾기
+    int findPasswordCheck(MemberDTO memberDTO); //비밀번호 찾기
+    int updatePassword(MemberDTO memberDTO); //비밀번호 재설정
 }
