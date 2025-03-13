@@ -47,6 +47,12 @@
 	<select id="getMember" resultMap="member" parameterType="String">
 		SELECT * FROM users WHERE user_id = #{userId}
 	</select>
+	
+	<!-- 이메일 중복 체크 -->
+ 	<select id="getMemberByEmail" resultMap="member"
+ 		parameterType="String">
+ 		SELECT * FROM users WHERE email = #{email}
+ 	</select>
 
 	<!-- 아이디 찾기 -->
     <select id="findUserId" resultType="string">

@@ -3,7 +3,7 @@ package com.care.project.main.dto;
 public class MemberDTO {
 	private String userId, userName, password, confirmPassword, newPassword, email, phoneNumber, postNum, addr, detailAddr, userGrade;
 	private Long userBirthday;
-	
+	private boolean isEmailVerified;  // 인증 여부 필드 추가
 	public String getUserId() {
 		return userId;
 	}
@@ -76,4 +76,12 @@ public class MemberDTO {
 	public void setUserBirthday(Long userBirthday) {
 		this.userBirthday = userBirthday;
 	}
+	public boolean isEmailVerified() {
+		return isEmailVerified;
+	}
+	public void setEmailVerified(boolean isEmailVerified) {
+		this.isEmailVerified = isEmailVerified;
+	}
+	
+	
 }
