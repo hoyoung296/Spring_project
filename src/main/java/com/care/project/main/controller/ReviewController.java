@@ -61,21 +61,4 @@ public class ReviewController {
 		int result = rvs.writeReview(dto);
 		return result;
 	}
-
-	@DeleteMapping("/del")
-	public ResponseEntity<Map<String, Object>> delReserve(@RequestParam String id) {
-		long num = Long.parseLong(id);
-		Map<String, Object> map = new HashMap<>();
-		int result = rvs.delReserve(num);
-		if (result == 1) {
-			map.put("message", "예매 취소 성공");
-			return ResponseEntity.ok(map); // HTTP 200
-		} else if (result == -1) { // 예를 들어 없는 ID
-			map.put("message", "해당 예매를 찾을 수 없음");
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map); // HTTP 404
-		} else {
-			map.put("message", "예매 취소 실패");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map); // HTTP 500
-		}
-	}
 }

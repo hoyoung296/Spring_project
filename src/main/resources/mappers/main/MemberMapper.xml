@@ -69,8 +69,6 @@
         UPDATE users SET password = #{newPassword} WHERE user_id = #{userId}
     </update>
 
-
-
 	<select id="userData" resultMap="member">
 		select * from users
 	</select>
