@@ -22,6 +22,5 @@ public interface MemberService {
  // 아이디/비밀번호 찾기 기능 추가
     String findUserId(MemberDTO memberDTO);
     boolean findPasswordCheck(MemberDTO memberDTO);
-    boolean updatePassword(MemberDTO memberDTO);
     
 }
