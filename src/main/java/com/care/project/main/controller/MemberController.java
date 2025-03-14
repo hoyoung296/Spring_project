@@ -229,7 +229,6 @@ public class MemberController {
 			return CommonResponse.createResponse(response, HttpStatus.OK);
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			return createErrorResponse(ErrorType.SERVER_ERROR, "서버 내부 오류로 실패했습니다.");
 		}
 	}
