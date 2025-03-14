@@ -61,15 +61,10 @@ public class MemberServiceImpl implements MemberService {
         	return responseDto;
         }
         return null;
-        
-        
     }
 
 	@Override
 	public void registerMember(MemberDTO memberDTO) {
-		if (memberDTO.getUserGrade() == null || memberDTO.getUserGrade().isEmpty()) {
-			memberDTO.setUserGrade("일반"); // 기본 등급 설정
-		}
 		// 주소가 없다면 기본값을 설정하거나, 입력받은 값 그대로 사용
 		if (memberDTO.getPostNum() == null || memberDTO.getPostNum().isEmpty()) {
 			memberDTO.setPostNum("000000"); // 기본 우편번호

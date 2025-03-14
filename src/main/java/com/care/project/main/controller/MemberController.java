@@ -45,11 +45,11 @@ public class MemberController {
 			if (!isEmailVerified) {
 				return createErrorResponse(ErrorType.INVALID_PARAMETER, "이메일 인증을 완료해야 회원가입이 가능합니다.");
 			}
-			
+
 			// 유효성 검사
-	        if (!ms.isEmailValid(memberDTO.getUserId())) { // 아이디를 이메일 형식으로 검사
-	            return createErrorResponse(ErrorType.INVALID_PARAMETER, "아이디는 이메일 형식이어야 합니다. (예: example@email.com)");
-	        }
+			if (!ms.isEmailValid(memberDTO.getUserId())) { // 아이디를 이메일 형식으로 검사
+				return createErrorResponse(ErrorType.INVALID_PARAMETER, "아이디는 이메일 형식이어야 합니다. (예: example@email.com)");
+			}
 			if (!ms.isEmailValid(memberDTO.getEmail())) {
 				return createErrorResponse(ErrorType.INVALID_PARAMETER, "올바른 이메일 형식을 입력해주세요. (예: example@email.com)");
 			}
@@ -140,14 +140,14 @@ public class MemberController {
 			String message;
 
 			// 로그인 성공 시 사용자 이름을 포함하여 메시지 수정
-			if (isValid != null ) {
+			if (isValid != null) {
 				System.out.println("isValid" + isValid);
 				message = "로그인 성공"; // 동적 메시지 생성
 			} else {
 				message = "아이디 또는 비밀번호가 일치하지 않습니다.";
 			}
-			CommonResponse<LoginResponseDto> response = CommonResponse.<LoginResponseDto>builder().code(Constant.Success.SUCCESS_CODE)
-					.message(message).data(isValid) // updatedMemberDTO가 null일 수 있음
+			CommonResponse<LoginResponseDto> response = CommonResponse.<LoginResponseDto>builder()
+					.code(Constant.Success.SUCCESS_CODE).message(message).data(isValid) // updatedMemberDTO가 null일 수 있음
 					.build();
 
 			return CommonResponse.createResponse(response, HttpStatus.OK);
@@ -157,34 +157,30 @@ public class MemberController {
 		}
 	}
 
+	// 아이디 찾기
+	@PostMapping("/findId")
+	public ResponseEntity<?> findUserId(@RequestBody MemberDTO memberDTO) {
+		String userId = ms.findUserId(memberDTO);
+		if (userId == null) {
+			return createErrorResponse(ErrorType.INVALID_PARAMETER, "입력한 정보와 일치하는 아이디가 없습니다.");
+		}
+		return ResponseEntity.ok(userId);
+	}
 
-    
- // 아이디 찾기
-    @PostMapping("/findId")
-    public ResponseEntity<?> findUserId(@RequestBody MemberDTO memberDTO) {
-        String userId = ms.findUserId(memberDTO);
-        if (userId == null) {
-            return createErrorResponse(ErrorType.INVALID_PARAMETER, "입력한 정보와 일치하는 아이디가 없습니다.");
-        }
-        return ResponseEntity.ok(userId);
-    }
+	// 비밀번호 찾기 (사용자 확인)
+	@PutMapping("/updatePassword")
+	public ResponseEntity<?> findPasswordCheck(@RequestBody MemberDTO memberDTO) {
+		boolean exists = ms.findPasswordCheck(memberDTO);
+		if (exists) {
 
-    // 비밀번호 찾기 (사용자 확인)
-    @PutMapping("/updatePassword")
-    public ResponseEntity<?> findPasswordCheck(@RequestBody MemberDTO memberDTO) {
-        boolean exists = ms.findPasswordCheck(memberDTO);
-        if(exists) {
-        
-        if (!ms.isPasswordValid(memberDTO.getNewPassword())) {
-            return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호는 최소 8자 이상이며, 영문/숫자/특수문자를 포함해야 합니다.");
-        }
-        boolean updated = ms.updatePassword(memberDTO);
-        return ResponseEntity.ok(updated);
-        }
-        return createErrorResponse(ErrorType.SERVER_ERROR, "비밀번호 변경 실패");
-    }
-
-    
+			if (!ms.isPasswordValid(memberDTO.getNewPassword())) {
+				return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호는 최소 8자 이상이며, 영문/숫자/특수문자를 포함해야 합니다.");
+			}
+			boolean updated = ms.updatePassword(memberDTO);
+			return ResponseEntity.ok(updated);
+		}
+		return createErrorResponse(ErrorType.SERVER_ERROR, "비밀번호 변경 실패");
+	}
 
 	// 회원정보 수정
 	@PutMapping("/update")
@@ -193,15 +189,19 @@ public class MemberController {
 			if (!ms.newcheckPassword(memberDTO)) {
 				return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호가 일치하지 않습니다.");
 			}
+
+			// 새로운 비밀번호 확인 추가
+			if (!memberDTO.getNewPassword().equals(memberDTO.getConfirmPassword())) {
+				return createErrorResponse(ErrorType.INVALID_PARAMETER, "새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+			}
+
 			// 유효성 검사
 			if (!ms.isUserIdValid(memberDTO.getUserId())) {
-				System.out.println("아이디");
 				return createErrorResponse(ErrorType.INVALID_PARAMETER, "아이디는 6자 이상 영문자와 숫자만 가능합니다.");
 			}
 			// 이메일 유효성 검사 제외 (기존 값으로 유지 처리)
 			if (memberDTO.getEmail() != null && !memberDTO.getEmail().isEmpty()) {
 				if (!ms.isEmailValid(memberDTO.getEmail())) {
-					System.out.println("이메일");
 					return createErrorResponse(ErrorType.INVALID_PARAMETER,
 							"올바른 이메일 형식을 입력해주세요. (예: example@email.com)");
 				}
@@ -210,7 +210,6 @@ public class MemberController {
 			// 폰번호 유효성 검사 제외 (기존 값으로 유지 처리)
 			if (memberDTO.getPhoneNumber() != null && !memberDTO.getPhoneNumber().isEmpty()) {
 				if (!ms.isPhoneNumberValid(memberDTO.getPhoneNumber())) {
-					System.out.println("폰번호");
 					return createErrorResponse(ErrorType.INVALID_PARAMETER,
 							"하이픈(-)이나 공백 없이 숫자만 입력해주세요. (예: 01012345678)");
 				}
@@ -218,12 +217,11 @@ public class MemberController {
 			// 새 비밀번호 유효성 검사 추가
 			if (memberDTO.getNewPassword() != null && !memberDTO.getNewPassword().isEmpty()) {
 				if (!ms.isPasswordValid(memberDTO.getNewPassword())) {
-					System.out.println("새비밀번호");
 					return createErrorResponse(ErrorType.INVALID_PARAMETER,
 							"비밀번호는 최소 8자 이상이어야 하며, 영문/숫자/특수문자를 포함해야 합니다.");
 				}
 			}
-			
+
 			boolean isUpdated = ms.updateMember(memberDTO);
 			String message = isUpdated ? "회원정보가 수정되었습니다." : "회원정보 수정 실패";
 			CommonResponse<MemberDTO> response = CommonResponse.<MemberDTO>builder().code(Constant.Success.SUCCESS_CODE)
@@ -239,7 +237,7 @@ public class MemberController {
 	@DeleteMapping("/delete")
 	public ResponseEntity<?> deleteMember(@RequestBody MemberDTO memberDTO) {
 		try {
-			if (!ms.checkPassword(memberDTO)) {
+			if (!ms.newcheckPassword(memberDTO)) {
 				return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호가 일치하지 않습니다.");
 			}
 			boolean isDeleted = ms.deleteMember(memberDTO.getUserId());

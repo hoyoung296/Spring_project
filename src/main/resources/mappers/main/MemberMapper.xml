@@ -22,9 +22,9 @@
 	<insert id="register"
 		parameterType="com.care.project.main.dto.MemberDTO">
 		INSERT INTO users (user_id, username, password, email, phone_number, postnum,
-		addr, detail_addr,  user_birthday, user_grade)
+		addr, detail_addr,  user_birthday)
 		VALUES (#{userId}, #{userName}, #{password}, #{email}, #{phoneNumber},
-		#{postNum}, #{addr}, #{detailAddr}, #{userBirthday}, #{userGrade})
+		#{postNum}, #{addr}, #{detailAddr}, #{userBirthday})
 	</insert>
 
 	<!-- 회원 정보 수정 -->
