@@ -32,9 +32,7 @@
 		parameterType="com.care.project.main.dto.MemberDTO">
 		UPDATE users
 		SET username = #{userName}, password = #{password}, email = #{email},
-		phone_number = #{phoneNumber}, postnum = #{postNum},
-		addr = #{addr}, detail_addr = #{detailAddr}, user_birthday = #{userBirthday},
-		user_grade = #{userGrade}
+		phone_number = #{phoneNumber}, addr = #{addr}, detail_addr = #{detailAddr}, user_birthday = #{userBirthday}
 		WHERE user_id = #{userId}
 	</update>
 
