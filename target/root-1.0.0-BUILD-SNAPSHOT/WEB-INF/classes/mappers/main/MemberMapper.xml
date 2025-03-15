@@ -22,9 +22,9 @@
 	<insert id="register"
 		parameterType="com.care.project.main.dto.MemberDTO">
 		INSERT INTO users (user_id, username, password, email, phone_number, postnum,
-		addr, detail_addr,  user_birthday, user_grade)
+		addr, detail_addr,  user_birthday)
 		VALUES (#{userId}, #{userName}, #{password}, #{email}, #{phoneNumber},
-		#{postNum}, #{addr}, #{detailAddr}, #{userBirthday}, #{userGrade})
+		#{postNum}, #{addr}, #{detailAddr}, #{userBirthday})
 	</insert>
 
 	<!-- 회원 정보 수정 -->
@@ -32,9 +32,7 @@
 		parameterType="com.care.project.main.dto.MemberDTO">
 		UPDATE users
 		SET username = #{userName}, password = #{password}, email = #{email},
-		phone_number = #{phoneNumber}, postnum = #{postNum},
-		addr = #{addr}, detail_addr = #{detailAddr}, user_birthday = #{userBirthday},
-		user_grade = #{userGrade}
+		phone_number = #{phoneNumber}, addr = #{addr}, detail_addr = #{detailAddr}, user_birthday = #{userBirthday}
 		WHERE user_id = #{userId}
 	</update>
 
@@ -47,7 +45,27 @@
 	<select id="getMember" resultMap="member" parameterType="String">
 		SELECT * FROM users WHERE user_id = #{userId}
 	</select>
+	
+	<!-- 이메일 중복 체크 -->
+ 	<select id="getMemberByEmail" resultMap="member"
+ 		parameterType="String">
+ 		SELECT * FROM users WHERE email = #{email}
+ 	</select>
 
+	<!-- 아이디 찾기 -->
+    <select id="findUserId" resultType="string">
+        SELECT user_id FROM users WHERE email = #{email}
+    </select>
+
+	<!-- 비밀번호 찾기 (사용자 확인) -->
+    <select id="findPasswordCheck" resultType="int">
+        SELECT COUNT(*) FROM users WHERE user_id = #{userId} AND email = #{email}
+    </select>
+
+    <!-- 비밀번호 변경 -->
+    <update id="updatePassword">
+        UPDATE users SET password = #{newPassword} WHERE user_id = #{userId}
+    </update>
 
 	<select id="userData" resultMap="member">
 		select * from users
