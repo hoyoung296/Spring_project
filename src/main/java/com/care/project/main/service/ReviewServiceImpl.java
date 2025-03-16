@@ -96,52 +96,52 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	public List<Map<String, Object>> getReserve(String id) {
-	    List<Map<String, Object>> list = null;
-	    try {
-	        list = rev.getReserve(id);  // 예약 내역 가져오기
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    
-	    // 예매번호를 String으로 처리
-	    list.forEach(map -> {
-	        if (map.containsKey("reservationId")) {
-	            String reservationId = map.get("reservationId").toString();
-	            map.put("reservationId", reservationId); // 예매 번호를 String으로 변환
-	        }
-	    });
-	    
-	    // 결제번호를 String으로 처리
-	    list.forEach(map -> {
-	        if (map.containsKey("paymentId")) {
-	            String paymentId = map.get("paymentId").toString();
-	            map.put("paymentId", paymentId); // 결제 번호를 String으로 변환
-	        }
-	    });
-	    
-	    // ObjectMapper 설정
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  // 최종 출력 형식
+		List<Map<String, Object>> list = null;
+		try {
+			list = rev.getReserve(id); // 예약 내역 가져오기
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-	    List<Map<String, Object>> formattedList = list.stream().map(map -> {
-	        try {
-	            // start_dt 변환
-	            if (map.containsKey("startDateTime")) {
-	                String startDateTime = (String) map.get("startDateTime");  // start_dt는 String 형식으로 제공됨
-	                if (startDateTime != null && !startDateTime.isEmpty()) {
-	                    // `startDateTime`이 "yyyy-MM-dd HH:mm:ss" 형식일 경우에만 처리
-	                    SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  // 기존 형식
-	                    Date date = originalFormat.parse(startDateTime);  // String을 Date로 변환
-	                    String formattedStartDate = dateFormat.format(date);  // Date를 "yyyy.MM.dd" 형식으로 변환
-	                    map.put("startDateTime", formattedStartDate);  // 변환된 start_dt를 맵에 업데이트
-	                }
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        return map;
-	    }).collect(Collectors.toList());
+		// 예매번호를 String으로 처리
+		list.forEach(map -> {
+			if (map.containsKey("reservationId")) {
+				String reservationId = map.get("reservationId").toString();
+				map.put("reservationId", reservationId); // 예매 번호를 String으로 변환
+			}
+		});
 
-	    return formattedList;
+		// 결제번호를 String으로 처리
+		list.forEach(map -> {
+			if (map.containsKey("paymentId")) {
+				String paymentId = map.get("paymentId").toString();
+				map.put("paymentId", paymentId); // 결제 번호를 String으로 변환
+			}
+		});
+
+		// ObjectMapper 설정
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 최종 출력 형식
+
+		List<Map<String, Object>> formattedList = list.stream().map(map -> {
+			try {
+				// start_dt 변환
+				if (map.containsKey("startDateTime")) {
+					String startDateTime = (String) map.get("startDateTime"); // start_dt는 String 형식으로 제공됨
+					if (startDateTime != null && !startDateTime.isEmpty()) {
+						// `startDateTime`이 "yyyy-MM-dd HH:mm:ss" 형식일 경우에만 처리
+						SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 기존 형식
+						Date date = originalFormat.parse(startDateTime); // String을 Date로 변환
+						String formattedStartDate = dateFormat.format(date); // Date를 "yyyy.MM.dd" 형식으로 변환
+						map.put("startDateTime", formattedStartDate); // 변환된 start_dt를 맵에 업데이트
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return map;
+		}).collect(Collectors.toList());
+
+		return formattedList;
 	}
 
 	public int reviewCheck(String id, int movieid) {

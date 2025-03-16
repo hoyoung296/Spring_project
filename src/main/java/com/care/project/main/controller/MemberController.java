@@ -221,7 +221,7 @@ public class MemberController {
 							"비밀번호는 최소 8자 이상이어야 하며, 영문/숫자/특수문자를 포함해야 합니다.");
 				}
 			}
-			
+
 			boolean isUpdated = ms.updateMember(memberDTO);
 			String message = isUpdated ? "회원정보가 수정되었습니다." : "회원정보 수정 실패";
 			CommonResponse<MemberDTO> response = CommonResponse.<MemberDTO>builder().code(Constant.Success.SUCCESS_CODE)
