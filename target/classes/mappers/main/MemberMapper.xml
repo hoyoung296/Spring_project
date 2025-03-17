@@ -22,9 +22,9 @@
 	<insert id="register"
 		parameterType="com.care.project.main.dto.MemberDTO">
 		INSERT INTO users (user_id, username, password, email, phone_number, postnum,
-		addr, detail_addr,  user_birthday, user_grade)
+		addr, detail_addr,  user_birthday)
 		VALUES (#{userId}, #{userName}, #{password}, #{email}, #{phoneNumber},
-		#{postNum}, #{addr}, #{detailAddr}, #{userBirthday}, #{userGrade})
+		#{postNum}, #{addr}, #{detailAddr}, #{userBirthday})
 	</insert>
 
 	<!-- 회원 정보 수정 -->
@@ -32,9 +32,7 @@
 		parameterType="com.care.project.main.dto.MemberDTO">
 		UPDATE users
 		SET username = #{userName}, password = #{password}, email = #{email},
-		phone_number = #{phoneNumber}, postnum = #{postNum},
-		addr = #{addr}, detail_addr = #{detailAddr}, user_birthday = #{userBirthday},
-		user_grade = #{userGrade}
+		phone_number = #{phoneNumber}, addr = #{addr}, detail_addr = #{detailAddr}, user_birthday = #{userBirthday}
 		WHERE user_id = #{userId}
 	</update>
 

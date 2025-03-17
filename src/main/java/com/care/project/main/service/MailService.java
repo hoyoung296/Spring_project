@@ -17,7 +17,7 @@ public class MailService {
     private JavaMailSender mailSender;
     
     @Autowired
-    private MemberMapper membermapper;
+    private MemberMapper memberMapper;
     
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();// 비밀번호 암호화
     
@@ -74,7 +74,7 @@ public class MailService {
             
          // 임시 비밀번호를 암호화하여 DB에 저장
             String encodedPassword = passwordEncoder.encode(tempPassword);
-            int result = membermapper.updatePassword(memberDTO, encodedPassword);
+            int result = memberMapper.updatePassword(memberDTO, encodedPassword);
             return result > 0; // 성공 여부 반환
         } catch (Exception e) {
             e.printStackTrace();

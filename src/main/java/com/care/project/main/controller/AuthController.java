@@ -10,11 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.care.project.main.dto.KakaoTokenDto;
 import com.care.project.main.dto.LoginResponseDto;
+import com.care.project.main.dto.PasswordRequestDto;
 import com.care.project.main.service.AuthService;
 import com.care.project.utils.JwtUtil;
 
@@ -46,6 +49,24 @@ public class AuthController {
         
         return ResponseEntity.ok(responseDto);
     }
+    
+ // 비밀번호 설정(또는 변경) 엔드포인트
+    @PostMapping("/set-password")
+    public ResponseEntity<?> setPassword(@RequestBody PasswordRequestDto requestDto) {
+        try {
+        	authService.setPassword(requestDto.getUserId(), requestDto.getPassword());
+            Map<String, Object> result = new HashMap<>();
+            result.put("success", true);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> result = new HashMap<>();
+            result.put("success", false);
+            result.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+    
     
  // Refresh Token 엔드포인트: Refresh Token을 이용해 새로운 Access Token 발급
     @GetMapping("/refresh")

@@ -19,8 +19,8 @@ public interface MemberService {
     boolean isPhoneNumberValid(String phoneNumber);
     boolean isPasswordValid(String password);
     
- // 아이디/비밀번호 찾기 기능 추가
+    // 아이디/비밀번호 찾기 기능 추가
     String findUserId(MemberDTO memberDTO);
     boolean findPasswordCheck(MemberDTO memberDTO);
-    
+   // boolean updatePassword(MemberDTO memberDTO, String encodedPassword); //임시 비밀번호 업데이트
 }

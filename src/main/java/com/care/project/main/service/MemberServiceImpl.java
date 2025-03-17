@@ -18,8 +18,8 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public boolean isUserIdValid(String userId) {
-		String userIdPattern = "^[a-zA-Z0-9]{6,}$"; // 아이디 : 6자 이상 영문자, 숫자만 포함
-		return userId != null && userId.matches(userIdPattern);
+	    String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"; // 이메일 형식 검증
+	    return userId != null && userId.matches(emailPattern); // 이메일 형식 검증
 	}
 
 	@Override
@@ -61,15 +61,10 @@ public class MemberServiceImpl implements MemberService {
         	return responseDto;
         }
         return null;
-        
-        
     }
 
 	@Override
 	public void registerMember(MemberDTO memberDTO) {
-		if (memberDTO.getUserGrade() == null || memberDTO.getUserGrade().isEmpty()) {
-			memberDTO.setUserGrade("일반"); // 기본 등급 설정
-		}
 		// 주소가 없다면 기본값을 설정하거나, 입력받은 값 그대로 사용
 		if (memberDTO.getPostNum() == null || memberDTO.getPostNum().isEmpty()) {
 			memberDTO.setPostNum("000000"); // 기본 우편번호
@@ -195,5 +190,13 @@ public class MemberServiceImpl implements MemberService {
 	public boolean findPasswordCheck(MemberDTO memberDTO) {
 		return memberMapper.findPasswordCheck(memberDTO) > 0;
 	}
+	
+	/*
+	// 임시 비밀번호 업데이트
+		@Override
+		public boolean updatePassword(MemberDTO memberDTO, String encodedPassword) {
+			return memberMapper.updatePassword(memberDTO, encodedPassword) > 0;
+		}
+		*/
 	
 }

@@ -118,18 +118,34 @@ public class AuthServiceImpl implements AuthService {
                 .userGrade("welcome")
                 .build();
 
+//        // 4. DB에서 해당 사용자가 있는지 확인, 없으면 신규 회원 등록
+//        UserDto existingUser = userMapper.selectUserById(user.getUserId());
+//        if (existingUser == null) {
+//        	 // 임의의 난수를 생성하고 해싱
+//            String randomPassword = UUID.randomUUID().toString();
+//            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//            String encodedPassword = passwordEncoder.encode(randomPassword);
+//            user.setPassword(encodedPassword);
+//            userMapper.insertUser(user);
+//        } else {
+//            user = existingUser;
+//        }
+        
+        boolean isNewUser = false;
         // 4. DB에서 해당 사용자가 있는지 확인, 없으면 신규 회원 등록
         UserDto existingUser = userMapper.selectUserById(user.getUserId());
         if (existingUser == null) {
-        	 // 임의의 난수를 생성하고 해싱
+            // 빈 문자열이 아닌, 임의의 난수를 생성하고 해싱한 값을 사용합니다.
             String randomPassword = UUID.randomUUID().toString();
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(randomPassword);
             user.setPassword(encodedPassword);
+            isNewUser = true;
             userMapper.insertUser(user);
         } else {
             user = existingUser;
         }
+        
 
         JwtUtil jwtUtil = new JwtUtil();
         
@@ -143,11 +159,36 @@ public class AuthServiceImpl implements AuthService {
         LoginResponseDto responseDto = new LoginResponseDto();
         responseDto.setLoginSuccess(true);
         responseDto.setJwtToken(jwtToken);
+        responseDto.setKakaoToken(kakaoAccessToken);
         responseDto.setRefreshToken(refreshToken);
+        // 신규 회원이면, 프론트엔드에서 추가로 비밀번호 설정 페이지로 리디렉션할 수 있도록 플래그 전달
+        responseDto.setNeedPasswordSetup(isNewUser);
         return responseDto;
     }
+    
+    
+    
 
-    // 내부 메서드: 카카오 사용자 정보 조회
+    @Override
+	public void setPassword(String userId, String newPassword) {
+    	// DB에서 사용자 조회
+        UserDto user = userMapper.selectUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("존재하지 않는 사용자입니다.");
+        }
+
+        // 새 비밀번호 해싱 (BCrypt 사용 예시)
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        // user에 새 비밀번호 설정 후 DB 업데이트
+        user.setPassword(encodedPassword);
+        // MyBatis Mapper에 updateUser 같은 메서드가 있어야 함
+        userMapper.updateUser(user);
+		
+	}
+
+	// 내부 메서드: 카카오 사용자 정보 조회
     private KakaoAccountDto getKakaoUserInfo(String kakaoAccessToken) {
         RestTemplate rt = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
