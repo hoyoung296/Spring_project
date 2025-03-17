@@ -9,6 +9,8 @@ import com.care.project.main.dto.MovieDTO;
 import com.care.project.main.dto.ReviewDTO;
 
 public interface ReviewMapper {
+	public List<MovieDTO> list();
+	
 	public List<MovieDTO> getList(@Param("id") String id);
 
 	public List<Map<String, Object>> searchInfo(int id);
@@ -24,4 +26,5 @@ public interface ReviewMapper {
 	public int reviewCheck(@Param("id") String id, @Param("movie_id") int movieid);
 
 	public int writeReview(ReviewDTO dto);
+	
 }

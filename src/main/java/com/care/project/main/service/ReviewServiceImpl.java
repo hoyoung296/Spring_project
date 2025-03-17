@@ -24,6 +24,16 @@ public class ReviewServiceImpl implements ReviewService {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private abstract class IgnoreUnknownMixin {
 	}
+	
+	public List<MovieDTO> list() {
+		List<MovieDTO> list = null;
+		try {
+			list = rev.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
 	public List<MovieDTO> getList(String id) {
 		List<MovieDTO> list = null;

@@ -7,6 +7,8 @@ import com.care.project.main.dto.MovieDTO;
 import com.care.project.main.dto.ReviewDTO;
 
 public interface ReviewService {
+	public List<MovieDTO> list();
+
 	public List<MovieDTO> getList(String id);
 
 	public List<Map<String, Object>> searchInfo(int id);

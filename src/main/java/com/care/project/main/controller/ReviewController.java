@@ -21,7 +21,12 @@ import com.care.project.main.service.ReviewService;
 public class ReviewController {
 	@Autowired
 	ReviewService rvs;
-
+	
+	@GetMapping("/list")
+	public List<MovieDTO> list() {
+		return rvs.list();
+	}
+	
 	@GetMapping("/search")
 	public List<MovieDTO> getList(@RequestParam String id) {
 		return rvs.getList(id);
