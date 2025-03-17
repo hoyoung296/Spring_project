@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +21,12 @@ import com.care.project.main.service.ReviewService;
 public class ReviewController {
 	@Autowired
 	ReviewService rvs;
-
+	
+	@GetMapping("/list")
+	public List<MovieDTO> list() {
+		return rvs.list();
+	}
+	
 	@GetMapping("/search")
 	public List<MovieDTO> getList(@RequestParam String id) {
 		return rvs.getList(id);

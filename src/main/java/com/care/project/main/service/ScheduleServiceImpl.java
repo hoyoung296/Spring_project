@@ -6,30 +6,29 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import com.care.project.main.mapper.ScheduleMapper;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
-    @Autowired 
-    private ScheduleMapper scheduleMapper;
+	@Autowired
+	private ScheduleMapper scheduleMapper;
 
-    @Override
-    public List<Map<String, Object>> scheduleDate(String title) {
+	@Override
+	public List<Map<String, Object>> scheduleDate(String title) {
 //        Map<String, Object> scheduleData = scheduleMapper.getSchedule(title);
 //        return scheduleData;
-        return scheduleMapper.getScheduleDate(title);
-    }
+		return scheduleMapper.getScheduleDate(title);
+	}
 
 	@Override
-	public List<Map<String, Object>> scheduleInfo(String startdate,String title) {
-		
-		return scheduleMapper.getScheduleInfo(startdate,title);
+	public List<Map<String, Object>> scheduleInfo(String startdate, String title) {
+
+		return scheduleMapper.getScheduleInfo(startdate, title);
 	}
-	
+
 	@Override
 	public Map<String, Object> scheduleDetailData(Integer scheduleid) {
-		System.out.println("예매할 영화 : "+ scheduleMapper.scheduleDetailData(scheduleid));
+		System.out.println("예매할 영화 : " + scheduleMapper.scheduleDetailData(scheduleid));
 		return scheduleMapper.scheduleDetailData(scheduleid);
 	}
 
@@ -54,12 +53,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 //			    ]
 //			  }
 //			}
-		System.out.println("예약된 좌석 : "+ scheduleMapper.reservedSeats(scheduleid));
+		System.out.println("예약된 좌석 : " + scheduleMapper.reservedSeats(scheduleid));
 		return scheduleMapper.reservedSeats(scheduleid);
 	}
-	
-	
-	
-    
-    
 }

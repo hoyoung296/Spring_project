@@ -15,77 +15,61 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY;
-    private static final long EXPIRATION_TIME;
-    private static final long REFRESH_EXPIRATION_TIME;
+	private static final String SECRET_KEY;
+	private static final long EXPIRATION_TIME;
+	private static final long REFRESH_EXPIRATION_TIME;
 
-    static {
-        Properties prop = new Properties();
-        try (InputStream input = JwtUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
-            if (input == null) {
-                throw new IllegalArgumentException("application.properties 파일을 찾을 수 없습니다.");
-            }
-            prop.load(input);
-            String secret = prop.getProperty("jwt.secret");
-            String expiration = prop.getProperty("jwt.expiration");
-            String refresh = prop.getProperty("refresh.expiration");
+	static {
+		Properties prop = new Properties();
+		try (InputStream input = JwtUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
+			if (input == null) {
+				throw new IllegalArgumentException("application.properties 파일을 찾을 수 없습니다.");
+			}
+			prop.load(input);
+			String secret = prop.getProperty("jwt.secret");
+			String expiration = prop.getProperty("jwt.expiration");
+			String refresh = prop.getProperty("refresh.expiration");
 
-            if (secret == null || secret.trim().isEmpty()) {
-                throw new IllegalArgumentException("jwt.secret 프로퍼티가 설정되어 있지 않습니다.");
-            }
-            // 비밀키를 Base64 인코딩
-            SECRET_KEY = Base64.getEncoder().encodeToString(secret.getBytes());
-            EXPIRATION_TIME = Long.parseLong(expiration.trim());
-            REFRESH_EXPIRATION_TIME = Long.parseLong(refresh.trim());
-        } catch (IOException e) {
-            throw new RuntimeException("JWT 프로퍼티 로딩 중 오류 발생", e);
-        }
-    }
+			if (secret == null || secret.trim().isEmpty()) {
+				throw new IllegalArgumentException("jwt.secret 프로퍼티가 설정되어 있지 않습니다.");
+			}
+			// 비밀키를 Base64 인코딩
+			SECRET_KEY = Base64.getEncoder().encodeToString(secret.getBytes());
+			EXPIRATION_TIME = Long.parseLong(expiration.trim());
+			REFRESH_EXPIRATION_TIME = Long.parseLong(refresh.trim());
+		} catch (IOException e) {
+			throw new RuntimeException("JWT 프로퍼티 로딩 중 오류 발생", e);
+		}
+	}
 
-    // Access Token 생성: 사용자 id, username, email 포함
-    public static String generateToken(String userId, String username, String email) {
-        long now = System.currentTimeMillis();
-        Date issuedAt = new Date(now);
-        Date expirationDate = new Date(now + EXPIRATION_TIME);
-        System.out.println("토큰 발급 시간 (iat): " + issuedAt);
-        System.out.println("토큰 만료 시간 (exp): " + expirationDate);
-        return Jwts.builder()
-                .setSubject(userId)
-                .claim("username", username)
-                .claim("email", email)
-                .setIssuedAt(issuedAt)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
-    }
-    
-    // Refresh Token 생성: 사용자 id, username, email 포함
-    public static String generateRefreshToken(String userId, String username, String email) {
-        long now = System.currentTimeMillis();
-        Date issuedAt = new Date(now);
-        Date expirationDate = new Date(now + REFRESH_EXPIRATION_TIME);
-        return Jwts.builder()
-                .setSubject(userId)
-                .claim("username", username)
-                .claim("email", email)
-                .setIssuedAt(issuedAt)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
-    }
+	// Access Token 생성: 사용자 id, username, email 포함
+	public static String generateToken(String userId, String username, String email) {
+		long now = System.currentTimeMillis();
+		Date issuedAt = new Date(now);
+		Date expirationDate = new Date(now + EXPIRATION_TIME);
+		System.out.println("토큰 발급 시간 (iat): " + issuedAt);
+		System.out.println("토큰 만료 시간 (exp): " + expirationDate);
+		return Jwts.builder().setSubject(userId).claim("username", username).claim("email", email).setIssuedAt(issuedAt)
+				.setExpiration(expirationDate).signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+	}
 
-    // JWT 검증 후 Claims 객체 반환 (60초의 clock skew 허용)
-    public static Claims validateToken(String token) {
-        return Jwts.parser()
-                .setAllowedClockSkewSeconds(60)
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody();
-    }
+	// Refresh Token 생성: 사용자 id, username, email 포함
+	public static String generateRefreshToken(String userId, String username, String email) {
+		long now = System.currentTimeMillis();
+		Date issuedAt = new Date(now);
+		Date expirationDate = new Date(now + REFRESH_EXPIRATION_TIME);
+		return Jwts.builder().setSubject(userId).claim("username", username).claim("email", email).setIssuedAt(issuedAt)
+				.setExpiration(expirationDate).signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+	}
 
-    // 토큰에서 userId(= subject) 추출
-    public static String getUserIdFromToken(String token) {
-        Claims claims = validateToken(token);
-        return claims.getSubject();
-    }
+	// JWT 검증 후 Claims 객체 반환 (60초의 clock skew 허용)
+	public static Claims validateToken(String token) {
+		return Jwts.parser().setAllowedClockSkewSeconds(60).setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+	}
+
+	// 토큰에서 userId(= subject) 추출
+	public static String getUserIdFromToken(String token) {
+		Claims claims = validateToken(token);
+		return claims.getSubject();
+	}
 }
