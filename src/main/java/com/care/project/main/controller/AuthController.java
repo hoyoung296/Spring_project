@@ -56,7 +56,7 @@ public class AuthController {
         refreshCookie.setHttpOnly(true);
         refreshCookie.setSecure(true); // HTTPS 환경에서만 사용
         refreshCookie.setPath("/");
-        refreshCookie.setMaxAge(7 * 24 * 60 * 60); // 7일 (초 단위)
+        //refreshCookie.setMaxAge(7 * 24 * 60 * 60); // 7일 (초 단위)
         response.addCookie(refreshCookie);
 
         // 4. JSON 응답에서는 refreshToken 제거 (보안 강화)
@@ -101,6 +101,22 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Invalid or expired refresh token");
         }
+    }
+    
+    // 로그아웃 엔드포인트: 명시적으로 쿠키를 삭제
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        // 쿠키 삭제: refreshToken 쿠키를 만료시킴
+        Cookie deleteCookie = new Cookie("refreshToken", null);
+        deleteCookie.setHttpOnly(true);
+        deleteCookie.setSecure(true);
+        deleteCookie.setPath("/");
+        deleteCookie.setMaxAge(0); // 쿠키 즉시 만료
+        response.addCookie(deleteCookie);
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        result.put("message", "Logged out successfully");
+        return ResponseEntity.ok(result);
     }
 
     // 사용자 정보 반환 (Authorization 헤더의 Access Token 사용)
