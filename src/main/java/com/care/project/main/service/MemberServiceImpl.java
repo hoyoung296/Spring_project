@@ -196,11 +196,13 @@ public class MemberServiceImpl implements MemberService {
 	public boolean findPasswordCheck(MemberDTO memberDTO) {
 		return memberMapper.findPasswordCheck(memberDTO) > 0;
 	}
-
-	// 비밀번호 재설정
-	@Override
-	public boolean updatePassword(MemberDTO memberDTO) {
-		memberDTO.setNewPassword(passwordEncoder.encode(memberDTO.getNewPassword()));// 비밀번호 암호화
-		return memberMapper.updatePassword(memberDTO) > 0;
-	}
+	
+	/*
+	// 임시 비밀번호 업데이트
+		@Override
+		public boolean updatePassword(MemberDTO memberDTO, String encodedPassword) {
+			return memberMapper.updatePassword(memberDTO, encodedPassword) > 0;
+		}
+		*/
+	
 }

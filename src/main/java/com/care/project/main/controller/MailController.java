@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.care.project.main.dto.MemberDTO;
 import com.care.project.main.service.MailService;
+import com.care.project.main.service.MemberService;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -20,6 +22,9 @@ public class MailController {
 	@Autowired
 	private MailService mailService;
 
+    @Autowired
+    private MemberService memberService;
+    
 	// 이메일 인증번호 전송
 	@PostMapping("/send-auth-code")
 	public ResponseEntity<Object> sendAuthCode(@RequestBody Map<String, String> requestData, HttpSession session) {
@@ -61,11 +66,34 @@ public class MailController {
 		}
 	}
 
-	// ApiResponse 클래스 수정
-	public static class ApiResponse {
-		private String status;
-		private String message;
-		private String verificationCode; // 인증번호 추가
+ // 임시 비밀번호 전송
+    @PutMapping("/sendTempPassword")
+    public ResponseEntity<Object> sendAuthPassword(@RequestBody MemberDTO memberDTO) {
+        String email = memberDTO.getUserId();
+        System.out.println("이메일로 받은 값: " + email);
+
+        MemberDTO dto = memberService.getMember(email); // 이메일로 회원 정보 조회
+        if (dto == null) {
+            return ResponseEntity.status(404).body(new ApiResponse("error", "해당 이메일의 회원이 존재하지 않습니다."));
+        }
+        
+        
+        boolean success = mailService.sendAuthPassword(dto); // boolean으로 받음
+
+        if (success) {
+            return ResponseEntity.ok().body(new ApiResponse("success", "임시 비밀번호가 이메일로 발송되었습니다."));
+        } else {
+            return ResponseEntity.status(500).body(new ApiResponse("error", "이메일 발송에 실패했습니다."));
+        }
+
+    }
+    
+    
+    // ApiResponse 클래스 수정
+    public static class ApiResponse {
+        private String status;
+        private String message;
+        private String verificationCode;  // 인증번호 추가
 
 		public ApiResponse(String status, String message) {
 			this.status = status;
