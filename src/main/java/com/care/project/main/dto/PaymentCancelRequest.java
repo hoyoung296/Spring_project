@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class PaymentCancelRequest {
 	private String portonePaymentId;
-    private int amount;
-    private int scheduleId;
-    private List<String> seatIds;
+	private int amount;
+	private int scheduleId;
+	private List<String> seatIds;
 }

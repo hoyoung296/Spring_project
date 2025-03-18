@@ -21,13 +21,18 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public boolean isUserIdValid(String userId) {
-	    String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"; // 이메일 형식 검증
-	    return userId != null && userId.matches(emailPattern); // 이메일 형식 검증
+		String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"; // 이메일
+																													// 형식
+																													// 검증
+		return userId != null && userId.matches(emailPattern); // 이메일 형식 검증
 	}
 
 	@Override
 	public boolean isEmailValid(String email) {
-		String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"; // 이메일 @ . 포함
+		String emailPattern = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"; // 이메일
+																													// @
+																													// .
+																													// 포함
 		return email != null && email.matches(emailPattern);
 	}
 
@@ -39,33 +44,36 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public boolean isPasswordValid(String password) {
-		String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,}$"; // 최소 8자, 영문자, 숫자, 특수문자 포함
+		String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,}$"; // 최소 8자, 영문자, 숫자,
+																										// 특수문자 포함
 		return password != null && password.matches(passwordPattern);
 	}
 
-    @Override
-    public LoginResponseDto loginMember(MemberDTO memberDTO) {
-        MemberDTO user = memberMapper.getMember(memberDTO.getUserId());// 회원 조회
-        JwtUtil jwtUtil = new JwtUtil();
-        String jwtToken = jwtUtil.generateToken(user.getUserId(), user.getUserName(), user.getEmail());
-        String refreshToken = JwtUtil.generateRefreshToken(user.getUserId(), user.getUserName(), user.getEmail());
-        
-        // JWT 생성 (예: 사용자 id, username, email 포함)
-        System.out.println("jwtToken : " + jwtToken);
-        System.out.println("refreshToken : " + refreshToken);
-        
-        // 응답 DTO 구성
-        LoginResponseDto responseDto = new LoginResponseDto();
-        responseDto.setLoginSuccess(true);
-        responseDto.setJwtToken(jwtToken);
-        responseDto.setRefreshToken(refreshToken);
-        
-        if(user != null && passwordEncoder.matches(memberDTO.getPassword(), user.getPassword())){
-        	return responseDto;
-        }
-        return null;
-    }
     
+    
+	@Override
+	public LoginResponseDto loginMember(MemberDTO memberDTO) {
+		MemberDTO user = memberMapper.getMember(memberDTO.getUserId());// 회원 조회
+		JwtUtil jwtUtil = new JwtUtil();
+		String jwtToken = jwtUtil.generateToken(user.getUserId(), user.getUserName(), user.getEmail());
+		String refreshToken = JwtUtil.generateRefreshToken(user.getUserId(), user.getUserName(), user.getEmail());
+
+		// JWT 생성 (예: 사용자 id, username, email 포함)
+		System.out.println("jwtToken : " + jwtToken);
+		System.out.println("refreshToken : " + refreshToken);
+
+		// 응답 DTO 구성
+		LoginResponseDto responseDto = new LoginResponseDto();
+		responseDto.setLoginSuccess(true);
+		responseDto.setJwtToken(jwtToken);
+		responseDto.setRefreshToken(refreshToken);
+
+		if (user != null && passwordEncoder.matches(memberDTO.getPassword(), user.getPassword())) {
+			return responseDto;
+		}
+		return null;
+	}
+
 	@Override
 	public void registerMember(MemberDTO memberDTO) {
 		
@@ -185,11 +193,13 @@ public class MemberServiceImpl implements MemberService {
 	public boolean findPasswordCheck(MemberDTO memberDTO) {
 		return memberMapper.findPasswordCheck(memberDTO) > 0;
 	}
-
-	// 비밀번호 재설정
-	@Override
-	public boolean updatePassword(MemberDTO memberDTO) {
-		memberDTO.setNewPassword(passwordEncoder.encode(memberDTO.getNewPassword()));// 비밀번호 암호화
-		return memberMapper.updatePassword(memberDTO) > 0;
-	}
+	
+	/*
+	// 임시 비밀번호 업데이트
+		@Override
+		public boolean updatePassword(MemberDTO memberDTO, String encodedPassword) {
+			return memberMapper.updatePassword(memberDTO, encodedPassword) > 0;
+		}
+		*/
+	
 }

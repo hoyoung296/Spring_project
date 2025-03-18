@@ -2,13 +2,15 @@ package com.care.project.main.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,35 +28,48 @@ import io.jsonwebtoken.Claims;
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("member")
-//@RequestMapping("/login/oauth2/callback/kakao")
 public class AuthController {
 
     @Autowired
     private AuthService authService;
 
+    // 로그인 (카카오 로그인 후) → Access Token은 JSON, Refresh Token은 쿠키로 전달
     @GetMapping("/login/oauth2/callback/kakao")
-    public ResponseEntity<LoginResponseDto> kakaoLogin(HttpServletRequest request) {
-        // 카카오 서버가 전달한 인가 코드 추출
+    public ResponseEntity<LoginResponseDto> kakaoLogin(
+            HttpServletRequest request,
+            HttpServletResponse response) {
         String code = request.getParameter("code");
         System.out.println("코드 값 : " + code);
 
-        // 1. 인가 코드를 이용해 카카오 토큰 발급 (전용 DTO에 매핑)
+        // 1. 카카오 토큰 발급 및 사용자 정보 처리
         KakaoTokenDto tokenDto = authService.getKakaoAccessToken(code);
         String kakaoAccessToken = tokenDto.getAccessToken();
-        System.out.println("카카오 토큰 : "+kakaoAccessToken);
+        System.out.println("카카오 토큰 : " + kakaoAccessToken);
 
-        // 2. 카카오 엑세스 토큰으로 카카오 사용자 정보 조회 후, UserDto로 변환하여 DB 저장 및 로그인 처리
+        // 2. 로그인 처리 (DB 저장, JWT 생성 등)
         LoginResponseDto responseDto = authService.kakaoLogin(kakaoAccessToken);
         System.out.println("responseDto : " + responseDto);
-        
+
+        // 3. Refresh Token을 HttpOnly, Secure 쿠키로 설정
+        String refreshToken = responseDto.getRefreshToken();
+        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(true); // HTTPS 환경에서만 사용
+        refreshCookie.setPath("/");
+        //refreshCookie.setMaxAge(7 * 24 * 60 * 60); // 7일 (초 단위)
+        response.addCookie(refreshCookie);
+
+        // 4. JSON 응답에서는 refreshToken 제거 (보안 강화)
+        responseDto.setRefreshToken(null);
+
         return ResponseEntity.ok(responseDto);
     }
-    
- // 비밀번호 설정(또는 변경) 엔드포인트
+
+    // 비밀번호 설정 (또는 변경) 엔드포인트
     @PostMapping("/set-password")
     public ResponseEntity<?> setPassword(@RequestBody PasswordRequestDto requestDto) {
         try {
-        	authService.setPassword(requestDto.getUserId(), requestDto.getPassword());
+            authService.setPassword(requestDto.getUserId(), requestDto.getPassword());
             Map<String, Object> result = new HashMap<>();
             result.put("success", true);
             return ResponseEntity.ok(result);
@@ -66,16 +81,20 @@ public class AuthController {
             return ResponseEntity.badRequest().body(result);
         }
     }
-    
-    
- // Refresh Token 엔드포인트: Refresh Token을 이용해 새로운 Access Token 발급
+
+    // Refresh Token 재발급 엔드포인트 → 쿠키에서 refreshToken을 읽음
     @GetMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<?> refreshToken(
+            @CookieValue(value = "refreshToken", required = false) String refreshToken) {
         try {
-            String refreshToken = authHeader.replace("Bearer ", "");
+            if (refreshToken == null) {
+                return ResponseEntity.status(401).body("No refresh token cookie found");
+            }
             Claims claims = JwtUtil.validateToken(refreshToken);
-            String newAccessToken = JwtUtil.generateToken(claims.getSubject(),
-                    (String) claims.get("username"), (String) claims.get("email"));
+            String newAccessToken = JwtUtil.generateToken(
+                    claims.getSubject(),
+                    (String) claims.get("username"),
+                    (String) claims.get("email"));
             Map<String, Object> tokens = new HashMap<>();
             tokens.put("jwtToken", newAccessToken);
             return ResponseEntity.ok(tokens);
@@ -84,12 +103,27 @@ public class AuthController {
         }
     }
     
-    
- // JWT를 이용해 사용자 정보 반환: 클라이언트가 Authorization 헤더에 JWT를 담아 요청
+    // 로그아웃 엔드포인트: 명시적으로 쿠키를 삭제
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        // 쿠키 삭제: refreshToken 쿠키를 만료시킴
+        Cookie deleteCookie = new Cookie("refreshToken", null);
+        deleteCookie.setHttpOnly(true);
+        deleteCookie.setSecure(true);
+        deleteCookie.setPath("/");
+        deleteCookie.setMaxAge(0); // 쿠키 즉시 만료
+        response.addCookie(deleteCookie);
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        result.put("message", "Logged out successfully");
+        return ResponseEntity.ok(result);
+    }
+
+    // 사용자 정보 반환 (Authorization 헤더의 Access Token 사용)
     @GetMapping("user/info")
     public ResponseEntity<?> getUserInfo(@RequestHeader("Authorization") String authHeader) {
         System.out.println("실행!!!!");
-    	try {
+        try {
             String token = authHeader.replace("Bearer ", "");
             Claims claims = JwtUtil.validateToken(token);
             Map<String, Object> userInfo = new HashMap<>();

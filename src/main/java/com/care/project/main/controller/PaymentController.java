@@ -27,118 +27,100 @@ import com.care.project.main.service.ReserveService;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @RestController
 @RequestMapping("member/payment")
 public class PaymentController {
-	
+
 	@Autowired
 	private PaymentService paymentService;
 	@Autowired
 	ReserveService reserver;
 
-	
 	// 결제 정보 저장 (pending 상태)
-    @PostMapping("/create")
-    @ResponseBody
-    public ResponseEntity<?> createPayment(@RequestBody PaymentDTO payment) {
-    	try {
-    		payment.setPaymentId(payment.getReservationId());
-    		//System.out.println("값@@@@@ : " + payment.toString());
-	    	int result = paymentService.createPayment(payment);
-	    	System.out.println("!!!!result controller : " + result);
-	    	Map<String, Object> responseData = new HashMap<>();
-	    	if(result>0) {
-	    		responseData.put("paymentId", payment.getPaymentId().toString());
-	    		System.out.println("responseData : "+responseData); 
-	    	}
-	    	return CommonResponse.createResponse(
- 	                CommonResponse.builder()
- 	                        .code(Constant.Success.SUCCESS_CODE)
- 	                        .message("Success")
- 	                        .data(responseData)
- 	                        .build(),
- 	                HttpStatus.OK
- 	        );
-    	} catch (Exception e) {
-    		log.info("createPayment Error ");
+	@PostMapping("/create")
+	@ResponseBody
+	public ResponseEntity<?> createPayment(@RequestBody PaymentDTO payment) {
+		try {
+			payment.setPaymentId(payment.getReservationId());
+			// System.out.println("값@@@@@ : " + payment.toString());
+			int result = paymentService.createPayment(payment);
+			System.out.println("!!!!result controller : " + result);
+			Map<String, Object> responseData = new HashMap<>();
+			if (result > 0) {
+				responseData.put("paymentId", payment.getPaymentId().toString());
+				System.out.println("responseData : " + responseData);
+			}
+			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
+					.message("Success").data(responseData).build(), HttpStatus.OK);
+		} catch (Exception e) {
+			log.info("createPayment Error ");
 			e.printStackTrace();
 
 			return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
 					.message(ErrorType.ETC_FAIL.getErrorMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-    }
-    
-    @PostMapping("/confirm")
-    public ResponseEntity<?> confirmPayment(@RequestBody PaymentCancelRequest request) {
-        String portonePaymentId = request.getPortonePaymentId();
-        int expectedAmount = request.getAmount();
-        int scheduleId = request.getScheduleId();
-        List<String> seatIds = request.getSeatIds();
-        List<Integer> seatStatusIds = reserver.seatStatus(scheduleId, seatIds);
-        System.out.println("@@expectedAmount" + expectedAmount);
-        System.out.println("@@portonePaymentId" + portonePaymentId);
-        System.out.println("@@scheduleId" + scheduleId);
-        System.out.println("@@seatIds" + seatIds);
-        System.out.println("@@seatStatusIds" + seatStatusIds);
-        boolean isValid = paymentService.verifyPayment(portonePaymentId, expectedAmount,scheduleId,seatStatusIds); // 금액 검증 포함
-        if(isValid) {
-        	reserver.updateSeatStatusType2(seatStatusIds);
-        }
-        Map<String, Object> responseData = new HashMap<>();
-        
-        if (isValid) {
-        	responseData.put("rs", "성공");
-            return CommonResponse.createResponse(
- 	                CommonResponse.builder()
-                     .code(Constant.Success.SUCCESS_CODE)
-                     .message("Success")
-                     .data(responseData)
-                     .build(),
-             HttpStatus.OK
-            		 );
-        } else {
-        	responseData.put("rs", "실패");
-        	return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
-					.message(ErrorType.ETC_FAIL.getErrorMessage())
-					.data(responseData).build(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    
-    @DeleteMapping("/cancel")
-    public ResponseEntity<?> cancelPayment(@RequestParam long id) {
-    	boolean isDeleted = false;
-    	System.out.println("paymentId @@ " + id);
-    	int scheduleId = reserver.getSchedulId(id);
-    	System.out.println("@@@scheduleId " + scheduleId);
-    	List<Integer> seatStatusIds = reserver.reserveSeatStatus(id);
-    	System.out.println("@@@seatStatusIds " + seatStatusIds);
-    	boolean rs = paymentService.cancelPayment(Long.toString(id), "예매취소");
-    	if(rs) {
-    		 isDeleted = reserver.cancelReservation(id, scheduleId, seatStatusIds);
-    		 System.out.println("isDeleted : " + isDeleted);
-    	}
-    	
-        Map<String, Object> responseData = new HashMap<>();
-        
-        if (isDeleted) {
-        	responseData.put("rs", "성공");
-            return CommonResponse.createResponse(
- 	                CommonResponse.builder()
-                     .code(Constant.Success.SUCCESS_CODE)
-                     .message("예매 취소 성공")
-                     .data(responseData)
-                     .build(),
-             HttpStatus.OK
-            		 );
-        } else {
-        	responseData.put("rs", "실패");
-        	return CommonResponse.createResponse(CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
-					.message(ErrorType.ETC_FAIL.getErrorMessage())
-					.data(responseData).build(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    
+	}
 
+	@PostMapping("/confirm")
+	public ResponseEntity<?> confirmPayment(@RequestBody PaymentCancelRequest request) {
+		String portonePaymentId = request.getPortonePaymentId();
+		int expectedAmount = request.getAmount();
+		int scheduleId = request.getScheduleId();
+		List<String> seatIds = request.getSeatIds();
+		List<Integer> seatStatusIds = reserver.seatStatus(scheduleId, seatIds);
+		System.out.println("@@expectedAmount" + expectedAmount);
+		System.out.println("@@portonePaymentId" + portonePaymentId);
+		System.out.println("@@scheduleId" + scheduleId);
+		System.out.println("@@seatIds" + seatIds);
+		System.out.println("@@seatStatusIds" + seatStatusIds);
+		boolean isValid = paymentService.verifyPayment(portonePaymentId, expectedAmount, scheduleId, seatStatusIds); // 금액
+																														// 검증
+																														// 포함
+		if (isValid) {
+			reserver.updateSeatStatusType2(seatStatusIds);
+		}
+		Map<String, Object> responseData = new HashMap<>();
+
+		if (isValid) {
+			responseData.put("rs", "성공");
+			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
+					.message("Success").data(responseData).build(), HttpStatus.OK);
+		} else {
+			responseData.put("rs", "실패");
+			return CommonResponse.createResponse(
+					CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
+							.message(ErrorType.ETC_FAIL.getErrorMessage()).data(responseData).build(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@DeleteMapping("/cancel")
+	public ResponseEntity<?> cancelPayment(@RequestParam long id) {
+		boolean isDeleted = false;
+		System.out.println("paymentId @@ " + id);
+		int scheduleId = reserver.getSchedulId(id);
+		System.out.println("@@@scheduleId " + scheduleId);
+		List<Integer> seatStatusIds = reserver.reserveSeatStatus(id);
+		System.out.println("@@@seatStatusIds " + seatStatusIds);
+		boolean rs = paymentService.cancelPayment(Long.toString(id), "예매취소");
+		if (rs) {
+			isDeleted = reserver.cancelReservation(id, scheduleId, seatStatusIds);
+			System.out.println("isDeleted : " + isDeleted);
+		}
+
+		Map<String, Object> responseData = new HashMap<>();
+
+		if (isDeleted) {
+			responseData.put("rs", "성공");
+			return CommonResponse.createResponse(CommonResponse.builder().code(Constant.Success.SUCCESS_CODE)
+					.message("예매 취소 성공").data(responseData).build(), HttpStatus.OK);
+		} else {
+			responseData.put("rs", "실패");
+			return CommonResponse.createResponse(
+					CommonResponse.builder().code(ErrorType.ETC_FAIL.getErrorCode())
+							.message(ErrorType.ETC_FAIL.getErrorMessage()).data(responseData).build(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

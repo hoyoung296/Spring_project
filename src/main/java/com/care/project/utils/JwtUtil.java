@@ -33,7 +33,6 @@ public class JwtUtil {
             if (secret == null || secret.trim().isEmpty()) {
                 throw new IllegalArgumentException("jwt.secret 프로퍼티가 설정되어 있지 않습니다.");
             }
-            // 비밀키를 Base64 인코딩
             SECRET_KEY = Base64.getEncoder().encodeToString(secret.getBytes());
             EXPIRATION_TIME = Long.parseLong(expiration.trim());
             REFRESH_EXPIRATION_TIME = Long.parseLong(refresh.trim());
@@ -42,7 +41,6 @@ public class JwtUtil {
         }
     }
 
-    // Access Token 생성: 사용자 id, username, email 포함
     public static String generateToken(String userId, String username, String email) {
         long now = System.currentTimeMillis();
         Date issuedAt = new Date(now);
@@ -58,8 +56,7 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
-    
-    // Refresh Token 생성: 사용자 id, username, email 포함
+
     public static String generateRefreshToken(String userId, String username, String email) {
         long now = System.currentTimeMillis();
         Date issuedAt = new Date(now);
@@ -74,7 +71,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    // JWT 검증 후 Claims 객체 반환 (60초의 clock skew 허용)
     public static Claims validateToken(String token) {
         return Jwts.parser()
                 .setAllowedClockSkewSeconds(60)
@@ -83,7 +79,6 @@ public class JwtUtil {
                 .getBody();
     }
 
-    // 토큰에서 userId(= subject) 추출
     public static String getUserIdFromToken(String token) {
         Claims claims = validateToken(token);
         return claims.getSubject();

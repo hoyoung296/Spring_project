@@ -167,20 +167,24 @@ public class MemberController {
 		return ResponseEntity.ok(userId);
 	}
 
+	/*
 	// 비밀번호 찾기 (사용자 확인)
 	@PutMapping("/updatePassword")
 	public ResponseEntity<?> findPasswordCheck(@RequestBody MemberDTO memberDTO) {
 		boolean exists = ms.findPasswordCheck(memberDTO);
 		if (exists) {
 
+
 			if (!ms.isPasswordValid(memberDTO.getNewPassword())) {
 				return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호는 최소 8자 이상이며, 영문/숫자/특수문자를 포함해야 합니다.");
 			}
-			boolean updated = ms.updatePassword(memberDTO);
+			boolean updated = ms.updatePassword(memberDTO, encodedPassword);
 			return ResponseEntity.ok(updated);
 		}
 		return createErrorResponse(ErrorType.SERVER_ERROR, "비밀번호 변경 실패");
 	}
+	*/
+
 
 	// 회원정보 수정
 	@PutMapping("/update")
@@ -221,7 +225,7 @@ public class MemberController {
 							"비밀번호는 최소 8자 이상이어야 하며, 영문/숫자/특수문자를 포함해야 합니다.");
 				}
 			}
-			
+
 			boolean isUpdated = ms.updateMember(memberDTO);
 			String message = isUpdated ? "회원정보가 수정되었습니다." : "회원정보 수정 실패";
 			CommonResponse<MemberDTO> response = CommonResponse.<MemberDTO>builder().code(Constant.Success.SUCCESS_CODE)
@@ -229,7 +233,6 @@ public class MemberController {
 			return CommonResponse.createResponse(response, HttpStatus.OK);
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			return createErrorResponse(ErrorType.SERVER_ERROR, "서버 내부 오류로 실패했습니다.");
 		}
 	}
