@@ -233,6 +233,7 @@ public class MemberController {
 			return createErrorResponse(ErrorType.SERVER_ERROR, "서버 내부 오류로 실패했습니다.");
 		}
 	}
+	
 
 	// 회원 탈퇴
 	@DeleteMapping("/delete")
@@ -261,7 +262,7 @@ public class MemberController {
 			if (memberDTO == null) {
 				return createErrorResponse(ErrorType.INVALID_PARAMETER, "해당 회원을 찾을 수 없습니다.");
 			}
-
+			
 			CommonResponse<MemberDTO> response = CommonResponse.<MemberDTO>builder().code(Constant.Success.SUCCESS_CODE)
 					.message("회원 정보 조회 성공").data(memberDTO).build();
 			return CommonResponse.createResponse(response, HttpStatus.OK);
