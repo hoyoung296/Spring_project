@@ -2,6 +2,8 @@ package com.care.project.main.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.care.project.main.dto.MemberDTO;
 
 public interface MemberMapper {
@@ -22,6 +24,6 @@ public interface MemberMapper {
 
 	int findPasswordCheck(MemberDTO memberDTO); // 비밀번호 찾기
 
-	int updatePassword(MemberDTO memberDTO, String encodedPassword); // 임시 비밀번호 전송 및 DB업데이트
+	int updatePassword(@Param("memberDTO")MemberDTO memberDTO,@Param("encodedPassword") String encodedPassword); // 임시 비밀번호 전송 및 DB업데이트
 
 }

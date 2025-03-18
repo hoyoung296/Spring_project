@@ -160,30 +160,12 @@ public class MemberController {
 	// 아이디 찾기
 	@PostMapping("/findId")
 	public ResponseEntity<?> findUserId(@RequestBody MemberDTO memberDTO) {
-		String userId = ms.findUserId(memberDTO);
-		if (userId == null) {
-			return createErrorResponse(ErrorType.INVALID_PARAMETER, "입력한 정보와 일치하는 아이디가 없습니다.");
+		String phoneNumber = ms.findUserId(memberDTO);
+		if (phoneNumber == null) {
+			return createErrorResponse(ErrorType.INVALID_PARAMETER, "입력한 정보와 일치하는 전화번호가 없습니다.");
 		}
-		return ResponseEntity.ok(userId);
+		return ResponseEntity.ok(phoneNumber);
 	}
-
-	/*
-	// 비밀번호 찾기 (사용자 확인)
-	@PutMapping("/updatePassword")
-	public ResponseEntity<?> findPasswordCheck(@RequestBody MemberDTO memberDTO) {
-		boolean exists = ms.findPasswordCheck(memberDTO);
-		if (exists) {
-
-
-			if (!ms.isPasswordValid(memberDTO.getNewPassword())) {
-				return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호는 최소 8자 이상이며, 영문/숫자/특수문자를 포함해야 합니다.");
-			}
-			boolean updated = ms.updatePassword(memberDTO, encodedPassword);
-			return ResponseEntity.ok(updated);
-		}
-		return createErrorResponse(ErrorType.SERVER_ERROR, "비밀번호 변경 실패");
-	}
-	*/
 
 
 	// 회원정보 수정

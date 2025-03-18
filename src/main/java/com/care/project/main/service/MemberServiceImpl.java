@@ -197,12 +197,4 @@ public class MemberServiceImpl implements MemberService {
 		return memberMapper.findPasswordCheck(memberDTO) > 0;
 	}
 	
-	/*
-	// 임시 비밀번호 업데이트
-		@Override
-		public boolean updatePassword(MemberDTO memberDTO, String encodedPassword) {
-			return memberMapper.updatePassword(memberDTO, encodedPassword) > 0;
-		}
-		*/
-	
 }
