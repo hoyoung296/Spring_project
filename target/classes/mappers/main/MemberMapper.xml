@@ -54,7 +54,7 @@
 
 	<!-- 아이디 찾기 -->
     <select id="findUserId" resultType="string">
-        SELECT user_id FROM users WHERE email = #{email}
+        SELECT user_id FROM users WHERE phone_number = #{phoneNumber}
     </select>
 
 	<!-- 비밀번호 찾기 (사용자 확인) -->
@@ -64,7 +64,7 @@
 
     <!-- 비밀번호 변경 -->
     <update id="updatePassword">
-        UPDATE users SET password = #{newPassword} WHERE user_id = #{userId}
+        UPDATE users SET password = #{encodedPassword} WHERE user_id = #{memberDTO.userId}
     </update>
 
 	<select id="userData" resultMap="member">
