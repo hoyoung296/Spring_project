@@ -31,6 +31,7 @@
 		<result property="movieRank" column="movie_rank" />
 		<result property="openDt" column="open_dt" />
 		<result property="userId" column="user_id" />
+		<result property="userName" column="username" />
 		<result property="reviewDate" column="review_date" />
 	</resultMap>
 
@@ -81,7 +82,7 @@
 		</if>	
 	</select>
 	<select id="searchInfo" resultMap="info">
-		select * from movie left join review using (movie_id) where movie_id=#{id}
+		select * from movie left join review using (movie_id) inner join users using(user_id) where movie_id=#{id}
 	</select>
 	<select id="getInfo" resultMap="info">
 		select * from review inner join movie using (movie_id) where user_id=#{id}
