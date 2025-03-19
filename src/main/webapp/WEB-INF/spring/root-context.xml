@@ -39,21 +39,18 @@
 
     <!-- 이전 sinema 설정은 주석 처리 -->
 
-    
 
-      	<!-- 
-
+    <!--   
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
         <property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:xe"/>
         <property name="username" value="c##ghdud024" />
         <property name="password" value="ghdud1532"/>
     </bean>
-
 	-->
-
     
-    <!-- AWS RDS 연결용 (지우지 마세요 나호영 작성)  
+    <!-- AWS RDS 연결용 (지우지 마세요 나호영 작성) 
+
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
         <property name="jdbcUrl" value="jdbc:oracle:thin:@oracle.cnogeqaawfk2.ap-northeast-2.rds.amazonaws.com:1521:ORACLE"/>
