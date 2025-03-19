@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.ServletContext;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -25,11 +27,17 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("upload")
 public class UploadController {
 
-	private static final String IMAGE_DIR = "C:/Users/USER/Desktop/job/spring-workspace/movieProjectBack/src/main/webapp/resources/images/";
+	private final String IMAGE_DIR;
+
+    public UploadController(ServletContext servletContext) {
+        // webapp/resources/images 폴더 경로를 동적으로 설정
+        this.IMAGE_DIR = servletContext.getRealPath("/resources/images/");
+    }
 
 	@PostMapping
 	public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) {
 		try {
+			
 			// 폴더 없으면 생성
 			File directory = new File(IMAGE_DIR);
 			if (!directory.exists()) {
