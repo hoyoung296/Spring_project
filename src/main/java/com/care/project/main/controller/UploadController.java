@@ -30,12 +30,8 @@ public class UploadController {
 	@PostMapping
 	public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) {
 		try {
-			// ✅ 프로젝트 내부의 webapp/resources/images/ 폴더를 직접 지정
-			String uploadDir = "C:/Users/USER/Desktop/job/spring-workspace/movieProjectBack/src/main/webapp/resources/images/";
-			System.out.println("업로드 폴더 경로 확인: " + uploadDir);
-
 			// 폴더 없으면 생성
-			File directory = new File(uploadDir);
+			File directory = new File(IMAGE_DIR);
 			if (!directory.exists()) {
 				directory.mkdirs();
 			}
@@ -43,7 +39,7 @@ public class UploadController {
 			// 파일 저장 경로 설정
 			String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 			System.out.println("파일이름 확인 : " + file.getOriginalFilename());
-			Path filePath = Paths.get(uploadDir, fileName);
+			Path filePath = Paths.get(IMAGE_DIR, fileName);
 			System.out.println("✅ 최종 저장 경로: " + filePath);
 
 			// 파일 저장
