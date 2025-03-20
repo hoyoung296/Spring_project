@@ -82,7 +82,7 @@
 		</if>	
 	</select>
 	<select id="searchInfo" resultMap="info">
-		select * from movie left join review using (movie_id) inner join users using(user_id) where movie_id=#{id}
+		select * from movie left join review using (movie_id) left join users using(user_id) where movie_id=#{id}
 	</select>
 	<select id="getInfo" resultMap="info">
 		select * from review inner join movie using (movie_id) where user_id=#{id}
