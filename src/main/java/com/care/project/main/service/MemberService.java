@@ -27,5 +27,4 @@ public interface MemberService {
     boolean findPasswordCheck(MemberDTO memberDTO);
     //boolean updatePassword(MemberDTO memberDTO);
 
-
 }

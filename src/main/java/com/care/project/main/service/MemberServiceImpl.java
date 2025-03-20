@@ -13,8 +13,6 @@ import com.care.project.utils.JwtUtil;
 public class MemberServiceImpl implements MemberService {
 	@Autowired
 	private MemberMapper memberMapper;
-	/*@Autowired
-    private FileService fileService; //파일 업로드 기능*/
 
 	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();// 비밀번호 암호화
 	
@@ -84,6 +82,7 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public boolean updateMember(MemberDTO memberDTO) {
+		System.out.println("DB 업데이트 실행: " + memberDTO.getPostNum()); // 디버깅 로그 추가
 		MemberDTO user = memberMapper.getMember(memberDTO.getUserId());
 		if (user == null)
 			return false; // 회원 존재 여부 확인

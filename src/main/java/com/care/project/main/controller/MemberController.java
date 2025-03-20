@@ -171,6 +171,8 @@ public class MemberController {
 	// 회원정보 수정
 	@PutMapping("/update")
 	public ResponseEntity<?> updateMember(@RequestBody MemberDTO memberDTO) {
+		System.out.println("받은 회원정보: " + memberDTO);
+	    System.out.println("받은 우편번호: " + memberDTO.getPostNum());
 		try {
 			if (!ms.newcheckPassword(memberDTO)) {
 				return createErrorResponse(ErrorType.INVALID_PARAMETER, "비밀번호가 일치하지 않습니다.");

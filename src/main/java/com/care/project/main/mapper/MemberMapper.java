@@ -19,5 +19,4 @@ public interface MemberMapper {
     int updatePassword(MemberDTO memberDTO); //비밀번호 재설정
 
 	int updatePassword(@Param("memberDTO")MemberDTO memberDTO,@Param("encodedPassword") String encodedPassword); // 임시 비밀번호 전송 및 DB업데이트
-
 }
