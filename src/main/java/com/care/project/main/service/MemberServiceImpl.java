@@ -15,6 +15,7 @@ public class MemberServiceImpl implements MemberService {
 	private MemberMapper memberMapper;
 
 	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();// 비밀번호 암호화
+	
 
 	@Override
 	public boolean isUserIdValid(String userId) {
@@ -46,6 +47,8 @@ public class MemberServiceImpl implements MemberService {
 		return password != null && password.matches(passwordPattern);
 	}
 
+    
+    
 	@Override
 	public LoginResponseDto loginMember(MemberDTO memberDTO) {
 		MemberDTO user = memberMapper.getMember(memberDTO.getUserId());// 회원 조회
@@ -71,22 +74,15 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void registerMember(MemberDTO memberDTO) {
-		// 주소가 없다면 기본값을 설정하거나, 입력받은 값 그대로 사용
-		if (memberDTO.getPostNum() == null || memberDTO.getPostNum().isEmpty()) {
-			memberDTO.setPostNum("000000"); // 기본 우편번호
-		}
-		if (memberDTO.getAddr() == null || memberDTO.getAddr().isEmpty()) {
-			memberDTO.setAddr("기본 주소"); // 기본 주소
-		}
-		if (memberDTO.getDetailAddr() == null || memberDTO.getDetailAddr().isEmpty()) {
-			memberDTO.setDetailAddr("상세 주소"); // 기본 상세 주소
-		}
+		
 		memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));// 비밀번호 암호화
+		
 		memberMapper.register(memberDTO);// 회원 등록
 	}
-
+	
 	@Override
 	public boolean updateMember(MemberDTO memberDTO) {
+		System.out.println("DB 업데이트 실행: " + memberDTO.getPostNum()); // 디버깅 로그 추가
 		MemberDTO user = memberMapper.getMember(memberDTO.getUserId());
 		if (user == null)
 			return false; // 회원 존재 여부 확인
@@ -107,7 +103,7 @@ public class MemberServiceImpl implements MemberService {
 			System.out.println("업데이트 새 비번 : " + user.getPassword());
 			memberDTO.setPassword(user.getPassword());
 		}
-
+		
 		// 주소 정보 갱신
 		if (memberDTO.getPostNum() == null || memberDTO.getPostNum().isEmpty()) {
 			memberDTO.setPostNum(user.getPostNum());

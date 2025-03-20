@@ -108,4 +108,6 @@ public class MemberDTO {
 	public void setEmailVerified(boolean isEmailVerified) {
 		this.isEmailVerified = isEmailVerified;
 	}
+	
+	
 }

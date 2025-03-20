@@ -32,10 +32,10 @@
 		parameterType="com.care.project.main.dto.MemberDTO">
 		UPDATE users
 		SET username = #{userName}, password = #{password}, email = #{email},
-		phone_number = #{phoneNumber}, addr = #{addr}, detail_addr = #{detailAddr}, user_birthday = #{userBirthday}
+		phone_number = #{phoneNumber}, postnum = #{postNum}, addr = #{addr}, detail_addr = #{detailAddr}, user_birthday = #{userBirthday}
 		WHERE user_id = #{userId}
 	</update>
-
+	
 	<!-- 회원 탈퇴 -->
 	<delete id="deleteMember" parameterType="String">
 		DELETE FROM users WHERE user_id = #{userId}
