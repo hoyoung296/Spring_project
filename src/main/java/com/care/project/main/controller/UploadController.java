@@ -16,6 +16,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -92,4 +93,33 @@ public class UploadController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 로딩 중 오류 발생");
 		}
 	}
+	
+	// 이미지 파일 삭제
+    @DeleteMapping("/del")
+    public ResponseEntity<String> deleteImage(@RequestParam("image") String imageName) {
+        try {
+            System.out.println("이미지 삭제 요청: " + imageName);
+
+            // 이미지 파일 경로 설정
+            Path imagePath = Paths.get(IMAGE_DIR + imageName);
+            File imageFile = imagePath.toFile();
+
+            // 파일 존재 여부 확인
+            if (!imageFile.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이미지를 찾을 수 없습니다.");
+            }
+
+            // 파일 삭제
+            boolean deleted = imageFile.delete();
+            if (deleted) {
+                return ResponseEntity.ok("이미지 삭제 완료");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 삭제 실패");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 삭제 중 오류 발생");
+        }
+    }
 }

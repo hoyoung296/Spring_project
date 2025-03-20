@@ -140,6 +140,12 @@ public class MemberServiceImpl implements MemberService {
 		if (memberDTO.getUserBirthday() == null) {
 			memberDTO.setUserBirthday(user.getUserBirthday());
 		}
+		// 프로필 이미지 업데이트
+	    if (memberDTO.getProfileImage() != null && !memberDTO.getProfileImage().isEmpty()) {
+	        memberDTO.setProfileImage(memberDTO.getProfileImage());
+	    } else {
+	        memberDTO.setProfileImage(user.getProfileImage()); // 기존 값 유지
+	    }
 
 		// 회원 정보 업데이트
 		memberMapper.updateMember(memberDTO);
