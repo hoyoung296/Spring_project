@@ -33,6 +33,7 @@
 		<result property="userId" column="user_id" />
 		<result property="userName" column="username" />
 		<result property="reviewDate" column="review_date" />
+		<result property="profileImage" column="profile_image" />
 	</resultMap>
 
 	<resultMap type="java.util.HashMap" id="reserve">
