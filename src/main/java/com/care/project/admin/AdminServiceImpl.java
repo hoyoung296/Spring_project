@@ -214,23 +214,27 @@ public class AdminServiceImpl implements AdminService {
 		List<MovieDTO> enhancedMovies = enhanceMovieDetails(newMovies); // 상세정보 보강
 
 		for (MovieDTO movie : enhancedMovies) { // enhancedMovies로 반복
+			// 영화 정보 갱신을 위해 updateMovieDetails 호출
+			updateMovieDetails(movie);
+
 			MovieDTO existingMovie = adminMapper.findByMovieId(movie.getMovieId());
 
-			if (existingMovie != null) {
-				existingMovie.setTitle(movie.getTitle());
-				existingMovie.setEntitle(movie.getEntitle());
-				existingMovie.setPosterUrl(movie.getPosterUrl());
-				existingMovie.setStillUrl(movie.getStillUrl());
-				existingMovie.setMovieSynopsis(movie.getMovieSynopsis());
-				existingMovie.setDirectorName(movie.getDirectorName());
-				existingMovie.setActors(movie.getActors());
-				existingMovie.setMovieRank(movie.getMovieRank());
-				existingMovie.setOpenDt(movie.getOpenDt());
-
-				adminMapper.updateMovie(existingMovie);
-			} else {
+			if (existingMovie == null) {
 				adminMapper.insertMovie(movie);
+				continue;
 			}
+
+			// 기존 데이터 유지하면서 API 데이터 반영
+			movie.setTitle(MovieUtils.getValidData(existingMovie.getTitle(), movie.getTitle()));
+			movie.setEntitle(MovieUtils.getValidData(existingMovie.getEntitle(), movie.getEntitle()));
+			movie.setDirectorName(MovieUtils.getValidData(existingMovie.getDirectorName(), movie.getDirectorName()));
+			movie.setActors(MovieUtils.getValidData(existingMovie.getActors(), movie.getActors()));
+			movie.setOpenDt(MovieUtils.getValidData(existingMovie.getOpenDt(), movie.getOpenDt()));
+			movie.setMovieSynopsis(MovieUtils.getValidSynopsis(existingMovie.getMovieSynopsis(), movie.getMovieSynopsis()));
+			movie.setPosterUrl(MovieUtils.getValidData(existingMovie.getPosterUrl(), movie.getPosterUrl()));
+			movie.setStillUrl(MovieUtils.getValidData(existingMovie.getStillUrl(), movie.getStillUrl()));
+
+			adminMapper.updateMovie(movie);
 		}
 	}
 
