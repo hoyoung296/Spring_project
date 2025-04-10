@@ -14,8 +14,8 @@ public class MailConfig {
 		JavaMailSenderImpl jms = new JavaMailSenderImpl();
 		jms.setHost("smtp.gmail.com");// google smtp 서버 설정
 		jms.setPort(587); // google smtp 메일 서버 포트
-		jms.setUsername("ymjeon1006@gmail.com"); // 보내는 계정
-		jms.setPassword("irqx ruya ztde pmli"); // 구글 비번
+		jms.setUsername("407245@gmail.com"); // 보내는 계정
+		jms.setPassword("nasj duqd gtvl mgfo"); // 구글 비번
 
 		// 메일 전달 프로토콜 세부 설정
 		Properties prop = new Properties();
