@@ -8,19 +8,6 @@
     http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
     http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <!-- ✅ 프로퍼티 파일 로드 
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:application.properties</value>
-            </list>
-        </property>
-    </bean>
--->
-    <!-- ✅ 컴포넌트 스캔 
-    <context:component-scan base-package="com.care.project" />  
-    -->
-
     <!-- ✅ @Transactional 사용을 위한 설정 -->
     <tx:annotation-driven transaction-manager="transactionManager" />
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

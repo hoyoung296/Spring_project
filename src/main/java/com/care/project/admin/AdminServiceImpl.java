@@ -201,7 +201,7 @@ public class AdminServiceImpl implements AdminService {
 		return result;
 	}
 
-	@Scheduled(cron = "0 0 23 * * *") // 매일 밤 11시에 실행
+	@Scheduled(cron = "0 30 22 * * *") // 매일 밤 11시에 실행
 	public void scheduledFetchAndUpdateMovies() {
 		System.out.println("자동 업데이트 시작");
 		fetchAndUpdateMovies();
